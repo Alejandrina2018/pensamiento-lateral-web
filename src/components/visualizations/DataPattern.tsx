@@ -104,6 +104,28 @@ const TERRITORY: Point[] = ZONES.flatMap((zone, z) =>
   })
 );
 
+// A faint city-block grid behind the territory dots, for Impacto Cercano's
+// "manzana por manzana" — still abstract (no real streets/parcels), just a
+// quiet rectilinear texture, always secondary to the content around it.
+const BLOCK_GRID_COLS = 9;
+const BLOCK_GRID_ROWS = 7;
+const BLOCK_GRID_LINES: Line[] = [
+  ...Array.from({ length: BLOCK_GRID_COLS + 1 }, (_, i) => {
+    const x = (i / BLOCK_GRID_COLS) * 560;
+    return [
+      { x, y: 0, r: 0 },
+      { x, y: 400, r: 0 },
+    ] as Line;
+  }),
+  ...Array.from({ length: BLOCK_GRID_ROWS + 1 }, (_, i) => {
+    const y = (i / BLOCK_GRID_ROWS) * 400;
+    return [
+      { x: 0, y, r: 0 },
+      { x: 560, y, r: 0 },
+    ] as Line;
+  }),
+];
+
 type Variant = "scatter-to-grid" | "cluster" | "grid-only" | "territory";
 
 function Dot({ point, fill, delay }: { point: Point; fill: string; delay: number }) {
@@ -148,13 +170,21 @@ function ConnectorLine({ line, delay }: { line: Line; delay: number }) {
 export default function DataPattern({
   className = "",
   variant = "scatter-to-grid",
+  gridOverlay = false,
 }: {
   className?: string;
   variant?: Variant;
+  /** Only meaningful for "territory" — adds the faint block-grid texture
+   * (Impacto Cercano's extra depth vs. Instituciones' plainer version). */
+  gridOverlay?: boolean;
 }) {
   if (variant === "territory") {
     return (
       <svg viewBox={VIEW_BOX} className={className} aria-hidden="true" focusable="false">
+        {gridOverlay &&
+          BLOCK_GRID_LINES.map(([a, b], i) => (
+            <line key={`block-${i}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="var(--color-slate)" strokeOpacity={0.08} strokeWidth={1} />
+          ))}
         {TERRITORY.map((p, i) => (
           <Dot
             key={`territory-${i}`}

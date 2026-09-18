@@ -46,20 +46,31 @@ export interface Insight {
   ogImage?: string;
 }
 
+/**
+ * "Qué hicimos" isn't the same shape for every case — some are plain
+ * paragraphs (Zurich), others are a short list of named sub-blocks (the
+ * other 4). CaseStudyLayout renders either without forcing empty sections.
+ */
+export type CaseWhatWeDid =
+  | { kind: "paragraphs"; items: string[] }
+  | { kind: "list"; items: Array<{ title: string; body: string }> };
+
 export interface CaseStudy {
   client: string;
+  /** This case's own detail-page headline — not the /casos listing tagline. */
   title: string;
   slug: string;
-  excerpt: string;
+  challenge: string[];
+  approach: string[];
+  whatWeDid: CaseWhatWeDid;
+  evidence: string[];
+  finalQuestion: string;
+  /** Not every case has closing body copy before the CTA — optional. */
+  finalBody?: string;
+  ctaLabel: string;
+  ctaHref: string;
   featuredImage?: string;
   logo?: string;
-  challenge?: string;
-  approach?: string;
-  whatWeDid?: string;
-  action?: string;
-  impact?: string;
-  ctaLabel?: string;
-  ctaHref?: string;
 }
 
 export interface PressItem {
@@ -67,6 +78,8 @@ export interface PressItem {
   publication: string;
   date: string;
   excerpt: string;
-  externalUrl: string;
+  /** Not yet supplied (final-copy.md's "CONTENIDO PENDIENTE") — rendered as
+   * plain text, never a dead link, until a real URL exists. */
+  externalUrl?: string;
   logo?: string;
 }
