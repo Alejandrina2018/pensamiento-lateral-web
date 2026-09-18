@@ -94,10 +94,9 @@ export default function QuienesSomosPage() {
               <PressItem key={item.title} item={item} />
             ))}
           </div>
-          {/* No /prensa listing page exists yet — plain text, never a dead link. */}
-          <p className="mt-8 border-t border-sand pt-8 text-sm font-medium text-slate/40">
-            {QUIENES_SOMOS_PRESS.allPressCtaLabel}
-          </p>
+          {/* allPressCtaLabel stays in the data for when a /prensa
+              destination exists — no CTA without an action (approved
+              correction), so it isn't rendered here. */}
         </Container>
       </section>
     </>
