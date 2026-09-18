@@ -1,13 +1,16 @@
 import Link from "next/link";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
-type Variant = "primary" | "secondary";
+type Variant = "primary" | "secondary" | "secondary-inverted";
 
 const VARIANT_STYLES: Record<Variant, string> = {
   primary:
     "bg-terracotta text-cream hover:bg-slate focus-visible:bg-slate",
   secondary:
     "border border-slate text-slate hover:bg-slate hover:text-cream",
+  // For use on a dark (bg-slate) section, where `secondary` would blend into the background.
+  "secondary-inverted":
+    "border border-cream text-cream hover:bg-cream hover:text-slate",
 };
 
 const BASE_STYLES =

@@ -12,7 +12,13 @@ export interface Author {
   linkedin?: string;
 }
 
-export type InsightCategory =
+/**
+ * The 5 generic buckets used by the Insights filter UI (CLAUDE.md #16).
+ * Distinct from `Insight.displayCategory`, which is the specific,
+ * verbatim label shown under each article — the two are intentionally
+ * not the same taxonomy (see content/final-copy.md categorization).
+ */
+export type InsightFilterCategory =
   | "Investigación"
   | "Datos"
   | "Clientes y marcas"
@@ -23,10 +29,16 @@ export interface Insight {
   title: string;
   slug: string;
   excerpt: string;
-  body: string;
+  /** Full article body — pending approved copy for most articles (see
+   * content/final-copy.md's "CONTENIDO PENDIENTE"); left unset rather than invented. */
+  body?: string;
   author: Author;
-  category: InsightCategory;
-  publicationDate: string;
+  /** Verbatim category label shown under the article — never rewritten. */
+  displayCategory: string;
+  /** One or more generic buckets this article matches in the filter UI. */
+  filterCategories: InsightFilterCategory[];
+  /** Not yet supplied for the initial articles — left unset rather than invented. */
+  publicationDate?: string;
   featured?: boolean;
   featuredImage?: string;
   seoTitle?: string;

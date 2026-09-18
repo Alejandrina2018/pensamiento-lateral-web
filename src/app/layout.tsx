@@ -10,7 +10,8 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
 });
 
-// TODO: replace with approved copy once content/final-copy.md lands (CLAUDE.md #34).
+// TODO: SEO metadata (titles/descriptions/OG) per page is explicitly pending —
+// content/final-copy.md lists it under "CONTENIDO PENDIENTE / NO INVENTAR".
 export const metadata: Metadata = {
   title: "Pensamiento Lateral",
   description: "Pensamiento Lateral — investigación y datos.",

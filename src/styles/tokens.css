@@ -13,6 +13,8 @@
   --color-green: #6e8877;
   --color-cream: #fffbf2;
   --color-sand: #ddd5be;
+  /* Soft tint of the brand blue, for a quiet section background — not a new hue. */
+  --color-blue-tint: color-mix(in srgb, var(--color-blue) 18%, var(--color-cream) 82%);
 
   /* Typography */
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;

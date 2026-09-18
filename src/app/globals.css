@@ -36,6 +36,37 @@ body {
   color: var(--color-slate);
 }
 
+@keyframes pl-settle {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.pl-settle {
+  animation: pl-settle var(--duration-slow) var(--ease-editorial) both;
+}
+
+@keyframes pl-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Pair with the SVG attribute pathLength="1" so dasharray/dashoffset of 1 work regardless of geometry. */
+.pl-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: pl-draw var(--duration-slow) var(--ease-editorial) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
