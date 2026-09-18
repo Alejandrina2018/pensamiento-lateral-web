@@ -10,6 +10,10 @@ type CTASectionProps = {
   secondaryAction?: ReactNode;
   id?: string;
   inverted?: boolean;
+  /** Extra vertical air for a standalone CTA page (/contacto) so it reads
+   * as an intentional destination, not a leftover section. Default
+   * (false) keeps every existing usage's padding unchanged. */
+  spacious?: boolean;
 };
 
 /** Generic closing CTA block (CLAUDE.md #37) — used by Home's Contacto and
@@ -22,10 +26,14 @@ export default function CTASection({
   secondaryAction,
   id,
   inverted = false,
+  spacious = false,
 }: CTASectionProps) {
   return (
     <section id={id} className={inverted ? "bg-slate text-cream" : "bg-cream text-slate"}>
-      <Container narrow className="flex flex-col items-start gap-6 py-24 md:py-32">
+      <Container
+        narrow
+        className={`flex flex-col items-start gap-6 ${spacious ? "py-32 md:py-48" : "py-24 md:py-32"}`}
+      >
         {eyebrow && (
           <Eyebrow className={inverted ? "text-cream/60" : undefined}>{eyebrow}</Eyebrow>
         )}

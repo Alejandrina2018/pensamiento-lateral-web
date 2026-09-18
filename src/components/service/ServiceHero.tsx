@@ -10,7 +10,9 @@ type ServiceHeroProps = {
   body: string | string[];
   ctaLabel: string;
   ctaHref: string;
-  visual: ReactNode;
+  /** Omit entirely for a page that doesn't need one (Pymes) — the text
+   * column then gets more vertical air instead of leaving an empty gap. */
+  visual?: ReactNode;
   /** Automatizaciones e IA reads calmer: the visual takes less width/opacity
    * so it never competes with the headline (CLAUDE.md #5, #28). */
   compactVisual?: boolean;
@@ -36,15 +38,17 @@ export default function ServiceHero({
 }: ServiceHeroProps) {
   return (
     <section className="overflow-hidden bg-cream">
-      <Container className="relative py-20 md:py-28">
-        <div
-          className={`pointer-events-none absolute inset-y-0 right-0 w-full opacity-20 md:opacity-70 ${
-            compactVisual ? "md:w-[38%]" : "md:w-[50%]"
-          }`}
-          aria-hidden="true"
-        >
-          {visual}
-        </div>
+      <Container className={`relative ${visual ? "py-20 md:py-28" : "py-24 md:py-36"}`}>
+        {visual && (
+          <div
+            className={`pointer-events-none absolute inset-y-0 right-0 w-full opacity-20 md:opacity-70 ${
+              compactVisual ? "md:w-[38%]" : "md:w-[50%]"
+            }`}
+            aria-hidden="true"
+          >
+            {visual}
+          </div>
+        )}
 
         <div className={`relative ${columnWidthClass}`}>
           <Eyebrow>{eyebrow}</Eyebrow>
