@@ -58,6 +58,16 @@ const LO_QUE_LOS_DATOS_NO_DICEN: Insight = {
   filterCategories: ["Investigación"],
 };
 
+const PROMEDIOS_NO_ALCANZAN: Insight = {
+  title: "Por qué los promedios no alcanzan para comprender un territorio",
+  slug: "por-que-los-promedios-no-alcanzan",
+  excerpt:
+    "Los datos agregados pueden esconder diferencias importantes entre zonas, perfiles y comportamientos. Una mirada más granular permite entender mejor dónde y cómo actuar.",
+  author: AUTHORS.angeles,
+  displayCategory: "Datos y territorio",
+  filterCategories: ["Datos", "Opinión pública y territorio"],
+};
+
 /** Every article we have real, approved copy for. Mirrors what a "published"
  * Sanity query would return — pages should filter/reference this list by
  * slug, never hardcode article text inline. */
@@ -67,6 +77,7 @@ export const INSIGHTS: Insight[] = [
   MAS_DATOS_NO_GARANTIZA,
   CLIENTE_NO_DICE,
   LO_QUE_LOS_DATOS_NO_DICEN,
+  PROMEDIOS_NO_ALCANZAN,
 ];
 
 // Home / Insights (first 3 of 7 — see content/final-copy.md's Home section).

@@ -6,7 +6,8 @@ import Eyebrow from "@/components/ui/Eyebrow";
 type ServiceHeroProps = {
   eyebrow: string;
   title: string;
-  body: string;
+  /** Empresas/Instituciones have two paragraphs; the service pages have one. */
+  body: string | string[];
   ctaLabel: string;
   ctaHref: string;
   visual: ReactNode;
@@ -48,7 +49,11 @@ export default function ServiceHero({
         <div className={`relative ${columnWidthClass}`}>
           <Eyebrow>{eyebrow}</Eyebrow>
           <h1 className="mt-4 text-display-lg font-semibold text-balance text-slate">{title}</h1>
-          <p className="mt-6 max-w-(--measure-narrow) text-lg text-slate/80">{body}</p>
+          <div className="mt-6 flex max-w-(--measure-narrow) flex-col gap-4 text-lg text-slate/80">
+            {(Array.isArray(body) ? body : [body]).map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
+          </div>
           <div className="mt-10">
             <Button href={ctaHref}>{ctaLabel}</Button>
           </div>

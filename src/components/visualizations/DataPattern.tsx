@@ -80,7 +80,31 @@ const CLUSTER_CONNECTIONS: Line[] = CLUSTERS.flatMap((cluster) => [
   [cluster[1], cluster[2]],
 ]);
 
-type Variant = "scatter-to-grid" | "cluster" | "grid-only";
+// --- territory (Instituciones) --------------------------------------------
+// 4 zones with deliberately different point densities — some areas denser
+// than others — and no connecting lines at all, so it reads as "zones with
+// differences" rather than a map, a GIS layer, or a network. A few points
+// per zone read as green ("escucha activa"), never a real metric.
+const ZONES = [
+  { x: 100, y: 90, count: 11, radius: 55 },
+  { x: 340, y: 70, count: 5, radius: 40 },
+  { x: 180, y: 260, count: 8, radius: 50 },
+  { x: 420, y: 230, count: 4, radius: 35 },
+];
+
+const TERRITORY: Point[] = ZONES.flatMap((zone, z) =>
+  Array.from({ length: zone.count }, (_, i) => {
+    const angle = ((z * 97 + i * 61) % 360) * (Math.PI / 180);
+    const radius = zone.radius * (0.2 + ((z * 13 + i * 9) % 80) / 100);
+    return {
+      x: zone.x + Math.cos(angle) * radius,
+      y: zone.y + Math.sin(angle) * radius * 0.85,
+      r: 2 + (i % 2),
+    };
+  })
+);
+
+type Variant = "scatter-to-grid" | "cluster" | "grid-only" | "territory";
 
 function Dot({ point, fill, delay }: { point: Point; fill: string; delay: number }) {
   return (
@@ -118,7 +142,9 @@ function ConnectorLine({ line, delay }: { line: Line; delay: number }) {
  *
  * - "scatter-to-grid" (default, Home): dispersion settling into order.
  * - "cluster" (Investigación): organic groupings, listening/interpretation.
- * - "grid-only" (Datos): already-structured, a few points read as active. */
+ * - "grid-only" (Datos): already-structured, a few points read as active.
+ * - "territory" (Instituciones): zones of different point density, no
+ *   connecting lines — never a map or GIS layer. */
 export default function DataPattern({
   className = "",
   variant = "scatter-to-grid",
@@ -126,6 +152,21 @@ export default function DataPattern({
   className?: string;
   variant?: Variant;
 }) {
+  if (variant === "territory") {
+    return (
+      <svg viewBox={VIEW_BOX} className={className} aria-hidden="true" focusable="false">
+        {TERRITORY.map((p, i) => (
+          <Dot
+            key={`territory-${i}`}
+            point={p}
+            fill={i % 4 === 0 ? "var(--color-green)" : "var(--color-slate)"}
+            delay={i * 25}
+          />
+        ))}
+      </svg>
+    );
+  }
+
   if (variant === "cluster") {
     return (
       <svg viewBox={VIEW_BOX} className={className} aria-hidden="true" focusable="false">
