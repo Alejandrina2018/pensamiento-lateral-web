@@ -19,7 +19,7 @@ export default function InsightPreview({ insight, index, featured = false }: Ins
       <div className={`flex gap-5 ${featured ? "md:gap-10" : "md:gap-8"}`}>
         <span
           aria-hidden="true"
-          className={`shrink-0 font-semibold text-slate/15 ${featured ? "text-4xl md:text-6xl" : "text-2xl md:text-3xl"}`}
+          className={`shrink-0 font-semibold text-slate/25 ${featured ? "text-4xl md:text-6xl" : "text-2xl md:text-3xl"}`}
         >
           {number}
         </span>

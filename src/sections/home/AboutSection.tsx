@@ -15,7 +15,7 @@ export default function AboutSection() {
             Miradas distintas para problemas complejos.
           </h2>
 
-          <p className="mt-8 max-w-(--measure) text-lg leading-relaxed font-medium text-slate/90 md:text-xl">
+          <p className="mt-8 max-w-(--measure-narrow) text-lg leading-relaxed font-medium text-slate/90 md:text-xl">
             Somos una consultora de investigación y datos que desde hace más de 15 años trabaja con empresas,
             organismos públicos e instituciones para interpretar contextos, analizar información y transformar
             evidencia en decisiones y acciones concretas.
