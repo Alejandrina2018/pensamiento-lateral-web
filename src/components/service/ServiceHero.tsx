@@ -13,6 +13,10 @@ type ServiceHeroProps = {
   /** Automatizaciones e IA reads calmer: the visual takes less width/opacity
    * so it never competes with the headline (CLAUDE.md #5, #28). */
   compactVisual?: boolean;
+  /** Width of the text column (and so the H1's wrap width). Widen it for a
+   * long title instead of shrinking the display scale, so the three hero
+   * titles keep the same perceived weight (approved consistency pass). */
+  columnWidthClass?: string;
 };
 
 /** Shared hero for the three service pages — same mechanics as Home's Hero
@@ -27,6 +31,7 @@ export default function ServiceHero({
   ctaHref,
   visual,
   compactVisual = false,
+  columnWidthClass = "max-w-2xl",
 }: ServiceHeroProps) {
   return (
     <section className="overflow-hidden bg-cream">
@@ -40,7 +45,7 @@ export default function ServiceHero({
           {visual}
         </div>
 
-        <div className="relative max-w-2xl">
+        <div className={`relative ${columnWidthClass}`}>
           <Eyebrow>{eyebrow}</Eyebrow>
           <h1 className="mt-4 text-display-lg font-semibold text-balance text-slate">{title}</h1>
           <p className="mt-6 max-w-(--measure-narrow) text-lg text-slate/80">{body}</p>

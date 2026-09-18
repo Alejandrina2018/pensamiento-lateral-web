@@ -49,7 +49,7 @@ export default function InvestigacionPage() {
 
       <section className="bg-cream">
         <Container className="py-20 md:py-28">
-          <Eyebrow as="h2">{INVESTIGACION_CAPABILITIES_INTRO.title}</Eyebrow>
+          <h2 className="text-display-md font-semibold text-slate">{INVESTIGACION_CAPABILITIES_INTRO.title}</h2>
           <p className="mt-4 max-w-(--measure) text-lg text-slate/80">{INVESTIGACION_CAPABILITIES_INTRO.body}</p>
           <div className="mt-12">
             <CapabilityList items={INVESTIGACION_CAPABILITIES} columns={2} />

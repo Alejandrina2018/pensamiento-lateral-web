@@ -45,6 +45,7 @@ export default function AutomatizacionesIaPage() {
         ctaHref={AUTOMATIZACIONES_HERO.ctaHref}
         visual={<FlowLine className="h-full w-full" />}
         compactVisual
+        columnWidthClass="max-w-2xl md:max-w-3xl"
       />
 
       <ContextIntro title={AUTOMATIZACIONES_CONTEXT.title} paragraphs={AUTOMATIZACIONES_CONTEXT.paragraphs} />
