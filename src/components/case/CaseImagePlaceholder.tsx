@@ -38,7 +38,7 @@ export default function CaseImagePlaceholder({
       role="img"
       aria-label={`${kind === "photo" ? "Foto de" : "Imagen del caso"} ${label} — pendiente`}
     >
-      <span className="text-xs uppercase tracking-widest text-slate/50">{LABEL_TEXT[kind]}</span>
+      <span className="text-xs uppercase tracking-widest text-slate/75">{LABEL_TEXT[kind]}</span>
     </div>
   );
 }

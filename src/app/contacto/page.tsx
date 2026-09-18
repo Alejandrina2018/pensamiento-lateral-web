@@ -19,6 +19,7 @@ export default function ContactoPage() {
     <CTASection
       eyebrow="Contactanos"
       title="Hablemos"
+      headingLevel="h1"
       body="Contanos cómo podemos ayudar a tu equipo."
       spacious
       inverted

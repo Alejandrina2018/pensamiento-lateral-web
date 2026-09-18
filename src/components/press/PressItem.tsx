@@ -30,7 +30,7 @@ export default function PressItem({ item }: PressItemProps) {
           <span aria-hidden="true">→</span>
         </a>
       ) : (
-        <p className="mt-4 text-sm font-medium text-slate/40">Leer nota</p>
+        <p className="mt-4 text-sm font-medium text-slate/70">Leer nota</p>
       )}
     </article>
   );

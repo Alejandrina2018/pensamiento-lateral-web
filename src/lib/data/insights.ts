@@ -68,16 +68,31 @@ const PROMEDIOS_NO_ALCANZAN: Insight = {
   filterCategories: ["Datos", "Opinión pública y territorio"],
 };
 
-/** Every article we have real, approved copy for. Mirrors what a "published"
- * Sanity query would return — pages should filter/reference this list by
- * slug, never hardcode article text inline. */
+const MODELOS_Y_INVESTIGACION: Insight = {
+  title: "Cuando los modelos muestran dónde mirar y la investigación explica por qué",
+  slug: "cuando-los-modelos-muestran-donde-mirar",
+  excerpt:
+    "El análisis de datos puede detectar zonas, segmentos o comportamientos diferentes. La investigación permite comprender qué hay detrás de esas diferencias.",
+  author: AUTHORS.angeles,
+  displayCategory: "Datos e investigación",
+  filterCategories: ["Datos", "Investigación"],
+};
+
+/** All 7 articles defined in content/final-copy.md's /insights route, in
+ * the source document's own order. Every one has approved excerpt/author/
+ * category copy — none has an approved full body yet (see `body` on the
+ * `Insight` type), so `isInsightPublished` gates linking until that
+ * changes. Mirrors what a "published" Sanity query would return — pages
+ * should filter/reference this list by slug, never hardcode article text
+ * inline. */
 export const INSIGHTS: Insight[] = [
   CONECTADOS,
   CONSUMIDORES_NO_DISENAR,
   MAS_DATOS_NO_GARANTIZA,
+  PROMEDIOS_NO_ALCANZAN,
   CLIENTE_NO_DICE,
   LO_QUE_LOS_DATOS_NO_DICEN,
-  PROMEDIOS_NO_ALCANZAN,
+  MODELOS_Y_INVESTIGACION,
 ];
 
 // Home / Insights (first 3 of 7 — see content/final-copy.md's Home section).
@@ -93,4 +108,16 @@ export function getPublishedInsights(slugs: string[]): Insight[] {
   return slugs
     .map((slug) => INSIGHTS.find((insight) => insight.slug === slug))
     .filter((insight): insight is Insight => Boolean(insight));
+}
+
+/**
+ * Whether an article has an approved full body — and so a real
+ * /insights/[slug] page to link to. Until then, previews must show title/
+ * excerpt/author-category only, never a link or "Leer artículo" CTA
+ * (audit finding: a dead link is worse than no link). Centralized here so
+ * every preview component (and the future Sanity query) uses the same
+ * rule.
+ */
+export function isInsightPublished(insight: Insight): boolean {
+  return Boolean(insight.body);
 }

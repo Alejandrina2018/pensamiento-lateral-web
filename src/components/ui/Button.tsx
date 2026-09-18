@@ -4,8 +4,13 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 type Variant = "primary" | "secondary" | "secondary-inverted";
 
 const VARIANT_STYLES: Record<Variant, string> = {
+  // The border is a fixed-contrast boundary against a dark section (e.g.
+  // WhatsApp's button on /contacto's slate background), where the
+  // terracotta fill alone doesn't meet WCAG 1.4.11's 3:1 non-text
+  // boundary contrast. It reads as a hairline on cream (already
+  // high-contrast there) and a visible edge on slate.
   primary:
-    "bg-terracotta text-cream hover:bg-slate focus-visible:bg-slate",
+    "border border-cream/40 bg-terracotta text-cream hover:bg-slate focus-visible:bg-slate",
   secondary:
     "border border-slate text-slate hover:bg-slate hover:text-cream",
   // For use on a dark (bg-slate) section, where `secondary` would blend into the background.

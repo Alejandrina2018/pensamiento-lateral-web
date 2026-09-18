@@ -14,6 +14,10 @@ type CTASectionProps = {
    * as an intentional destination, not a leftover section. Default
    * (false) keeps every existing usage's padding unchanged. */
   spacious?: boolean;
+  /** /contacto is the only page where this CTA is the entire page — there
+   * `title` must be the page's H1. Every other usage is one section among
+   * several and keeps the default H2. */
+  headingLevel?: "h1" | "h2";
 };
 
 /** Generic closing CTA block (CLAUDE.md #37) — used by Home's Contacto and
@@ -27,7 +31,10 @@ export default function CTASection({
   id,
   inverted = false,
   spacious = false,
+  headingLevel = "h2",
 }: CTASectionProps) {
+  const Heading = headingLevel;
+
   return (
     <section id={id} className={inverted ? "bg-slate text-cream" : "bg-cream text-slate"}>
       <Container
@@ -37,7 +44,7 @@ export default function CTASection({
         {eyebrow && (
           <Eyebrow className={inverted ? "text-cream/60" : undefined}>{eyebrow}</Eyebrow>
         )}
-        <h2 className="text-display-lg font-semibold">{title}</h2>
+        <Heading className="text-display-lg font-semibold">{title}</Heading>
         {body && <p className={`max-w-(--measure-narrow) text-lg ${inverted ? "text-cream/80" : "text-slate/80"}`}>{body}</p>}
         {(primaryAction || secondaryAction) && (
           <div className="flex flex-wrap items-center gap-4 pt-2">

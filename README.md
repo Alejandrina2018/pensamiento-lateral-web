@@ -25,6 +25,24 @@ npm run lint    # ESLint
 npm run build   # build de producción + type-check
 ```
 
+## Required production configuration
+
+El sitio no tiene **ninguna vía de contacto funcional** sin estas dos
+variables configuradas en el entorno de producción (Vercel):
+
+- `NEXT_PUBLIC_WHATSAPP_NUMBER`
+- `NEXT_PUBLIC_CONTACT_EMAIL`
+
+Por diseño, si una de las dos falta, el CTA correspondiente (botón de
+WhatsApp o "Escribinos") no se renderiza — nunca como link roto, pero
+tampoco se muestra ningún canal alternativo. Si **ambas** faltan,
+`/contacto` y el bloque de contacto de Home quedan solo con título y
+texto, sin ningún botón de acción.
+
+No incluir valores reales en este repositorio. Completar `.env.local`
+(desarrollo, gitignorado) a partir de `.env.local.example`, y configurar
+las mismas variables en el proyecto de Vercel antes de lanzar.
+
 ## Estructura
 
 ```

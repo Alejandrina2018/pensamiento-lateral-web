@@ -28,7 +28,7 @@ export default function TeamMember({ author }: TeamMemberProps) {
             <span aria-hidden="true">→</span>
           </a>
         ) : (
-          <p className="mt-4 text-sm font-medium text-slate/40">LinkedIn</p>
+          <p className="mt-4 text-sm font-medium text-slate/70">LinkedIn</p>
         )}
       </div>
     </div>

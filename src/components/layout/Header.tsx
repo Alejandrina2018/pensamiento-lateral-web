@@ -4,7 +4,13 @@ import MobileMenu from "./MobileMenu";
 import { MAIN_NAV, SITE_NAME } from "@/lib/constants";
 
 /** Sticky, subtle site header (CLAUDE.md #10). No mega-menu; the
- * "Servicios" dropdown uses <details> so it works without JavaScript. */
+ * "Servicios" dropdown uses <details> so it works without JavaScript.
+ *
+ * PENDING UX DECISION (flagged by the site audit, not resolved here): here
+ * "Servicios" only opens the dropdown — its own href never navigates. In
+ * MobileMenu, "Servicios" is a plain link that navigates straight to
+ * /investigacion. Left as-is per explicit instruction; revisit together in
+ * the final navigation review. */
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-sand bg-cream/95 backdrop-blur">

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Insight } from "@/types/content";
+import { isInsightPublished } from "@/lib/data/insights";
 
 type InsightPreviewProps = {
   insight: Insight;
@@ -10,8 +11,11 @@ type InsightPreviewProps = {
 /** Title-forward editorial row (CLAUDE.md #16) — title leads, category
  * trails in small caps. Discrete numbering ties it to the same editorial
  * motif as Servicios/Método. `featured` gives the first article more
- * space/scale, never a card treatment. */
+ * space/scale, never a card treatment. The "Leer artículo" CTA only
+ * renders once the article has an approved body (a real /insights/[slug]
+ * page to send someone to) — until then this is a preview, not a link. */
 export default function InsightPreview({ insight, index, featured = false }: InsightPreviewProps) {
+  const published = isInsightPublished(insight);
   const number = String(index + 1).padStart(2, "0");
 
   return (
@@ -19,7 +23,7 @@ export default function InsightPreview({ insight, index, featured = false }: Ins
       <div className={`flex gap-5 ${featured ? "md:gap-10" : "md:gap-8"}`}>
         <span
           aria-hidden="true"
-          className={`shrink-0 font-semibold text-slate/25 ${featured ? "text-4xl md:text-6xl" : "text-2xl md:text-3xl"}`}
+          className={`shrink-0 font-semibold text-slate/45 ${featured ? "text-4xl md:text-6xl" : "text-2xl md:text-3xl"}`}
         >
           {number}
         </span>
@@ -41,13 +45,15 @@ export default function InsightPreview({ insight, index, featured = false }: Ins
           <p className="mt-4 text-sm uppercase tracking-wide text-slate/50">
             {insight.author.name} · {insight.displayCategory}
           </p>
-          <Link
-            href={`/insights/${insight.slug}`}
-            className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-terracotta hover:text-slate"
-          >
-            Leer artículo
-            <span aria-hidden="true">→</span>
-          </Link>
+          {published && (
+            <Link
+              href={`/insights/${insight.slug}`}
+              className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-terracotta hover:text-slate"
+            >
+              Leer artículo
+              <span aria-hidden="true">→</span>
+            </Link>
+          )}
         </div>
       </div>
     </article>

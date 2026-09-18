@@ -24,6 +24,11 @@ export default function CasosPage() {
 
       <section className="bg-cream">
         <Container className="pb-20 md:pb-28">
+          {/* Visually hidden — reuses the page's own "Casos" label (already
+              shown as the eyebrow above) so each case's H3 is correctly
+              subordinated to an H2 instead of jumping straight from H1
+              (audit finding); no new copy. */}
+          <h2 className="sr-only">Casos</h2>
           {CASOS_LISTING.map((caseItem, i) => (
             <CasePreview
               key={caseItem.name}

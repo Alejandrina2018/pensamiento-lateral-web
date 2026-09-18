@@ -26,7 +26,9 @@ export default function ProcessTimeline({ title, stages }: ProcessTimelineProps)
                 aria-hidden="true"
                 className="absolute -left-[calc(2rem+2px)] top-1 h-1.5 w-1.5 rounded-full bg-terracotta lg:-top-[calc(2.5rem+2px)] lg:left-0"
               />
-              <p className="text-number-lg font-semibold text-cream/25">{stage.number}</p>
+              <p aria-hidden="true" className="text-number-lg font-semibold text-cream/40">
+                {stage.number}
+              </p>
               <h3 className="mt-1 text-xl font-semibold">{stage.title}</h3>
               <p className="mt-2 max-w-(--measure-narrow) text-sm leading-relaxed text-cream/85 md:text-base">
                 {stage.description}

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Insight } from "@/types/content";
 import Container from "@/components/ui/Container";
 import Eyebrow from "@/components/ui/Eyebrow";
+import { isInsightPublished } from "@/lib/data/insights";
 
 type RelatedArticlesProps = {
   insights: Insight[];
@@ -38,9 +39,13 @@ export default function RelatedArticles({ insights }: RelatedArticlesProps) {
               className={isSingle ? "max-w-(--measure)" : "md:px-8 md:first:pl-0 md:last:pr-0"}
             >
               <h3 className={`font-semibold text-slate ${isSingle ? "text-2xl md:text-3xl" : "text-xl"}`}>
-                <Link href={`/insights/${insight.slug}`} className="hover:text-terracotta">
-                  {insight.title}
-                </Link>
+                {isInsightPublished(insight) ? (
+                  <Link href={`/insights/${insight.slug}`} className="hover:text-terracotta">
+                    {insight.title}
+                  </Link>
+                ) : (
+                  insight.title
+                )}
               </h3>
               {isSingle && (
                 <p className="mt-3 max-w-(--measure) leading-relaxed text-slate/80">{insight.excerpt}</p>

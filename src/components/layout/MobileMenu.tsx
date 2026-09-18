@@ -5,7 +5,14 @@ import Link from "next/link";
 import { MAIN_NAV, FOOTER_NAV } from "@/lib/constants";
 
 /** Mobile nav trigger + panel (CLAUDE.md #10). No hover dependency;
- * keyboard and touch operable. */
+ * keyboard and touch operable.
+ *
+ * PENDING UX DECISION (flagged by the site audit, not resolved here): here
+ * "Servicios" is a plain link that navigates straight to /investigacion —
+ * its children render as a separate list below it, never a toggle. In
+ * Header, the desktop "Servicios" only opens the dropdown and never
+ * navigates on its own. Left as-is per explicit instruction; revisit
+ * together in the final navigation review. */
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
 
@@ -17,7 +24,7 @@ export default function MobileMenu() {
         aria-controls="mobile-menu"
         aria-label={open ? "Cerrar menú" : "Abrir menú"}
         onClick={() => setOpen((v) => !v)}
-        className="flex h-10 w-10 flex-col items-center justify-center gap-1.5"
+        className="flex h-11 w-11 flex-col items-center justify-center gap-1.5"
       >
         <span
           className={`h-px w-6 bg-slate transition-transform duration-(--duration-base) ease-(--ease-editorial) ${
