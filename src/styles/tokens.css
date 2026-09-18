@@ -1,0 +1,49 @@
+/**
+ * Design tokens — Pensamiento Lateral
+ * Source of truth for brand color, type, spacing and motion values.
+ * Defined as Tailwind v4 @theme variables so every token is also
+ * available as a utility class (bg-slate, text-terracotta, etc).
+ */
+
+@theme {
+  /* Brand palette (CLAUDE.md #2) */
+  --color-slate: #2f383f;
+  --color-blue: #84b0b8;
+  --color-terracotta: #b45026;
+  --color-green: #6e8877;
+  --color-cream: #fffbf2;
+  --color-sand: #ddd5be;
+
+  /* Typography */
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+
+  /* Editorial display sizes, for hero/heading moments that need scale
+     beyond Tailwind's default text-* steps (CLAUDE.md #4, #39) */
+  --text-display-xl: clamp(2.75rem, 2rem + 3.5vw, 5.5rem);
+  --text-display-xl--line-height: 1.05;
+  --text-display-lg: clamp(2.25rem, 1.75rem + 2.5vw, 3.75rem);
+  --text-display-lg--line-height: 1.1;
+  --text-display-md: clamp(1.75rem, 1.5rem + 1.5vw, 2.5rem);
+  --text-display-md--line-height: 1.15;
+  --text-number-lg: clamp(2.75rem, 2rem + 3vw, 5rem);
+  --text-number-lg--line-height: 1;
+
+  /* Content measure: ~60-75 characters per line (CLAUDE.md #39) */
+  --measure: 68ch;
+  --measure-narrow: 52ch;
+
+  /* Container widths */
+  --container-content: 1360px;
+  --container-narrow: 760px;
+
+  /* Few, deliberate radii — avoid the rounded SaaS look (CLAUDE.md #38) */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  /* Motion */
+  --ease-editorial: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 600ms;
+}

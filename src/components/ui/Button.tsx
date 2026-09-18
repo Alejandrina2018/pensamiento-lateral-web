@@ -1,0 +1,58 @@
+import Link from "next/link";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
+
+type Variant = "primary" | "secondary";
+
+const VARIANT_STYLES: Record<Variant, string> = {
+  primary:
+    "bg-terracotta text-cream hover:bg-slate focus-visible:bg-slate",
+  secondary:
+    "border border-slate text-slate hover:bg-slate hover:text-cream",
+};
+
+const BASE_STYLES =
+  "inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 text-sm font-medium tracking-wide transition-colors duration-(--duration-base) ease-(--ease-editorial)";
+
+type ButtonOwnProps = {
+  variant?: Variant;
+  children: ReactNode;
+  className?: string;
+};
+
+type LinkProps = ButtonOwnProps & { href: string } & Omit<
+    ComponentPropsWithoutRef<typeof Link>,
+    "href" | "className" | "children"
+  >;
+
+type ButtonAsButtonProps = ButtonOwnProps & { href?: undefined } & Omit<
+    ComponentPropsWithoutRef<"button">,
+    "className" | "children"
+  >;
+
+type ButtonProps = LinkProps | ButtonAsButtonProps;
+
+/** Shared CTA primitive (CLAUDE.md #37). Renders a Link when `href` is
+ * passed, otherwise a native button. */
+export default function Button({
+  variant = "primary",
+  children,
+  className = "",
+  ...props
+}: ButtonProps) {
+  const classes = `${BASE_STYLES} ${VARIANT_STYLES[variant]} ${className}`;
+
+  if ("href" in props && props.href) {
+    const { href, ...linkProps } = props;
+    return (
+      <Link href={href} className={classes} {...linkProps}>
+        {children}
+      </Link>
+    );
+  }
+
+  return (
+    <button className={classes} {...(props as ComponentPropsWithoutRef<"button">)}>
+      {children}
+    </button>
+  );
+}
