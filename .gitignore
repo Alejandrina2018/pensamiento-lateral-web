@@ -37,6 +37,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local QA/review screenshots — not project assets
+/screenshots/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
