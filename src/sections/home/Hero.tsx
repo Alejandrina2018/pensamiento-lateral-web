@@ -3,18 +3,21 @@ import Button from "@/components/ui/Button";
 import DataPattern from "@/components/visualizations/DataPattern";
 
 // Verbatim from content/final-copy.md — Home / Hero.
+// The data pattern is bounded to the same max-width container as the text
+// (rather than the full viewport) so the gap between them stays consistent
+// instead of growing on very wide desktop screens.
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-cream">
-      <div
-        className="pointer-events-none absolute inset-y-0 right-0 w-full opacity-30 md:w-2/3 md:opacity-100"
-        aria-hidden="true"
-      >
-        <DataPattern className="h-full w-full" />
-      </div>
-
+    <section className="overflow-hidden bg-cream">
       <Container className="relative py-24 md:py-36">
-        <div className="max-w-2xl">
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 w-full opacity-30 md:w-[55%] md:opacity-80"
+          aria-hidden="true"
+        >
+          <DataPattern className="h-full w-full" />
+        </div>
+
+        <div className="relative max-w-2xl">
           <h1 className="text-display-xl font-semibold text-balance text-slate">
             Comprender para la acción.
           </h1>

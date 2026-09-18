@@ -11,12 +11,14 @@ export default function ClientCredentials() {
         </h2>
 
         {/* No logo assets yet (CLAUDE.md #8) — sober typographic placeholders. */}
-        <ul className="flex flex-wrap items-center justify-center gap-x-2 gap-y-3">
+        <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-5 md:gap-x-8">
           {CLIENTS.map((name, i) => (
-            <li key={name} className="flex items-center gap-2">
-              <span className="text-sm font-medium uppercase tracking-widest text-slate/70">{name}</span>
+            <li key={name} className="flex items-center gap-5 md:gap-8">
+              <span className="text-base font-semibold uppercase tracking-widest text-slate md:text-lg">
+                {name}
+              </span>
               {i < CLIENTS.length - 1 && (
-                <span aria-hidden="true" className="text-slate/30">
+                <span aria-hidden="true" className="text-slate/25">
                   ·
                 </span>
               )}

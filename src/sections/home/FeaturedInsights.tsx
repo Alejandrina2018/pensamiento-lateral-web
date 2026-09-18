@@ -13,8 +13,8 @@ export default function FeaturedInsights() {
         </p>
 
         <div className="mt-8">
-          {HOME_INSIGHTS.map((insight) => (
-            <InsightPreview key={insight.slug} insight={insight} />
+          {HOME_INSIGHTS.map((insight, i) => (
+            <InsightPreview key={insight.slug} insight={insight} index={i} featured={i === 0} />
           ))}
         </div>
       </Container>

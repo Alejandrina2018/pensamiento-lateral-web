@@ -24,7 +24,9 @@ export default function MethodTimeline() {
               />
               <p className="text-number-lg font-semibold text-cream/25">{stage.number}</p>
               <h3 className="mt-1 text-xl font-semibold">{stage.title}</h3>
-              <p className="mt-2 max-w-(--measure-narrow) text-sm text-cream/70">{stage.description}</p>
+              <p className="mt-2 max-w-(--measure-narrow) text-sm leading-relaxed text-cream/85 md:text-base">
+                {stage.description}
+              </p>
             </li>
           ))}
         </ol>

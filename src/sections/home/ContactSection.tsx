@@ -13,7 +13,7 @@ export default function ContactSection() {
       inverted
       title="¿Hablamos?"
       body="Contanos cómo podemos ayudar a tu equipo."
-      primaryAction={<WhatsAppButton label="WhatsApp" />}
+      primaryAction={<WhatsAppButton label="WhatsApp" className="px-9 py-4 text-base md:text-lg" />}
       secondaryAction={
         email ? (
           <Button href={`mailto:${email}`} variant="secondary-inverted">

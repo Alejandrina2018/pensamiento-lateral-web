@@ -11,16 +11,20 @@ type CasePreviewProps = {
 export default function CasePreview({ caseItem, reversed = false }: CasePreviewProps) {
   return (
     <div
-      className={`grid items-center gap-8 border-t border-sand py-12 md:grid-cols-2 md:gap-16 ${
+      className={`grid items-center gap-8 border-t border-sand py-12 md:grid-cols-12 md:gap-10 ${
         reversed ? "md:[&>*:first-child]:order-2" : ""
       }`}
     >
-      <CaseImagePlaceholder label={caseItem.name} />
+      <div className="md:col-span-5">
+        <CaseImagePlaceholder label={caseItem.name} />
+      </div>
 
-      <div className="flex flex-col gap-4">
+      {/* Kept wider than the image (7/12 vs 5/12) so a real photo, map, or
+          dashboard fragment never outweighs the headline (CLAUDE.md #6). */}
+      <div className="flex flex-col gap-4 md:col-span-7">
         <h3 className="text-2xl font-semibold text-slate">{caseItem.name}</h3>
         <p className="text-display-md font-semibold text-slate">{caseItem.tagline}</p>
-        {caseItem.body && <p className="max-w-(--measure) text-slate/80">{caseItem.body}</p>}
+        {caseItem.body && <p className="max-w-(--measure) leading-relaxed text-slate/80">{caseItem.body}</p>}
         <Link
           href={caseItem.href}
           className="inline-flex w-fit items-center gap-2 text-sm font-medium text-terracotta hover:text-slate"

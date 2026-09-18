@@ -3,25 +3,53 @@ import type { Insight } from "@/types/content";
 
 type InsightPreviewProps = {
   insight: Insight;
+  index: number;
+  featured?: boolean;
 };
 
 /** Title-forward editorial row (CLAUDE.md #16) — title leads, category
- * trails in small caps. No thumbnail: typography and space carry it. */
-export default function InsightPreview({ insight }: InsightPreviewProps) {
+ * trails in small caps. Discrete numbering ties it to the same editorial
+ * motif as Servicios/Método. `featured` gives the first article more
+ * space/scale, never a card treatment. */
+export default function InsightPreview({ insight, index, featured = false }: InsightPreviewProps) {
+  const number = String(index + 1).padStart(2, "0");
+
   return (
-    <article className="border-t border-sand py-10">
-      <h3 className="text-2xl font-semibold text-slate md:text-3xl">{insight.title}</h3>
-      <p className="mt-3 max-w-(--measure) text-slate/80">{insight.excerpt}</p>
-      <p className="mt-4 text-sm uppercase tracking-wide text-slate/50">
-        {insight.author.name} · {insight.displayCategory}
-      </p>
-      <Link
-        href={`/insights/${insight.slug}`}
-        className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-terracotta hover:text-slate"
-      >
-        Leer artículo
-        <span aria-hidden="true">→</span>
-      </Link>
+    <article className={`border-t border-sand ${featured ? "py-12 md:py-16" : "py-8 md:py-10"}`}>
+      <div className={`flex gap-5 ${featured ? "md:gap-10" : "md:gap-8"}`}>
+        <span
+          aria-hidden="true"
+          className={`shrink-0 font-semibold text-slate/15 ${featured ? "text-4xl md:text-6xl" : "text-2xl md:text-3xl"}`}
+        >
+          {number}
+        </span>
+        <div className="min-w-0 flex-1">
+          <h3
+            className={`font-semibold text-balance text-slate ${
+              featured ? "text-3xl md:text-5xl" : "text-xl md:text-2xl"
+            }`}
+          >
+            {insight.title}
+          </h3>
+          <p
+            className={`mt-3 max-w-(--measure) leading-relaxed text-slate/80 ${
+              featured ? "text-lg" : "text-base"
+            }`}
+          >
+            {insight.excerpt}
+          </p>
+          <p className="mt-4 text-sm uppercase tracking-wide text-slate/50">
+            {insight.author.name} · {insight.displayCategory}
+          </p>
+          <Link
+            href={`/insights/${insight.slug}`}
+            className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-terracotta hover:text-slate"
+          >
+            Leer artículo
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      </div>
     </article>
   );
 }
