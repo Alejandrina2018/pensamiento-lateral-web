@@ -29,12 +29,11 @@ export default function CapabilityList({ items, columns = 2, variant = "plain" }
     );
   }
 
+  const railClasses = "border-l border-green/30 pt-2 pl-6 md:pl-10";
+  const plainClasses = "border-t border-sand pt-10";
+
   return (
-    <div
-      className={`border-t border-sand pt-10 md:columns-2 md:gap-10 ${
-        variant === "rail" ? "border-l border-sand pl-6 md:pl-10" : ""
-      }`}
-    >
+    <div className={`md:columns-2 md:gap-10 ${variant === "rail" ? railClasses : plainClasses}`}>
       {items.map((item) => (
         <div key={item.name} className="mb-10 flex flex-col gap-3 break-inside-avoid-column">
           <h3 className="text-lg font-semibold text-slate">{item.name}</h3>

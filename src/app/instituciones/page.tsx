@@ -42,6 +42,7 @@ export default function InstitucionesPage() {
         ctaLabel={INSTITUCIONES_HERO.ctaLabel}
         ctaHref={INSTITUCIONES_HERO.ctaHref}
         visual={<DataPattern variant="territory" className="h-full w-full" />}
+        columnWidthClass="max-w-2xl md:max-w-4xl"
       />
 
       <section className="bg-sand/40">

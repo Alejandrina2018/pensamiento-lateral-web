@@ -96,8 +96,8 @@ export default function WordConnections({ words, layout, accent, className = "" 
           pathLength={1}
           className="pl-draw"
           stroke={stroke}
-          strokeOpacity={0.4}
-          strokeWidth={1}
+          strokeOpacity={0.2}
+          strokeWidth={0.75}
           style={{ animationDelay: `${150 + i * 90}ms` }}
         />
       ))}
