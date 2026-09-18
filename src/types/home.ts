@@ -31,12 +31,14 @@ export interface Audience {
   accent: "terracotta" | "green";
 }
 
-/** A Home "Casos destacados" entry — lighter than the full CaseStudy page
- * shape, and not always 1:1 with a single case (see "Sector público"). */
+/** A "Casos destacados" preview entry (used by Home and by each service
+ * page's single "Caso destacado") — lighter than the full CaseStudy page
+ * shape, and not always 1:1 with a single case (see Home's "Sector
+ * público"). `body` takes a single string or several paragraphs. */
 export interface HomeCaseHighlight {
   name: string;
   tagline: string;
-  body?: string;
+  body?: string | string[];
   ctaLabel: string;
   href: string;
 }

@@ -24,7 +24,11 @@ export default function CasePreview({ caseItem, reversed = false }: CasePreviewP
       <div className="flex flex-col gap-4 md:col-span-7">
         <h3 className="text-2xl font-semibold text-slate">{caseItem.name}</h3>
         <p className="text-display-md font-semibold text-slate">{caseItem.tagline}</p>
-        {caseItem.body && <p className="max-w-(--measure) leading-relaxed text-slate/80">{caseItem.body}</p>}
+        {(Array.isArray(caseItem.body) ? caseItem.body : caseItem.body ? [caseItem.body] : []).map((paragraph, i) => (
+          <p key={i} className="max-w-(--measure) leading-relaxed text-slate/80">
+            {paragraph}
+          </p>
+        ))}
         <Link
           href={caseItem.href}
           className="inline-flex w-fit items-center gap-2 text-sm font-medium text-terracotta hover:text-slate"
