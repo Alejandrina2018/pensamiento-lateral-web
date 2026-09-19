@@ -14,10 +14,10 @@ import {
   QUIENES_SOMOS_PRESS,
 } from "@/lib/data/quienes-somos";
 import { sanityFetch } from "@/sanity/lib/fetch";
-import { PRESS_ITEMS_QUERY } from "@/sanity/lib/queries";
+import { AUTHORS_QUERY, PRESS_ITEMS_QUERY } from "@/sanity/lib/queries";
 import { CACHE_TAGS } from "@/sanity/lib/tags";
 import { formatPublicationMonth } from "@/sanity/lib/formatPublicationMonth";
-import type { PressItemResult } from "@/sanity/lib/types";
+import type { PressItemResult, SanityAuthor } from "@/sanity/lib/types";
 
 // TODO: dedicated SEO copy is pending (content/final-copy.md's "CONTENIDO
 // PENDIENTE") — description reuses the approved opening paragraph.
@@ -27,12 +27,16 @@ export const metadata: Metadata = {
 };
 
 export default async function QuienesSomosPage() {
-  // PL en la prensa — first content cut over to Sanity (published
+  // PL en la prensa and the team — cut over to Sanity (published
   // perspective only). Everything else on this page is still the
   // approved static copy from src/lib/data/quienes-somos.ts.
   const pressItems = await sanityFetch<PressItemResult[]>({
     query: PRESS_ITEMS_QUERY,
     tags: [CACHE_TAGS.press],
+  });
+  const authors = await sanityFetch<SanityAuthor[]>({
+    query: AUTHORS_QUERY,
+    tags: [CACHE_TAGS.authors],
   });
 
   return (
@@ -91,8 +95,16 @@ export default async function QuienesSomosPage() {
           </h3>
           <p className="mt-6 max-w-(--measure) text-lg leading-relaxed text-slate/80">{QUIENES_SOMOS_TEAM.intro}</p>
           <div className="mt-12 grid gap-12 md:grid-cols-2 md:gap-16">
-            {QUIENES_SOMOS_TEAM.members.map((author) => (
-              <TeamMember key={author.name} author={author} />
+            {authors.map((author) => (
+              <TeamMember
+                key={author._id}
+                author={{
+                  name: author.name,
+                  role: author.role,
+                  bio: author.bio,
+                  linkedin: author.linkedin,
+                }}
+              />
             ))}
           </div>
         </Container>
