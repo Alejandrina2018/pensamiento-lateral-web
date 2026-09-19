@@ -137,11 +137,10 @@ const caseStudyDocs: IdentifiedSanityDocumentStub[] = CASE_STUDIES.map((caseStud
 
 // --- Press items -----------------------------------------------------
 // final-copy.md only gives "Septiembre 2026" (month + year, no day) —
-// stored as the 1st of that month since the `date` field needs a real
-// date value. Flagged in the migration report; the frontend will need
-// to format it back to "Septiembre 2026" style, not a numeric date,
-// once this type cuts over.
-function monthYearToIsoDate(value: string): string {
+// converted to the schema's "YYYY-MM" (pressItem.publicationMonth),
+// never a fabricated day-of-month. There is no `date` field on this
+// document type at all; nothing here should ever produce one.
+function monthYearToYearMonth(value: string): string {
   const months: Record<string, string> = {
     enero: "01", febrero: "02", marzo: "03", abril: "04", mayo: "05", junio: "06",
     julio: "07", agosto: "08", septiembre: "09", octubre: "10", noviembre: "11", diciembre: "12",
@@ -149,7 +148,7 @@ function monthYearToIsoDate(value: string): string {
   const [monthName, year] = value.toLowerCase().split(" ");
   const month = months[monthName];
   if (!month || !year) throw new Error(`Cannot parse press date "${value}" — expected "<mes> <año>"`);
-  return `${year}-${month}-01`;
+  return `${year}-${month}`;
 }
 
 const PRESS_ITEMS: PressItem[] = QUIENES_SOMOS_PRESS.items;
@@ -159,7 +158,7 @@ const pressItemDocs: IdentifiedSanityDocumentStub[] = PRESS_ITEMS.map((item, ind
   _type: "pressItem",
   title: item.title,
   publication: item.publication,
-  date: monthYearToIsoDate(item.date),
+  publicationMonth: monthYearToYearMonth(item.date),
   excerpt: item.excerpt,
   url: item.externalUrl,
   // order preserved exactly as listed in final-copy.md.
