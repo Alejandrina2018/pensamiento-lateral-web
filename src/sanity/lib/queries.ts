@@ -22,15 +22,26 @@ const INSIGHT_LIST_PROJECTION = groq`{
   "hasArticle": defined(body) && count(body) > 0 && defined(slug.current)
 }`;
 
-/** /insights — every published Insight, teaser-only ones included. */
+/**
+ * /insights — every published Insight, teaser-only ones included.
+ *
+ * Ordering note: Insight has no explicit `order` field (unlike Author/
+ * CaseStudy/PressItem, which each have one for exactly this reason).
+ * None of the 7 migrated documents have `publicationDate` set either, so
+ * this falls back to `_createdAt asc` — the order documents were written
+ * in the single migration transaction, which mirrors the approved
+ * source array order in lib/data/insights.ts more closely than `desc`
+ * would. This is a best-effort approximation, not a guarantee — flagged
+ * to the user rather than silently assumed correct.
+ */
 export const INSIGHTS_QUERY = groq`
-  *[_type == "insight"] | order(coalesce(publicationDate, _createdAt) desc)
+  *[_type == "insight"] | order(coalesce(publicationDate, _createdAt) asc)
   ${INSIGHT_LIST_PROJECTION}
 `;
 
-/** /insights?categoria=$categoria — same list, filtered server-side. */
+/** /insights?categoria=$categoria — same list and ordering, filtered server-side. */
 export const INSIGHTS_BY_CATEGORY_QUERY = groq`
-  *[_type == "insight" && $categoria in filterCategories] | order(coalesce(publicationDate, _createdAt) desc)
+  *[_type == "insight" && $categoria in filterCategories] | order(coalesce(publicationDate, _createdAt) asc)
   ${INSIGHT_LIST_PROJECTION}
 `;
 

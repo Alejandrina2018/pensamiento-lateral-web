@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import InsightPreview from "@/components/insight/InsightPreview";
-import { INSIGHTS } from "@/lib/data/insights";
-import type { InsightFilterCategory } from "@/types/content";
+import { sanityFetch } from "@/sanity/lib/fetch";
+import { INSIGHTS_QUERY, INSIGHTS_BY_CATEGORY_QUERY } from "@/sanity/lib/queries";
+import { CACHE_TAGS } from "@/sanity/lib/tags";
+import type { InsightListItem } from "@/sanity/lib/types";
+import type { Insight, InsightFilterCategory } from "@/types/content";
 
 // Verbatim from content/final-copy.md — <!-- ROUTE: /insights -->
 const INTRO = "Análisis, reflexiones y aprendizajes que surgen de investigaciones propias y del análisis de tendencias.";
@@ -27,6 +30,29 @@ type PageProps = {
   searchParams: Promise<{ categoria?: string }>;
 };
 
+// Sanity's SanityAuthor list projection for Insight only selects name/role/
+// image (see INSIGHT_LIST_PROJECTION) — bio isn't fetched since InsightPreview
+// never displays it here; the Insight/Author types require it, so it's
+// filled with an empty string at this mapping boundary rather than fetched
+// for nothing.
+function toInsight(item: InsightListItem): Insight {
+  return {
+    title: item.title,
+    slug: item.slug ?? "",
+    excerpt: item.excerpt,
+    // Never set from this teaser-listing query — see CLAUDE.md #12: none of
+    // the 7 migrated Insights have an approved body yet, so `body` stays
+    // undefined and isInsightPublished() correctly withholds the "Leer
+    // artículo" link/CTA and any /insights/[slug] reference.
+    body: undefined,
+    author: { name: item.author.name, role: item.author.role, bio: "" },
+    displayCategory: item.displayCategory,
+    // The schema's filterCategories options list is the same closed set as
+    // InsightFilterCategory (see CLAUDE.md #16 / insight.ts's FILTER_CATEGORIES).
+    filterCategories: item.filterCategories as InsightFilterCategory[],
+  };
+}
+
 // Server-rendered filtering (a plain link per filter, no client JS) keeps
 // every article's full content crawlable regardless of which filter is
 // selected — consistent with the rest of the site's minimal-JS approach.
@@ -34,8 +60,11 @@ export default async function InsightsPage({ searchParams }: PageProps) {
   const { categoria } = await searchParams;
   const active = FILTERS.some((f) => f.value === categoria) ? (categoria as InsightFilterCategory | "Todos") : "Todos";
 
-  const filtered =
-    active === "Todos" ? INSIGHTS : INSIGHTS.filter((insight) => insight.filterCategories.includes(active));
+  const items = await sanityFetch<InsightListItem[]>(
+    active === "Todos"
+      ? { query: INSIGHTS_QUERY, tags: [CACHE_TAGS.insights] }
+      : { query: INSIGHTS_BY_CATEGORY_QUERY, params: { categoria: active }, tags: [CACHE_TAGS.insights] },
+  );
 
   return (
     <>
@@ -72,8 +101,8 @@ export default async function InsightsPage({ searchParams }: PageProps) {
               of jumping straight from H1; no new copy. */}
           <h2 className="sr-only">Insights</h2>
           <div className="mt-4">
-            {filtered.map((insight, i) => (
-              <InsightPreview key={insight.slug} insight={insight} index={i} featured={i === 0} />
+            {items.map((item, i) => (
+              <InsightPreview key={item._id} insight={toInsight(item)} index={i} featured={i === 0} />
             ))}
           </div>
         </Container>
