@@ -11,6 +11,7 @@ import { resolvePreviewPath } from "@/sanity/lib/previewUrl";
 export default defineConfig({
   name: "pensamiento-lateral",
   title: "Pensamiento Lateral",
+  basePath: "/studio",
 
   projectId: projectId ?? "",
   dataset: dataset ?? "production",
