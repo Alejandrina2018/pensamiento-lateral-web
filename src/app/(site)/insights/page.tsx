@@ -6,7 +6,7 @@ import { sanityFetch } from "@/sanity/lib/fetch";
 import { INSIGHTS_QUERY, INSIGHTS_BY_CATEGORY_QUERY } from "@/sanity/lib/queries";
 import { CACHE_TAGS } from "@/sanity/lib/tags";
 import type { InsightListItem } from "@/sanity/lib/types";
-import type { Insight, InsightFilterCategory } from "@/types/content";
+import type { InsightFilterCategory } from "@/types/content";
 
 // Verbatim from content/final-copy.md — <!-- ROUTE: /insights -->
 const INTRO = "Análisis, reflexiones y aprendizajes que surgen de investigaciones propias y del análisis de tendencias.";
@@ -30,12 +30,11 @@ type PageProps = {
   searchParams: Promise<{ categoria?: string }>;
 };
 
-// Sanity's SanityAuthor list projection for Insight only selects name/role/
-// image (see INSIGHT_LIST_PROJECTION) — bio isn't fetched since InsightPreview
-// never displays it here; the Insight/Author types require it, so it's
-// filled with an empty string at this mapping boundary rather than fetched
-// for nothing.
-function toInsight(item: InsightListItem): Insight {
+// InsightPreview only reads title/slug/excerpt/body/displayCategory and
+// author.name/author.role — its prop type reflects exactly that (see
+// InsightPreviewData in InsightPreview.tsx), so this mapping doesn't need
+// to fabricate a `bio` the list query never fetches.
+function toInsightPreviewData(item: InsightListItem) {
   return {
     title: item.title,
     slug: item.slug ?? "",
@@ -45,11 +44,8 @@ function toInsight(item: InsightListItem): Insight {
     // undefined and isInsightPublished() correctly withholds the "Leer
     // artículo" link/CTA and any /insights/[slug] reference.
     body: undefined,
-    author: { name: item.author.name, role: item.author.role, bio: "" },
+    author: { name: item.author.name, role: item.author.role },
     displayCategory: item.displayCategory,
-    // The schema's filterCategories options list is the same closed set as
-    // InsightFilterCategory (see CLAUDE.md #16 / insight.ts's FILTER_CATEGORIES).
-    filterCategories: item.filterCategories as InsightFilterCategory[],
   };
 }
 
@@ -102,7 +98,7 @@ export default async function InsightsPage({ searchParams }: PageProps) {
           <h2 className="sr-only">Insights</h2>
           <div className="mt-4">
             {items.map((item, i) => (
-              <InsightPreview key={item._id} insight={toInsight(item)} index={i} featured={i === 0} />
+              <InsightPreview key={item._id} insight={toInsightPreviewData(item)} index={i} featured={i === 0} />
             ))}
           </div>
         </Container>

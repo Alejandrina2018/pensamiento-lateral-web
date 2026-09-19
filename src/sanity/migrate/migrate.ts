@@ -80,7 +80,12 @@ function authorRefByName(name: string) {
 // --- Insights ----------------------------------------------------------
 // None have `body` yet — every migrated Insight starts as a teaser,
 // exactly matching what's live today (point 4).
-const insightDocs: IdentifiedSanityDocumentStub[] = INSIGHTS.map((insight) => ({
+// `order` (1-7) preserved exactly as the approved array order in
+// lib/data/insights.ts — the editorial order must not depend on
+// `_createdAt`/`publicationDate` (neither is reliable: `_createdAt` isn't
+// guaranteed to reflect array order across a batched transaction, and
+// `publicationDate` is unset on every one of these 7 documents).
+const insightDocs: IdentifiedSanityDocumentStub[] = INSIGHTS.map((insight, index) => ({
   _id: documentId.insight(insight.slug),
   _type: "insight",
   title: insight.title,
@@ -89,6 +94,7 @@ const insightDocs: IdentifiedSanityDocumentStub[] = INSIGHTS.map((insight) => ({
   author: authorRefByName(insight.author.name),
   displayCategory: insight.displayCategory,
   filterCategories: insight.filterCategories,
+  order: index + 1,
   // body intentionally omitted — no approved article bodies exist yet.
 }));
 

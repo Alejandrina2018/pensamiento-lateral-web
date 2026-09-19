@@ -32,7 +32,10 @@ export type InsightListItem = {
   displayCategory: string;
   filterCategories: string[];
   featured: boolean;
+  /** Informative only — never the sort key (see INSIGHTS_QUERY). */
   publicationDate: string | null;
+  /** The listing's sort key (order asc) — mirrors Author/CaseStudy/PressItem. */
+  order: number;
   author: Pick<SanityAuthor, "name" | "role" | "image">;
   /** published && defined(body) && defined(slug.current) — computed in
    * the query itself (see INSIGHT_HAS_ARTICLE_PROJECTION), never stored. */

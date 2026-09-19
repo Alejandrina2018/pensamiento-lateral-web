@@ -88,12 +88,31 @@ export default defineType({
       options: { list: FILTER_CATEGORIES },
       validation: (Rule) => Rule.required().min(1).unique(),
     }),
-    defineField({ name: "publicationDate", type: "datetime", group: "content" }),
+    defineField({
+      name: "publicationDate",
+      title: "Fecha de publicación",
+      type: "datetime",
+      group: "content",
+      description: "Informativo únicamente — no determina el orden del listado en /insights (ver campo Orden).",
+    }),
     defineField({ name: "featured", type: "boolean", initialValue: false, group: "content" }),
     defineField({ name: "featuredImage", title: "Imagen destacada", type: "imageWithAlt", group: "content" }),
+    defineField({
+      name: "order",
+      title: "Orden",
+      type: "number",
+      group: "content",
+      description: "Posición en el listado de /insights. No depende de la fecha de creación ni de publicationDate.",
+      validation: (Rule) => Rule.required().integer().positive(),
+    }),
     ...seoFields,
   ],
   orderings: [
+    {
+      title: "Orden",
+      name: "orderAsc",
+      by: [{ field: "order", direction: "asc" }],
+    },
     {
       title: "Fecha de publicación",
       name: "publicationDateDesc",

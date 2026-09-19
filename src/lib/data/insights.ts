@@ -115,9 +115,11 @@ export function getPublishedInsights(slugs: string[]): Insight[] {
  * /insights/[slug] page to link to. Until then, previews must show title/
  * excerpt/author-category only, never a link or "Leer artículo" CTA
  * (audit finding: a dead link is worse than no link). Centralized here so
- * every preview component (and the future Sanity query) uses the same
- * rule.
+ * every preview component (and the Sanity-backed listing) uses the same
+ * rule. Only needs `body`, so it takes any object that has one — not the
+ * full `Insight` shape — letting callers pass narrower view models (e.g.
+ * a Sanity listing item) without fabricating unused fields.
  */
-export function isInsightPublished(insight: Insight): boolean {
+export function isInsightPublished(insight: { body?: string }): boolean {
   return Boolean(insight.body);
 }

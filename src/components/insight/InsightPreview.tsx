@@ -1,9 +1,23 @@
 import Link from "next/link";
-import type { Insight } from "@/types/content";
+import type { Author } from "@/types/content";
 import { isInsightPublished } from "@/lib/data/insights";
 
+/** Only what this component actually reads — title, excerpt, category,
+ * and author name/role. A full `Insight` (with `bio`, `filterCategories`,
+ * etc.) satisfies this structurally, so Home's static data still works
+ * unchanged; a Sanity listing item doesn't need to fabricate a `bio` it
+ * never fetched just to satisfy a wider type. */
+type InsightPreviewData = {
+  title: string;
+  slug: string;
+  excerpt: string;
+  body?: string;
+  author: Pick<Author, "name" | "role">;
+  displayCategory: string;
+};
+
 type InsightPreviewProps = {
-  insight: Insight;
+  insight: InsightPreviewData;
   index: number;
   featured?: boolean;
 };
