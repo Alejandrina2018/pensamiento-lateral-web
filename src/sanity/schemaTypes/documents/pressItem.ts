@@ -12,7 +12,13 @@ export default defineType({
   fields: [
     defineField({ name: "title", type: "string", validation: (Rule) => Rule.required() }),
     defineField({ name: "publication", title: "Medio", type: "string", validation: (Rule) => Rule.required() }),
-    defineField({ name: "date", type: "date", validation: (Rule) => Rule.required() }),
+    defineField({
+      name: "publicationMonth",
+      title: "Mes de publicación",
+      type: "string",
+      description: 'Formato YYYY-MM (ej. "2026-09") — el copy aprobado solo da mes y año, nunca un día inventado.',
+      validation: (Rule) => Rule.required().regex(/^\d{4}-(0[1-9]|1[0-2])$/, { name: "YYYY-MM" }),
+    }),
     defineField({ name: "excerpt", title: "Bajada", type: "text", rows: 3, validation: (Rule) => Rule.required() }),
     defineField({
       name: "url",

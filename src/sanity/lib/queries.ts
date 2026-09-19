@@ -124,9 +124,10 @@ export const AUTHORS_QUERY = groq`
   }
 `;
 
-/** /quienes-somos → PL en la prensa */
+/** /quienes-somos → PL en la prensa. Ordered by the explicit `order`
+ * field (never creation order — point 7 of the Press cutover). */
 export const PRESS_ITEMS_QUERY = groq`
   *[_type == "pressItem"] | order(order asc){
-    _id, title, publication, date, excerpt, url, logo, order
+    _id, title, publication, publicationMonth, excerpt, url, logo, order
   }
 `;

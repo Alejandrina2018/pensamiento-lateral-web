@@ -13,6 +13,11 @@ import {
   QUIENES_SOMOS_TEAM,
   QUIENES_SOMOS_PRESS,
 } from "@/lib/data/quienes-somos";
+import { sanityFetch } from "@/sanity/lib/fetch";
+import { PRESS_ITEMS_QUERY } from "@/sanity/lib/queries";
+import { CACHE_TAGS } from "@/sanity/lib/tags";
+import { formatPublicationMonth } from "@/sanity/lib/formatPublicationMonth";
+import type { PressItemResult } from "@/sanity/lib/types";
 
 // TODO: dedicated SEO copy is pending (content/final-copy.md's "CONTENIDO
 // PENDIENTE") — description reuses the approved opening paragraph.
@@ -21,7 +26,15 @@ export const metadata: Metadata = {
   description: QUIENES_SOMOS_INTRO.paragraphs[0],
 };
 
-export default function QuienesSomosPage() {
+export default async function QuienesSomosPage() {
+  // PL en la prensa — first content cut over to Sanity (published
+  // perspective only). Everything else on this page is still the
+  // approved static copy from src/lib/data/quienes-somos.ts.
+  const pressItems = await sanityFetch<PressItemResult[]>({
+    query: PRESS_ITEMS_QUERY,
+    tags: [CACHE_TAGS.press],
+  });
+
   return (
     <>
       <section className="bg-cream">
@@ -90,8 +103,17 @@ export default function QuienesSomosPage() {
           <Eyebrow as="h2">{QUIENES_SOMOS_PRESS.title}</Eyebrow>
           <h3 className="mt-4 text-display-md font-semibold text-slate">{QUIENES_SOMOS_PRESS.subtitle}</h3>
           <div className="mt-10">
-            {QUIENES_SOMOS_PRESS.items.map((item) => (
-              <PressItem key={item.title} item={item} />
+            {pressItems.map((item) => (
+              <PressItem
+                key={item._id}
+                item={{
+                  title: item.title,
+                  publication: item.publication,
+                  date: formatPublicationMonth(item.publicationMonth),
+                  excerpt: item.excerpt,
+                  externalUrl: item.url,
+                }}
+              />
             ))}
           </div>
           {/* allPressCtaLabel stays in the data for when a /prensa

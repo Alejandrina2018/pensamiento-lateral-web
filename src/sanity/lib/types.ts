@@ -82,7 +82,9 @@ export type PressItemResult = {
   _id: string;
   title: string;
   publication: string;
-  date: string;
+  /** YYYY-MM — format for display with formatPublicationMonth(), never
+   * shown raw (no invented day). */
+  publicationMonth: string;
   excerpt: string;
   url?: string;
   logo?: SanityImage;
