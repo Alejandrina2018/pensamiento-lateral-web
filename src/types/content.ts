@@ -8,7 +8,10 @@ export interface Author {
   name: string;
   role: string;
   bio: string;
-  image?: string;
+  /** Resolved, ready-to-render image — never a raw Sanity asset
+   * reference. Optional: TeamMember falls back to the usual placeholder
+   * when absent. */
+  image?: { src: string; alt: string };
   linkedin?: string;
 }
 

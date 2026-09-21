@@ -17,6 +17,7 @@ import { sanityFetch } from "@/sanity/lib/fetch";
 import { AUTHORS_QUERY, PRESS_ITEMS_QUERY } from "@/sanity/lib/queries";
 import { CACHE_TAGS } from "@/sanity/lib/tags";
 import { formatPublicationMonth } from "@/sanity/lib/formatPublicationMonth";
+import { urlFor } from "@/sanity/lib/image";
 import type { PressItemResult, SanityAuthor } from "@/sanity/lib/types";
 
 // TODO: dedicated SEO copy is pending (content/final-copy.md's "CONTENIDO
@@ -25,6 +26,19 @@ export const metadata: Metadata = {
   title: "Quiénes somos — Pensamiento Lateral",
   description: QUIENES_SOMOS_INTRO.paragraphs[0],
 };
+
+/** Resolves a Sanity author's `image` (asset + optional hotspot) into a
+ * ready-to-render URL, cropped to the 4:3 box TeamMember actually uses —
+ * hotspot-aware, so a tall portrait upload still keeps the face in frame.
+ * Returns undefined when no image asset is attached yet, so TeamMember
+ * falls back to its usual placeholder instead of breaking. */
+function toAuthorImage(author: SanityAuthor): { src: string; alt: string } | undefined {
+  if (!author.image?.asset) return undefined;
+  return {
+    src: urlFor(author.image).width(1200).height(900).fit("crop").url(),
+    alt: author.image.alt || `Foto de ${author.name}`,
+  };
+}
 
 export default async function QuienesSomosPage() {
   // PL en la prensa and the team — cut over to Sanity (published
@@ -75,15 +89,27 @@ export default async function QuienesSomosPage() {
           <h2 className="max-w-3xl text-display-md font-semibold text-balance text-slate">
             {QUIENES_SOMOS_EVOLUTION.title}
           </h2>
-          <div className="mt-8 flex max-w-(--measure) flex-col gap-6 text-lg leading-relaxed text-slate/80">
-            {QUIENES_SOMOS_EVOLUTION.paragraphs.map((paragraph, i) => (
-              <RichText key={i} text={paragraph} />
-            ))}
+          {/* Two columns from md: up — same Container/width system as
+              every other section on this page (never narrower), but the
+              paragraphs stay at a comfortable reading measure instead of
+              stretching edge to edge: the closing statement takes the
+              rest of the width as a large editorial callout beside them,
+              not more line-length. Stacks single-column on mobile, same
+              reading order as before (paragraphs, then the closing
+              line). */}
+          <div className="mt-10 grid gap-10 md:grid-cols-12 md:gap-0">
+            <div className="flex flex-col gap-6 text-lg leading-relaxed text-slate/80 md:col-span-7 md:pr-12">
+              {QUIENES_SOMOS_EVOLUTION.paragraphs.map((paragraph, i) => (
+                <RichText key={i} text={paragraph} />
+              ))}
+            </div>
+            <div className="md:col-span-5 md:border-l md:border-slate/15 md:pl-12">
+              <p className="text-lg font-medium text-slate/70">{QUIENES_SOMOS_EVOLUTION.leadIn}</p>
+              <p className="mt-4 text-display-lg font-semibold text-balance text-slate">
+                {QUIENES_SOMOS_EVOLUTION.closingStatement}
+              </p>
+            </div>
           </div>
-          <p className="mt-12 text-lg font-medium text-slate/70">{QUIENES_SOMOS_EVOLUTION.leadIn}</p>
-          <p className="mt-4 max-w-4xl text-display-xl font-semibold text-balance text-slate">
-            {QUIENES_SOMOS_EVOLUTION.closingStatement}
-          </p>
         </Container>
       </section>
 
@@ -103,6 +129,7 @@ export default async function QuienesSomosPage() {
                   role: author.role,
                   bio: author.bio,
                   linkedin: author.linkedin,
+                  image: toAuthorImage(author),
                 }}
               />
             ))}
