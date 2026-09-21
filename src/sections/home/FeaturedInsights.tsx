@@ -1,9 +1,21 @@
 import Container from "@/components/ui/Container";
 import InsightPreview from "@/components/insight/InsightPreview";
-import { HOME_INSIGHTS } from "@/lib/data/insights";
+import { sanityFetch } from "@/sanity/lib/fetch";
+import { HOME_INSIGHTS_QUERY } from "@/sanity/lib/queries";
+import { CACHE_TAGS } from "@/sanity/lib/tags";
+import type { InsightListItem } from "@/sanity/lib/types";
+import { toInsightPreviewData } from "@/sanity/lib/insightPreview";
 
 // Verbatim from content/final-copy.md — Home / Insights (first 3 of 7).
-export default function FeaturedInsights() {
+// The 3 shown are the first 3 by editorial order (order asc [0...3]) —
+// the same selection HOME_INSIGHTS used to hardcode as a literal slice of
+// the first 3 entries of INSIGHTS, now computed from Sanity instead.
+export default async function FeaturedInsights() {
+  const items = await sanityFetch<InsightListItem[]>({
+    query: HOME_INSIGHTS_QUERY,
+    tags: [CACHE_TAGS.insights],
+  });
+
   return (
     <section id="insights" className="bg-cream">
       <Container className="py-24 md:py-32">
@@ -13,8 +25,8 @@ export default function FeaturedInsights() {
         </p>
 
         <div className="mt-8">
-          {HOME_INSIGHTS.map((insight, i) => (
-            <InsightPreview key={insight.slug} insight={insight} index={i} featured={i === 0} />
+          {items.map((item, i) => (
+            <InsightPreview key={item._id} insight={toInsightPreviewData(item)} index={i} featured={i === 0} />
           ))}
         </div>
       </Container>

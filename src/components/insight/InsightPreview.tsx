@@ -7,7 +7,7 @@ import { isInsightPublished } from "@/lib/data/insights";
  * etc.) satisfies this structurally, so Home's static data still works
  * unchanged; a Sanity listing item doesn't need to fabricate a `bio` it
  * never fetched just to satisfy a wider type. */
-type InsightPreviewData = {
+export type InsightPreviewData = {
   title: string;
   slug: string;
   excerpt: string;

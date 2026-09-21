@@ -10,7 +10,7 @@ import Container from "@/components/ui/Container";
 import Eyebrow from "@/components/ui/Eyebrow";
 import TagList from "@/components/ui/TagList";
 import WordConnections from "@/components/visualizations/WordConnections";
-import { getPublishedInsights } from "@/lib/data/insights";
+import { getRelatedInsights } from "@/sanity/lib/relatedInsights";
 import {
   EMPRESAS_HERO,
   EMPRESAS_HERO_WORDS,
@@ -32,8 +32,8 @@ export const metadata: Metadata = {
   description: EMPRESAS_HERO.body[0],
 };
 
-export default function EmpresasPage() {
-  const relatedInsights = getPublishedInsights(EMPRESAS_RELATED_SLUGS);
+export default async function EmpresasPage() {
+  const relatedInsights = await getRelatedInsights(EMPRESAS_RELATED_SLUGS);
 
   return (
     <>

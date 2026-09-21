@@ -1,11 +1,11 @@
 import Link from "next/link";
-import type { Insight } from "@/types/content";
+import type { InsightPreviewData } from "@/components/insight/InsightPreview";
 import Container from "@/components/ui/Container";
 import Eyebrow from "@/components/ui/Eyebrow";
 import { isInsightPublished } from "@/lib/data/insights";
 
 type RelatedArticlesProps = {
-  insights: Insight[];
+  insights: InsightPreviewData[];
 };
 
 const GRID_COLS = { 2: "md:grid-cols-2", 3: "md:grid-cols-3" } as const;

@@ -44,6 +44,31 @@ export const INSIGHTS_BY_CATEGORY_QUERY = groq`
 `;
 
 /**
+ * Home's "Insights" section — the first 3 by editorial order, matching
+ * exactly what the old HOME_INSIGHTS (a literal slice of the first 3 of
+ * INSIGHTS) selected. Not `featured == true`: no Insight document is
+ * curated with that flag today, so relying on it here would silently
+ * show 0 items instead of preserving the approved curation.
+ */
+export const HOME_INSIGHTS_QUERY = groq`
+  *[_type == "insight"] | order(order asc)[0...3]
+  ${INSIGHT_LIST_PROJECTION}
+`;
+
+/**
+ * "Artículos relacionados" on the 5 service/audience pages — fetches by
+ * an explicit slug list (each page's own *_RELATED_SLUGS, still a TS
+ * constant: editorial page config, not CMS content). Sanity gives no
+ * ordering guarantee for an `in` filter, so callers must reorder the
+ * result to match their own slugs array — never rely on `order asc`
+ * here, it would silently override each page's own curation.
+ */
+export const INSIGHTS_BY_SLUGS_QUERY = groq`
+  *[_type == "insight" && slug.current in $slugs]
+  ${INSIGHT_LIST_PROJECTION}
+`;
+
+/**
  * /insights/[slug] — requires body AND slug, so a teaser that was
  * published prematurely (or a slug typed in before the body existed)
  * still resolves to nothing here and the route 404s, same as the

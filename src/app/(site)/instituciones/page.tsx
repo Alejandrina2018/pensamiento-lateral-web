@@ -9,7 +9,7 @@ import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
 import Eyebrow from "@/components/ui/Eyebrow";
 import DataPattern from "@/components/visualizations/DataPattern";
-import { getPublishedInsights } from "@/lib/data/insights";
+import { getRelatedInsights } from "@/sanity/lib/relatedInsights";
 import {
   INSTITUCIONES_HERO,
   INSTITUCIONES_CONNECTION,
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
   description: INSTITUCIONES_HERO.body[0],
 };
 
-export default function InstitucionesPage() {
-  const relatedInsights = getPublishedInsights(INSTITUCIONES_RELATED_SLUGS);
+export default async function InstitucionesPage() {
+  const relatedInsights = await getRelatedInsights(INSTITUCIONES_RELATED_SLUGS);
   const [impactoCercano, gcba] = INSTITUCIONES_CASES;
 
   return (

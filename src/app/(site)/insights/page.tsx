@@ -6,6 +6,7 @@ import { sanityFetch } from "@/sanity/lib/fetch";
 import { INSIGHTS_QUERY, INSIGHTS_BY_CATEGORY_QUERY } from "@/sanity/lib/queries";
 import { CACHE_TAGS } from "@/sanity/lib/tags";
 import type { InsightListItem } from "@/sanity/lib/types";
+import { toInsightPreviewData } from "@/sanity/lib/insightPreview";
 import type { InsightFilterCategory } from "@/types/content";
 
 // Verbatim from content/final-copy.md — <!-- ROUTE: /insights -->
@@ -29,25 +30,6 @@ export const metadata: Metadata = {
 type PageProps = {
   searchParams: Promise<{ categoria?: string }>;
 };
-
-// InsightPreview only reads title/slug/excerpt/body/displayCategory and
-// author.name/author.role — its prop type reflects exactly that (see
-// InsightPreviewData in InsightPreview.tsx), so this mapping doesn't need
-// to fabricate a `bio` the list query never fetches.
-function toInsightPreviewData(item: InsightListItem) {
-  return {
-    title: item.title,
-    slug: item.slug ?? "",
-    excerpt: item.excerpt,
-    // Never set from this teaser-listing query — see CLAUDE.md #12: none of
-    // the 7 migrated Insights have an approved body yet, so `body` stays
-    // undefined and isInsightPublished() correctly withholds the "Leer
-    // artículo" link/CTA and any /insights/[slug] reference.
-    body: undefined,
-    author: { name: item.author.name, role: item.author.role },
-    displayCategory: item.displayCategory,
-  };
-}
 
 // Server-rendered filtering (a plain link per filter, no client JS) keeps
 // every article's full content crawlable regardless of which filter is

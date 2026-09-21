@@ -10,7 +10,7 @@ import Container from "@/components/ui/Container";
 import Eyebrow from "@/components/ui/Eyebrow";
 import TagList from "@/components/ui/TagList";
 import DataPattern from "@/components/visualizations/DataPattern";
-import { getPublishedInsights } from "@/lib/data/insights";
+import { getRelatedInsights } from "@/sanity/lib/relatedInsights";
 import {
   INVESTIGACION_HERO,
   INVESTIGACION_CONTEXT,
@@ -31,8 +31,8 @@ export const metadata: Metadata = {
   description: INVESTIGACION_HERO.body,
 };
 
-export default function InvestigacionPage() {
-  const relatedInsights = getPublishedInsights(INVESTIGACION_RELATED_SLUGS);
+export default async function InvestigacionPage() {
+  const relatedInsights = await getRelatedInsights(INVESTIGACION_RELATED_SLUGS);
 
   return (
     <>

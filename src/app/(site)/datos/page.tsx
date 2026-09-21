@@ -10,7 +10,7 @@ import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
 import Eyebrow from "@/components/ui/Eyebrow";
 import DataPattern from "@/components/visualizations/DataPattern";
-import { getPublishedInsights } from "@/lib/data/insights";
+import { getRelatedInsights } from "@/sanity/lib/relatedInsights";
 import {
   DATOS_HERO,
   DATOS_CONTEXT,
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
   description: DATOS_HERO.body,
 };
 
-export default function DatosPage() {
-  const relatedInsights = getPublishedInsights(DATOS_RELATED_SLUGS);
+export default async function DatosPage() {
+  const relatedInsights = await getRelatedInsights(DATOS_RELATED_SLUGS);
 
   return (
     <>

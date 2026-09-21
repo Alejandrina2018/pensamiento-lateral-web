@@ -10,7 +10,7 @@ import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
 import Eyebrow from "@/components/ui/Eyebrow";
 import FlowLine from "@/components/visualizations/FlowLine";
-import { getPublishedInsights } from "@/lib/data/insights";
+import { getRelatedInsights } from "@/sanity/lib/relatedInsights";
 import {
   AUTOMATIZACIONES_HERO,
   AUTOMATIZACIONES_CONTEXT,
@@ -29,11 +29,11 @@ export const metadata: Metadata = {
   description: AUTOMATIZACIONES_HERO.body,
 };
 
-export default function AutomatizacionesIaPage() {
+export default async function AutomatizacionesIaPage() {
   // No slug from final-copy.md's related list for this page exists in the
-  // published insights yet — getPublishedInsights([]) resolves to [] and
-  // RelatedArticles renders nothing.
-  const relatedInsights = getPublishedInsights(AUTOMATIZACIONES_RELATED_SLUGS);
+  // published insights yet — getRelatedInsights([]) short-circuits to []
+  // and RelatedArticles renders nothing.
+  const relatedInsights = await getRelatedInsights(AUTOMATIZACIONES_RELATED_SLUGS);
 
   return (
     <>
