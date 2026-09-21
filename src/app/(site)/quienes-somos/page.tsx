@@ -27,17 +27,32 @@ export const metadata: Metadata = {
   description: QUIENES_SOMOS_INTRO.paragraphs[0],
 };
 
-/** Resolves a Sanity author's `image` (asset + optional hotspot) into a
- * ready-to-render URL, cropped to the 4:3 box TeamMember actually uses —
- * hotspot-aware, so a tall portrait upload still keeps the face in frame.
- * Returns undefined when no image asset is attached yet, so TeamMember
- * falls back to its usual placeholder instead of breaking. */
+// Temporary fallback while these two authors don't have a Sanity image
+// yet — keyed by the author's Sanity `slug` (stable identifier, not the
+// display name). Remove an entry once its Sanity author.image is set;
+// toAuthorImage already prefers Sanity first, so nothing else changes.
+const LOCAL_TEAM_PHOTO_FALLBACK: Record<string, string> = {
+  "alejandrina-chichizola": "/images/team/alejandrina-chichizola.jpg",
+  "angeles-calandri": "/images/team/angeles-calandri.jpg",
+};
+
+/** Resolves a team photo with three tiers, in order: Sanity `author.image`
+ * (asset + optional hotspot, hotspot-aware crop to the 4:3 box TeamMember
+ * uses) → a local fallback file for the two authors who don't have one in
+ * Sanity yet → undefined, which makes TeamMember fall back to its usual
+ * placeholder. Never hardcodes a photo inside TeamMember itself. */
 function toAuthorImage(author: SanityAuthor): { src: string; alt: string } | undefined {
-  if (!author.image?.asset) return undefined;
-  return {
-    src: urlFor(author.image).width(1200).height(900).fit("crop").url(),
-    alt: author.image.alt || `Foto de ${author.name}`,
-  };
+  if (author.image?.asset) {
+    return {
+      src: urlFor(author.image).width(1200).height(900).fit("crop").url(),
+      alt: author.image.alt || `Foto de ${author.name}`,
+    };
+  }
+  const localSrc = LOCAL_TEAM_PHOTO_FALLBACK[author.slug];
+  if (localSrc) {
+    return { src: localSrc, alt: `Foto de ${author.name}` };
+  }
+  return undefined;
 }
 
 export default async function QuienesSomosPage() {
@@ -89,26 +104,27 @@ export default async function QuienesSomosPage() {
           <h2 className="max-w-3xl text-display-md font-semibold text-balance text-slate">
             {QUIENES_SOMOS_EVOLUTION.title}
           </h2>
-          {/* Two columns from md: up — same Container/width system as
-              every other section on this page (never narrower), but the
-              paragraphs stay at a comfortable reading measure instead of
-              stretching edge to edge: the closing statement takes the
-              rest of the width as a large editorial callout beside them,
-              not more line-length. Stacks single-column on mobile, same
-              reading order as before (paragraphs, then the closing
-              line). */}
-          <div className="mt-10 grid gap-10 md:grid-cols-12 md:gap-0">
-            <div className="flex flex-col gap-6 text-lg leading-relaxed text-slate/80 md:col-span-7 md:pr-12">
+          {/* Vertical editorial read, not a two-column split (design-review
+              correction — the side-by-side version read as two
+              disconnected halves). The paragraphs get more width than the
+              page's usual --measure column (~8/12 of the grid instead) so
+              the block stops looking narrow next to Team below it, while
+              staying short of the full container so lines stay readable.
+              The closing statement sits below as the block's own
+              conclusion — same left edge as everything above it, full
+              editorial size, no border or side column. */}
+          <div className="mt-10 grid gap-6 md:grid-cols-12">
+            <div className="flex flex-col gap-6 text-lg leading-relaxed text-slate/80 md:col-span-8">
               {QUIENES_SOMOS_EVOLUTION.paragraphs.map((paragraph, i) => (
                 <RichText key={i} text={paragraph} />
               ))}
             </div>
-            <div className="md:col-span-5 md:border-l md:border-slate/15 md:pl-12">
-              <p className="text-lg font-medium text-slate/70">{QUIENES_SOMOS_EVOLUTION.leadIn}</p>
-              <p className="mt-4 text-display-lg font-semibold text-balance text-slate">
-                {QUIENES_SOMOS_EVOLUTION.closingStatement}
-              </p>
-            </div>
+          </div>
+          <div className="mt-16 max-w-4xl md:mt-20">
+            <p className="text-lg font-medium text-slate/70">{QUIENES_SOMOS_EVOLUTION.leadIn}</p>
+            <p className="mt-4 text-display-xl font-semibold text-balance text-slate">
+              {QUIENES_SOMOS_EVOLUTION.closingStatement}
+            </p>
           </div>
         </Container>
       </section>
