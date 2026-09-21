@@ -61,8 +61,6 @@ export type CaseStudyListItem = {
   listingHeadline: string;
   listingExcerpt: string;
   featuredImage?: SanityImage;
-  ctaLabel: string;
-  ctaHref: string;
   order: number;
 };
 
@@ -74,6 +72,10 @@ export type CaseStudyDetail = CaseStudyListItem & {
   evidence: PortableTextBlock[];
   finalQuestion: string;
   finalBody?: string;
+  /** The detail page's own closing CTA — distinct from the listing row's
+   * fixed "Ver caso" link (see CASE_STUDY_LIST_PROJECTION). */
+  ctaLabel: string;
+  ctaHref: string;
   additionalImages?: SanityImage[];
   seoTitle?: string;
   seoDescription?: string;

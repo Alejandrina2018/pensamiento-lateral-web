@@ -2,14 +2,27 @@ import type { Metadata } from "next";
 import Container from "@/components/ui/Container";
 import Eyebrow from "@/components/ui/Eyebrow";
 import CasePreview from "@/components/case/CasePreview";
-import { CASOS_INTRO, CASOS_LISTING } from "@/lib/data/casos";
+import { CASOS_INTRO } from "@/lib/data/casos";
+import { sanityFetch } from "@/sanity/lib/fetch";
+import { CASE_STUDIES_QUERY } from "@/sanity/lib/queries";
+import { CACHE_TAGS } from "@/sanity/lib/tags";
+import type { CaseStudyListItem } from "@/sanity/lib/types";
 
+// CASOS_INTRO is the page's own static intro copy (title/body) — not a
+// caso — so it stays as approved static content, same as Insights' page
+// intro and Quiénes somos' team-section heading. Only the 5 case entries
+// themselves move to Sanity.
 export const metadata: Metadata = {
   title: "Casos — Pensamiento Lateral",
   description: CASOS_INTRO.body,
 };
 
-export default function CasosPage() {
+export default async function CasosPage() {
+  const cases = await sanityFetch<CaseStudyListItem[]>({
+    query: CASE_STUDIES_QUERY,
+    tags: [CACHE_TAGS.cases],
+  });
+
   return (
     <>
       <section className="bg-cream">
@@ -29,12 +42,22 @@ export default function CasosPage() {
               subordinated to an H2 instead of jumping straight from H1
               (audit finding); no new copy. */}
           <h2 className="sr-only">Casos</h2>
-          {CASOS_LISTING.map((caseItem, i) => (
+          {cases.map((caseItem, i) => (
             <CasePreview
-              key={caseItem.name}
-              caseItem={caseItem}
+              key={caseItem._id}
+              // "Ver caso" and the /casos/<slug> href are fixed listing-row
+              // UI, not per-document Sanity content (see the note on
+              // CASE_STUDY_LIST_PROJECTION) — never sourced from the
+              // detail page's own ctaLabel/ctaHref ("Hablemos" → /contacto).
+              caseItem={{
+                name: caseItem.client,
+                tagline: caseItem.listingHeadline,
+                body: caseItem.listingExcerpt,
+                ctaLabel: "Ver caso",
+                href: `/casos/${caseItem.slug}`,
+              }}
               reversed={i % 2 === 1}
-              emphasized={caseItem.name === "Impacto Cercano · AMBA"}
+              emphasized={caseItem.client === "Impacto Cercano · AMBA"}
             />
           ))}
         </Container>

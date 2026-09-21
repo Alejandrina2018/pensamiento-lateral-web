@@ -1,13 +1,31 @@
 import type { ReactNode } from "react";
-import type { CaseStudy } from "@/types/content";
+import type { PortableTextBlock } from "sanity";
+import { PortableText } from "@portabletext/react";
+import type { NamedBlock, WhatWeDidItem } from "@/sanity/lib/types";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
-import RichText from "@/components/ui/RichText";
 import CTASection from "@/components/ui/CTASection";
 
+/** Everything this layout actually renders, sourced from a published
+ * Sanity caseStudy document (see CASE_STUDY_BY_SLUG_QUERY) — challenge/
+ * approach/evidence/whatWeDid are Portable Text, rendered with
+ * @portabletext/react rather than converted to strings/HTML by hand. */
+type CaseStudyLayoutData = {
+  client: string;
+  title: string;
+  challenge: PortableTextBlock[];
+  approach: PortableTextBlock[];
+  whatWeDid: WhatWeDidItem[];
+  evidence: PortableTextBlock[];
+  finalQuestion: string;
+  finalBody?: string;
+  ctaLabel: string;
+  ctaHref: string;
+};
+
 type CaseStudyLayoutProps = {
-  caseStudy: CaseStudy;
+  caseStudy: CaseStudyLayoutData;
   /** Quiet background texture behind the opening block — never a full
    * hero graphic. Omit entirely for cases that call for no decoration
    * (GCBA). */
@@ -17,6 +35,38 @@ type CaseStudyLayoutProps = {
    * list-style case gets the numbered "sequence" reading. */
   whatWeDidStyle?: "sequence" | "plain";
 };
+
+function isNamedBlock(item: WhatWeDidItem): item is NamedBlock {
+  return item._type === "namedBlock";
+}
+
+type WhatWeDidGroup = { kind: "paragraphs"; blocks: PortableTextBlock[] } | { kind: "list"; items: NamedBlock[] };
+
+/**
+ * `whatWeDid` is a mixed array (plain Portable Text blocks and/or
+ * namedBlocks) that must render in its original order without losing
+ * content. Every one of the 5 migrated cases is actually homogeneous
+ * (all-paragraphs or all-namedBlock, matching the old paragraphs|list
+ * union 1:1), so grouping consecutive same-kind items reproduces exactly
+ * today's single-branch rendering for real content, while still doing the
+ * structurally correct thing — nothing dropped, order preserved — if a
+ * case ever mixes both.
+ */
+function groupWhatWeDid(items: WhatWeDidItem[]): WhatWeDidGroup[] {
+  const groups: WhatWeDidGroup[] = [];
+  for (const item of items) {
+    const last = groups[groups.length - 1];
+    if (isNamedBlock(item)) {
+      if (last?.kind === "list") last.items.push(item);
+      else groups.push({ kind: "list", items: [item] });
+    } else if (last?.kind === "paragraphs") {
+      last.blocks.push(item);
+    } else {
+      groups.push({ kind: "paragraphs", blocks: [item] });
+    }
+  }
+  return groups;
+}
 
 /**
  * Shared template for /casos/[slug]. Every section but "El desafío" /
@@ -47,9 +97,7 @@ export default function CaseStudyLayout({ caseStudy, visual, whatWeDidStyle = "s
         <Container className="py-16 md:py-20">
           <h2 className="text-display-md font-semibold text-slate">El desafío</h2>
           <div className="mt-6 flex max-w-(--measure) flex-col gap-4 text-lg leading-relaxed text-slate/80">
-            {caseStudy.challenge.map((paragraph, i) => (
-              <RichText key={i} text={paragraph} />
-            ))}
+            <PortableText value={caseStudy.challenge} />
           </div>
         </Container>
       </section>
@@ -58,9 +106,7 @@ export default function CaseStudyLayout({ caseStudy, visual, whatWeDidStyle = "s
         <Container className="py-16 md:py-20">
           <h2 className="text-display-md font-semibold text-slate">Nuestro abordaje</h2>
           <div className="mt-6 flex max-w-(--measure) flex-col gap-4 text-lg leading-relaxed text-slate/80">
-            {caseStudy.approach.map((paragraph, i) => (
-              <RichText key={i} text={paragraph} />
-            ))}
+            <PortableText value={caseStudy.approach} />
           </div>
         </Container>
       </section>
@@ -69,35 +115,42 @@ export default function CaseStudyLayout({ caseStudy, visual, whatWeDidStyle = "s
         <Container className="py-16 md:py-20">
           <h2 className="text-display-md font-semibold text-slate">Qué hicimos</h2>
 
-          {caseStudy.whatWeDid.kind === "paragraphs" ? (
-            <div className="mt-6 flex max-w-(--measure) flex-col gap-4 text-lg leading-relaxed text-slate/80">
-              {caseStudy.whatWeDid.items.map((paragraph, i) => (
-                <RichText key={i} text={paragraph} />
-              ))}
-            </div>
-          ) : whatWeDidStyle === "plain" ? (
-            <div className="mt-8 flex flex-col gap-8">
-              {caseStudy.whatWeDid.items.map((item) => (
-                <div key={item.title}>
-                  <h3 className="text-lg font-semibold text-slate">{item.title}</h3>
-                  <RichText text={item.body} className="mt-2 max-w-(--measure) leading-relaxed text-slate/80" />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <ol className="mt-8 flex flex-col gap-8 border-l border-sand pl-6 md:pl-10">
-              {caseStudy.whatWeDid.items.map((item, i) => (
-                <li key={item.title} className="flex gap-4">
-                  <span className="shrink-0 pt-1 text-sm font-semibold text-slate/40" aria-hidden="true">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <div>
+          {groupWhatWeDid(caseStudy.whatWeDid).map((group, gi) =>
+            group.kind === "paragraphs" ? (
+              <div
+                key={gi}
+                className="mt-6 flex max-w-(--measure) flex-col gap-4 text-lg leading-relaxed text-slate/80"
+              >
+                <PortableText value={group.blocks} />
+              </div>
+            ) : whatWeDidStyle === "plain" ? (
+              <div key={gi} className="mt-8 flex flex-col gap-8">
+                {group.items.map((item) => (
+                  <div key={item._key}>
                     <h3 className="text-lg font-semibold text-slate">{item.title}</h3>
-                    <RichText text={item.body} className="mt-2 max-w-(--measure) leading-relaxed text-slate/80" />
+                    <div className="mt-2 max-w-(--measure) leading-relaxed text-slate/80">
+                      <PortableText value={item.body} />
+                    </div>
                   </div>
-                </li>
-              ))}
-            </ol>
+                ))}
+              </div>
+            ) : (
+              <ol key={gi} className="mt-8 flex flex-col gap-8 border-l border-sand pl-6 md:pl-10">
+                {group.items.map((item, i) => (
+                  <li key={item._key} className="flex gap-4">
+                    <span className="shrink-0 pt-1 text-sm font-semibold text-slate/40" aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate">{item.title}</h3>
+                      <div className="mt-2 max-w-(--measure) leading-relaxed text-slate/80">
+                        <PortableText value={item.body} />
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            ),
           )}
         </Container>
       </section>
@@ -106,9 +159,7 @@ export default function CaseStudyLayout({ caseStudy, visual, whatWeDidStyle = "s
         <Container className="py-16 md:py-20">
           <h2 className="text-display-md font-semibold text-slate">De la evidencia a la acción</h2>
           <div className="mt-6 flex max-w-(--measure) flex-col gap-4 text-lg leading-relaxed text-slate/80">
-            {caseStudy.evidence.map((paragraph, i) => (
-              <RichText key={i} text={paragraph} />
-            ))}
+            <PortableText value={caseStudy.evidence} />
           </div>
         </Container>
       </section>

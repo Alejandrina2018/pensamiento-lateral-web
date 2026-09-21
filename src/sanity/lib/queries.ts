@@ -76,6 +76,14 @@ export const INSIGHT_SLUGS_QUERY = groq`
   }
 `;
 
+/**
+ * Only what /casos' listing actually reads. ctaLabel/ctaHref are
+ * deliberately excluded here: on the caseStudy document those fields are
+ * the detail page's own closing CTA ("Hablemos" → /contacto — see
+ * CASE_STUDY_BY_SLUG_QUERY), not the listing row's "Ver caso" link, which
+ * is fixed UI copy pointing at /casos/<slug> and isn't stored as
+ * per-document content at all.
+ */
 const CASE_STUDY_LIST_PROJECTION = groq`{
   _id,
   client,
@@ -83,8 +91,6 @@ const CASE_STUDY_LIST_PROJECTION = groq`{
   listingHeadline,
   listingExcerpt,
   featuredImage,
-  ctaLabel,
-  ctaHref,
   order
 }`;
 
