@@ -11,6 +11,8 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import TagList from "@/components/ui/TagList";
 import WordConnections from "@/components/visualizations/WordConnections";
 import { getRelatedInsights } from "@/sanity/lib/relatedInsights";
+import { getCasesBySlugs } from "@/sanity/lib/relatedCases";
+import type { CompactCaseItem } from "@/types/audience";
 import {
   EMPRESAS_HERO,
   EMPRESAS_HERO_WORDS,
@@ -19,7 +21,7 @@ import {
   EMPRESAS_CAPABILITY_SUMMARY_TITLE,
   EMPRESAS_CAPABILITY_SUMMARY,
   EMPRESAS_CASES_TITLE,
-  EMPRESAS_CASES,
+  EMPRESAS_CASE_SLUGS,
   EMPRESAS_SECTORS,
   EMPRESAS_RELATED_SLUGS,
   EMPRESAS_FINAL_CTA,
@@ -34,6 +36,14 @@ export const metadata: Metadata = {
 
 export default async function EmpresasPage() {
   const relatedInsights = await getRelatedInsights(EMPRESAS_RELATED_SLUGS);
+  // "Ver caso" and the /casos/<slug> href are fixed listing-row UI, not
+  // per-document Sanity content — same reasoning as /casos' own listing
+  // cutover (CASE_STUDY_LIST_PROJECTION's comment).
+  const empresasCases: CompactCaseItem[] = (await getCasesBySlugs(EMPRESAS_CASE_SLUGS)).map((c) => ({
+    name: c.client,
+    tagline: c.listingHeadline,
+    href: `/casos/${c.slug}`,
+  }));
 
   return (
     <>
@@ -68,7 +78,7 @@ export default async function EmpresasPage() {
         <Container className="py-20 md:py-28">
           <h2 className="text-display-md font-semibold text-slate">{EMPRESAS_CASES_TITLE}</h2>
           <div className="mt-8">
-            <CompactCaseList items={EMPRESAS_CASES} />
+            <CompactCaseList items={empresasCases} />
           </div>
         </Container>
       </section>

@@ -125,6 +125,20 @@ export const CASE_STUDIES_QUERY = groq`
   ${CASE_STUDY_LIST_PROJECTION}
 `;
 
+/**
+ * By an explicit slug list — for placements that reuse a subset of real
+ * cases with their own selection/order (e.g. /empresas, /instituciones'
+ * case sections), instead of duplicating listingHeadline/listingExcerpt
+ * as static copy. Sanity gives no ordering guarantee for `in`, so callers
+ * must reorder the result to match their own slugs array — never rely on
+ * `order asc` here, it's /casos' own editorial order, not necessarily a
+ * given page's curation.
+ */
+export const CASE_STUDIES_BY_SLUGS_QUERY = groq`
+  *[_type == "caseStudy" && slug.current in $slugs]
+  ${CASE_STUDY_LIST_PROJECTION}
+`;
+
 /** /casos/[slug] */
 export const CASE_STUDY_BY_SLUG_QUERY = groq`
   *[_type == "caseStudy" && slug.current == $slug][0]{

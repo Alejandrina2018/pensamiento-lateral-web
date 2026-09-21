@@ -1,6 +1,5 @@
 import type { CapabilityItem } from "@/types/service";
 import type { ConnectionIntroData } from "@/types/audience";
-import type { HomeCaseHighlight } from "@/types/home";
 
 // Verbatim from content/final-copy.md — <!-- ROUTE: /instituciones -->
 
@@ -75,22 +74,16 @@ export const INSTITUCIONES_CAPABILITY_SUMMARY: CapabilityItem[] = [
 
 export const INSTITUCIONES_CASES_TITLE = "Casos";
 
-export const INSTITUCIONES_CASES: HomeCaseHighlight[] = [
-  {
-    name: "Impacto Cercano · AMBA",
-    tagline: "Comprender el territorio para orientar acciones de impacto local.",
-    body: "Investigación, escucha territorial, datos y georreferenciación para identificar prioridades y orientar intervenciones más precisas.",
-    ctaLabel: "Ver caso",
-    href: "/casos/impacto-cercano",
-  },
-  {
-    name: "Gobierno de la Ciudad de Buenos Aires",
-    tagline: "Relevar: el primer paso para combatir la violencia de género en el AMBA.",
-    body: "Una investigación social face to face que permitió dimensionar la problemática y generar evidencia para políticas y campañas de concientización.",
-    ctaLabel: "Ver caso",
-    href: "/casos/gcba-violencia-genero",
-  },
-];
+/**
+ * Selection and order only — this page's own curation (Impacto Cercano
+ * first with extra room, then GCBA — CLAUDE.md-approved). The client
+ * name/tagline/body shown for each no longer live here: they were verbatim
+ * duplicates of the caseStudy documents' listingHeadline/listingExcerpt in
+ * Sanity, so /instituciones now fetches them by slug instead (see
+ * getCasesBySlugs in src/sanity/lib/relatedCases.ts) — one source per case,
+ * never two copies to keep in sync.
+ */
+export const INSTITUCIONES_CASE_SLUGS = ["impacto-cercano", "gcba-violencia-genero"];
 
 // Only the article that already exists in the /insights data (CLAUDE.md
 // #34). The other 2 titles from final-copy.md aren't published yet.

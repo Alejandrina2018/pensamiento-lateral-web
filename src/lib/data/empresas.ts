@@ -1,5 +1,5 @@
 import type { CapabilityItem } from "@/types/service";
-import type { ConnectionIntroData, CompactCaseItem } from "@/types/audience";
+import type { ConnectionIntroData } from "@/types/audience";
 
 // Verbatim from content/final-copy.md — <!-- ROUTE: /empresas -->
 
@@ -76,23 +76,16 @@ export const EMPRESAS_CAPABILITY_SUMMARY: CapabilityItem[] = [
 
 export const EMPRESAS_CASES_TITLE = "Distintos desafíos. Resultados concretos.";
 
-export const EMPRESAS_CASES: CompactCaseItem[] = [
-  {
-    name: "Zurich",
-    tagline: "De información dispersa a una herramienta para la gestión.",
-    href: "/casos/zurich",
-  },
-  {
-    name: "Suono",
-    tagline: "De comprender al consumidor a encontrar nuevas oportunidades de crecimiento.",
-    href: "/casos/suono",
-  },
-  {
-    name: "Banco Provincia",
-    tagline: "Comprender la experiencia para diseñar mejores soluciones.",
-    href: "/casos/banco-provincia",
-  },
-];
+/**
+ * Selection and order only — this page's own curation (CLAUDE.md-approved:
+ * Zurich, Suono, Banco Provincia, in this order). The actual client name/
+ * tagline shown for each no longer lives here: they were verbatim
+ * duplicates of the caseStudy documents' listingHeadline/listingExcerpt in
+ * Sanity, so /empresas now fetches them by slug instead (see
+ * getCasesBySlugs in src/sanity/lib/relatedCases.ts) — one source per case,
+ * never two copies to keep in sync.
+ */
+export const EMPRESAS_CASE_SLUGS = ["zurich", "suono", "banco-provincia"];
 
 export const EMPRESAS_SECTORS = {
   title: "Experiencia en distintos sectores",

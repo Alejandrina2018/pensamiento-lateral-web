@@ -10,6 +10,8 @@ import Container from "@/components/ui/Container";
 import Eyebrow from "@/components/ui/Eyebrow";
 import DataPattern from "@/components/visualizations/DataPattern";
 import { getRelatedInsights } from "@/sanity/lib/relatedInsights";
+import { getCasesBySlugs } from "@/sanity/lib/relatedCases";
+import type { HomeCaseHighlight } from "@/types/home";
 import {
   INSTITUCIONES_HERO,
   INSTITUCIONES_CONNECTION,
@@ -17,7 +19,7 @@ import {
   INSTITUCIONES_CAPABILITY_SUMMARY_TITLE,
   INSTITUCIONES_CAPABILITY_SUMMARY,
   INSTITUCIONES_CASES_TITLE,
-  INSTITUCIONES_CASES,
+  INSTITUCIONES_CASE_SLUGS,
   INSTITUCIONES_RELATED_SLUGS,
   INSTITUCIONES_FINAL_CTA,
 } from "@/lib/data/instituciones";
@@ -31,7 +33,16 @@ export const metadata: Metadata = {
 
 export default async function InstitucionesPage() {
   const relatedInsights = await getRelatedInsights(INSTITUCIONES_RELATED_SLUGS);
-  const [impactoCercano, gcba] = INSTITUCIONES_CASES;
+  // "Ver caso" is fixed listing-row UI, not per-document Sanity content —
+  // same reasoning as /casos' own listing cutover.
+  const institucionesCases: HomeCaseHighlight[] = (await getCasesBySlugs(INSTITUCIONES_CASE_SLUGS)).map((c) => ({
+    name: c.client,
+    tagline: c.listingHeadline,
+    body: c.listingExcerpt,
+    ctaLabel: "Ver caso",
+    href: `/casos/${c.slug}`,
+  }));
+  const [impactoCercano, gcba] = institucionesCases;
 
   return (
     <>
@@ -69,12 +80,16 @@ export default async function InstitucionesPage() {
           {/* Impacto Cercano goes first with extra room — it's PL's own
               model — purely through order and spacing, no new labels or
               metrics (approved direction). */}
-          <div className="mt-10">
-            <CasePreview caseItem={impactoCercano} />
-          </div>
-          <div className="mt-4">
-            <CasePreview caseItem={gcba} reversed />
-          </div>
+          {impactoCercano && (
+            <div className="mt-10">
+              <CasePreview caseItem={impactoCercano} />
+            </div>
+          )}
+          {gcba && (
+            <div className="mt-4">
+              <CasePreview caseItem={gcba} reversed />
+            </div>
+          )}
         </Container>
       </section>
 
