@@ -1,42 +1,46 @@
+import Image from "next/image";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
-import DataPattern from "@/components/visualizations/DataPattern";
-import HeroLens from "@/components/visualizations/HeroLens";
 
 // Verbatim from content/final-copy.md — Home / Hero.
-// The data pattern is bounded to the same max-width container as the text
-// (rather than the full viewport) so the gap between them stays consistent
-// instead of growing on very wide desktop screens.
+// Visual: the client's own approved conceptual image (design-review round,
+// Fase 2) — scattered data points converging, through an ordered pattern,
+// into a single focused finding. Replaces the previous SVG dot-pattern +
+// lens overlay as the hero's main visual, in a real two-column layout
+// (not an absolutely-positioned, low-opacity background watermark
+// anymore) so it reads as the primary asset, not decoration. `priority`
+// since this is almost certainly the page's LCP element.
 export default function Hero() {
   return (
-    <section className="overflow-hidden bg-cream">
-      <Container className="relative py-24 md:py-36">
-        <div
-          className="pointer-events-none absolute inset-y-0 right-0 w-full opacity-30 md:w-[55%] md:opacity-80"
-          aria-hidden="true"
-        >
-          {/* HeroLens overlays the same viewBox as DataPattern, framing the
-              grid it settles into — "comprender" (observe, find the
-              pattern) before "la acción". */}
-          <div className="relative h-full w-full">
-            <DataPattern className="absolute inset-0 h-full w-full" />
-            <HeroLens className="absolute inset-0 h-full w-full" />
+    <section className="bg-cream">
+      <Container className="py-24 md:py-36">
+        <div className="grid items-center gap-12 md:grid-cols-12 md:gap-10">
+          <div className="md:col-span-5">
+            <h1 className="text-display-xl font-semibold text-balance text-slate">
+              Comprender para la acción.
+            </h1>
+            <p className="mt-6 max-w-(--measure-narrow) text-lg text-slate/80">
+              Investigación y datos para comprender contextos, encontrar oportunidades y transformar evidencia en
+              acciones.
+            </p>
+            <div className="mt-10 flex flex-wrap gap-4">
+              <Button href="#servicios">Conocé nuestros servicios</Button>
+              <Button href="#contacto" variant="secondary">
+                Hablemos
+              </Button>
+            </div>
           </div>
-        </div>
 
-        <div className="relative max-w-2xl">
-          <h1 className="text-display-xl font-semibold text-balance text-slate">
-            Comprender para la acción.
-          </h1>
-          <p className="mt-6 max-w-(--measure-narrow) text-lg text-slate/80">
-            Investigación y datos para comprender contextos, encontrar oportunidades y transformar evidencia en
-            acciones.
-          </p>
-          <div className="mt-10 flex flex-wrap gap-4">
-            <Button href="#servicios">Conocé nuestros servicios</Button>
-            <Button href="#contacto" variant="secondary">
-              Hablemos
-            </Button>
+          <div className="md:col-span-7">
+            <Image
+              src="/images/hero/comprender-para-la-accion.jpg"
+              alt="Datos dispersos que se ordenan en un patrón y convergen en un hallazgo — comprender para la acción"
+              width={1672}
+              height={941}
+              priority
+              sizes="(min-width: 768px) 58vw, 100vw"
+              className="h-auto w-full"
+            />
           </div>
         </div>
       </Container>

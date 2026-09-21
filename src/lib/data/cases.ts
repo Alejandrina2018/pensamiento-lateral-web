@@ -24,9 +24,10 @@ export const HOME_CASE_HIGHLIGHTS: HomeCaseHighlight[] = [
     body: "Investigación y análisis para detectar problemáticas, interpretar percepciones y necesidades ciudadanas y transformar esa evidencia en herramientas para la gestión.",
     ctaLabel: "Ver casos de instituciones",
     href: "/instituciones",
-    // TODO — pendiente una foto de un edificio público argentino: el
-    // material de referencia recibido para este bloque era una imagen
-    // genérica internacional (explícitamente rechazada por el cliente),
-    // así que se mantiene el placeholder en vez de usarla.
+    // Banco de la Nación Argentina — real Argentine public-building photo
+    // supplied by the client (design-review round, Fase 2), replacing the
+    // placeholder that stood in for the earlier, explicitly-rejected
+    // generic international reference (see git history).
+    image: { src: "/images/casos/sector-publico.jpg", alt: "Fachada del edificio del Banco de la Nación Argentina" },
   },
 ];
