@@ -26,7 +26,7 @@ export default function ServiceIntro() {
                 <span className="text-3xl font-semibold text-slate/15 md:text-5xl" aria-hidden="true">
                   0{i + 1}
                 </span>
-                <p className="text-sm font-medium uppercase tracking-widest text-slate/60">{service.name}</p>
+                <p className="text-sm font-medium uppercase tracking-widest text-terracotta">{service.name}</p>
               </div>
               <div className="flex flex-col gap-4 md:col-span-9">
                 <h3 className="text-display-md font-semibold text-slate">{service.tagline}</h3>
@@ -48,7 +48,7 @@ export default function ServiceIntro() {
               <span className="text-3xl font-semibold text-slate/15 md:text-5xl" aria-hidden="true">
                 03
               </span>
-              <p className="text-sm font-medium uppercase tracking-widest text-slate/60">{automatizaciones.name}</p>
+              <p className="text-sm font-medium uppercase tracking-widest text-terracotta">{automatizaciones.name}</p>
             </div>
             <div className="flex flex-col gap-4 md:col-span-9">
               <h3 className="text-3xl font-semibold text-slate md:text-4xl">{automatizaciones.tagline}</h3>
