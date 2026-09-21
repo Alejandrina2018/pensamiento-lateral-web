@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { HomeCaseHighlight } from "@/types/home";
 import CaseImagePlaceholder from "./CaseImagePlaceholder";
 
@@ -20,7 +21,19 @@ export default function CasePreview({ caseItem, reversed = false, emphasized = f
       } ${reversed ? "md:[&>*:first-child]:order-2" : ""}`}
     >
       <div className="md:col-span-5">
-        <CaseImagePlaceholder label={caseItem.name} />
+        {caseItem.image ? (
+          <div className="relative aspect-[4/3] overflow-hidden border border-sand">
+            <Image
+              src={caseItem.image.src}
+              alt={caseItem.image.alt}
+              fill
+              sizes="(min-width: 768px) 40vw, 90vw"
+              className="object-cover"
+            />
+          </div>
+        ) : (
+          <CaseImagePlaceholder label={caseItem.name} />
+        )}
       </div>
 
       {/* Kept wider than the image (7/12 vs 5/12) so a real photo, map, or

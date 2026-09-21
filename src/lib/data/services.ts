@@ -1,11 +1,15 @@
 import type { Service } from "@/types/home";
 
 // Verbatim from content/final-copy.md — "Tres áreas de servicio" (Home).
+// Investigación's `body` has one small deviation: trimmed by a few words
+// (design-review round, Fase 1 Home) so its visual length sits closer to
+// Datos/Automatizaciones' — explicitly requested ("que los párrafos tengan
+// una extensión similar"), sense fully preserved, not a rewrite.
 export const SERVICES: Service[] = [
   {
     name: "Investigación",
     tagline: "Entender qué pasa y por qué.",
-    body: "Diseñamos estudios sobre personas, mercados y organizaciones. Integramos metodologías cualitativas y cuantitativas para identificar patrones, tensiones y oportunidades que permitan ir más allá del dato.",
+    body: "Diseñamos estudios sobre personas, mercados y organizaciones. Integramos metodologías cualitativas y cuantitativas para identificar patrones, tensiones y oportunidades más allá del dato.",
     tags: [
       "Investigación de mercado",
       "Opinión pública",

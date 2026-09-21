@@ -1,6 +1,7 @@
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import DataPattern from "@/components/visualizations/DataPattern";
+import HeroLens from "@/components/visualizations/HeroLens";
 
 // Verbatim from content/final-copy.md — Home / Hero.
 // The data pattern is bounded to the same max-width container as the text
@@ -14,7 +15,13 @@ export default function Hero() {
           className="pointer-events-none absolute inset-y-0 right-0 w-full opacity-30 md:w-[55%] md:opacity-80"
           aria-hidden="true"
         >
-          <DataPattern className="h-full w-full" />
+          {/* HeroLens overlays the same viewBox as DataPattern, framing the
+              grid it settles into — "comprender" (observe, find the
+              pattern) before "la acción". */}
+          <div className="relative h-full w-full">
+            <DataPattern className="absolute inset-0 h-full w-full" />
+            <HeroLens className="absolute inset-0 h-full w-full" />
+          </div>
         </div>
 
         <div className="relative max-w-2xl">

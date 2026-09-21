@@ -41,4 +41,10 @@ export interface HomeCaseHighlight {
   body?: string | string[];
   ctaLabel: string;
   href: string;
+  /** Real photo, when one has actually been supplied — optional on
+   * purpose (CasePreview falls back to the usual CaseImagePlaceholder
+   * when it's absent, e.g. Home's "Sector público"). Rendered with
+   * next/image's `fill` inside a fixed aspect-[4/3] box — no intrinsic
+   * width/height needed. */
+  image?: { src: string; alt: string };
 }
