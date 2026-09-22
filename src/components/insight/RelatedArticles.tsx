@@ -11,6 +11,17 @@ type RelatedArticlesProps = {
    * section (on top of Caso destacado's own trimmed bottom padding) —
    * `compact` reduces only the top; bottom is untouched everywhere. */
   compact?: boolean;
+  /** Default (false) keeps the single-article layout exactly as it is
+   * everywhere else (including /instituciones, which also currently has
+   * exactly one published related Insight). /datos's design-review pass
+   * found that lone article — capped at max-w-(--measure) — reading much
+   * narrower than Caso destacado above it, even though this section's
+   * own Container was already full-width. `wideSingle` widens only the
+   * article itself (title + byline) to md:col-span-8, matching the width
+   * used elsewhere on that page; the excerpt keeps its own
+   * max-w-(--measure) so its lines don't stretch. Only relevant when
+   * there's exactly one insight — ignored for 2-3. */
+  wideSingle?: boolean;
 };
 
 const GRID_COLS = { 2: "md:grid-cols-2", 3: "md:grid-cols-3" } as const;
@@ -23,7 +34,7 @@ const GRID_COLS = { 2: "md:grid-cols-2", 3: "md:grid-cols-3" } as const;
  * This is also how it should behave once Sanity is wired in: the section's
  * presence follows from what the query actually returns.
  */
-export default function RelatedArticles({ insights, compact = false }: RelatedArticlesProps) {
+export default function RelatedArticles({ insights, compact = false, wideSingle = false }: RelatedArticlesProps) {
   if (insights.length === 0) return null;
 
   const isSingle = insights.length === 1;
@@ -35,13 +46,23 @@ export default function RelatedArticles({ insights, compact = false }: RelatedAr
 
         <div
           className={`mt-8 grid gap-x-10 gap-y-10 border-t border-sand pt-10 ${
-            isSingle ? "" : `${GRID_COLS[insights.length as 2 | 3]} md:divide-x md:divide-sand`
+            isSingle
+              ? wideSingle
+                ? "md:grid-cols-12"
+                : ""
+              : `${GRID_COLS[insights.length as 2 | 3]} md:divide-x md:divide-sand`
           }`}
         >
           {insights.map((insight) => (
             <article
               key={insight.slug}
-              className={isSingle ? "max-w-(--measure)" : "md:px-8 md:first:pl-0 md:last:pr-0"}
+              className={
+                isSingle
+                  ? wideSingle
+                    ? "md:col-span-8"
+                    : "max-w-(--measure)"
+                  : "md:px-8 md:first:pl-0 md:last:pr-0"
+              }
             >
               <h3 className={`font-semibold text-slate ${isSingle ? "text-2xl md:text-3xl" : "text-xl"}`}>
                 {isInsightPublished(insight) ? (

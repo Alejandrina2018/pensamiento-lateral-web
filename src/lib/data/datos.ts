@@ -79,6 +79,11 @@ export const DATOS_CASE: HomeCaseHighlight = {
   ],
   ctaLabel: "Ver caso completo",
   href: "/casos/zurich",
+  // Same real photo (and alt text) already used for Zurich on Home and
+  // now /investigacion's Suono case — reused here rather than duplicated
+  // (CLAUDE.md #8: no invented assets). Already a native landscape crop
+  // that reads clearly at CasePreview's aspect-[4/3] box.
+  image: { src: "/images/casos/zurich.jpeg", alt: "Tablero de indicadores en una notebook, sobre una mesa de trabajo" },
 };
 
 // Only the article that already exists in the /insights data (CLAUDE.md
