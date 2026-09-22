@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import BrandMark from "./BrandMark";
 import { getContactEmail } from "@/lib/env";
 import { MAIN_NAV, FOOTER_NAV, SITE_NAME } from "@/lib/constants";
 
@@ -13,7 +14,7 @@ export default function Footer() {
     <footer className="border-t border-sand bg-cream">
       <Container className="grid gap-10 py-16 md:grid-cols-[1.2fr_1fr_1fr]">
         <div>
-          <p className="text-lg font-semibold tracking-tight text-slate">{SITE_NAME}</p>
+          <BrandMark markClassName="h-8" textClassName="text-lg" />
         </div>
 
         <nav aria-label="Enlaces del sitio" className="flex flex-col gap-2">

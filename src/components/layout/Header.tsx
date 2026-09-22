@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import BrandMark from "./BrandMark";
 import MobileMenu from "./MobileMenu";
-import { MAIN_NAV, SITE_NAME } from "@/lib/constants";
+import { MAIN_NAV } from "@/lib/constants";
 
 /** Sticky, subtle site header (CLAUDE.md #10). No mega-menu; the
  * "Servicios" dropdown uses <details> so it works without JavaScript.
@@ -15,9 +16,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-sand bg-cream/95 backdrop-blur">
       <Container className="relative flex items-center justify-between py-5">
-        <Link href="/" className="text-lg font-semibold tracking-tight text-slate">
-          {SITE_NAME}
-        </Link>
+        <BrandMark markClassName="h-6 md:h-7" textClassName="text-lg" />
 
         <nav aria-label="Menú principal" className="hidden items-center gap-8 md:flex">
           {MAIN_NAV.map((item) =>
