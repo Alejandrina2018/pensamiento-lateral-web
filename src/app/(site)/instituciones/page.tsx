@@ -52,7 +52,7 @@ export default async function InstitucionesPage() {
         body={INSTITUCIONES_HERO.body}
         ctaLabel={INSTITUCIONES_HERO.ctaLabel}
         ctaHref={INSTITUCIONES_HERO.ctaHref}
-        visual={<DataPattern variant="territory" className="h-full w-full" />}
+        visual={<DataPattern variant="map" className="h-full w-full" />}
         columnWidthClass="max-w-2xl md:max-w-4xl"
       />
 

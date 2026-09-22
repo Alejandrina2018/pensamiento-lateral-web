@@ -1,4 +1,4 @@
-type Layout = "converge" | "layers";
+type Layout = "converge" | "layers" | "network";
 type Accent = "terracotta" | "green";
 
 const ACCENT_VAR: Record<Accent, string> = {
@@ -30,6 +30,38 @@ const CONVERGE_CONNECTIONS: Array<[number, number]> = [
 const LAYER_Y_STEP = 54;
 const LAYER_X_OFFSETS = [10, 46, 0, 64];
 
+// Hand-placed, irregular — same spirit as "converge" but sized for exactly
+// the 6 dimensions Instituciones' "Comprender para intervenir mejor" reads
+// as a system (percepciones, necesidades, expectativas, comportamientos ↔
+// datos, contexto). Each word gets a small node dot instead of a line
+// running through its letters; only 5 of the 15 possible pairs are drawn
+// ("conexiones sutiles", never a fully meshed graph). Datos/Contexto sit
+// slightly larger — the two synthesizing anchors the other four connect
+// into — everything else stays legible at the same weight.
+const NETWORK_VIEW_WIDTH = 600;
+const NETWORK_VIEW_HEIGHT = 300;
+const NETWORK_POSITIONS: Array<{
+  x: number;
+  y: number;
+  anchor?: "start" | "end";
+  dot: { x: number; y: number };
+  emphasis?: boolean;
+}> = [
+  { x: 30, y: 50, dot: { x: 16, y: 44 } },
+  { x: 230, y: 26, dot: { x: 216, y: 20 } },
+  { x: 570, y: 76, anchor: "end", dot: { x: 584, y: 70 } },
+  { x: 40, y: 236, dot: { x: 26, y: 230 } },
+  { x: 300, y: 160, dot: { x: 286, y: 154 }, emphasis: true },
+  { x: 560, y: 250, anchor: "end", dot: { x: 574, y: 244 }, emphasis: true },
+];
+const NETWORK_CONNECTIONS: Array<[number, number]> = [
+  [0, 4],
+  [1, 4],
+  [3, 4],
+  [2, 5],
+  [4, 5],
+];
+
 type WordConnectionsProps = {
   words: string[];
   layout: Layout;
@@ -44,10 +76,62 @@ type WordConnectionsProps = {
  * - "converge": words scattered irregularly with a few thin, partial
  *   connecting lines — no closed shape, no hub-and-spoke (Empresas).
  * - "layers": words stacked as offset horizontal lines with a short rule
- *   under each — no connecting lines, no conclusion added (Instituciones).
+ *   under each — no connecting lines, no conclusion added.
+ * - "network": a small node-and-line diagram — every word gets a dot,
+ *   only a handful of pairs connect, two words read slightly larger as
+ *   the system's anchors (Instituciones' "Comprender para intervenir
+ *   mejor").
  */
 export default function WordConnections({ words, layout, accent, className = "" }: WordConnectionsProps) {
   const stroke = ACCENT_VAR[accent];
+
+  if (layout === "network") {
+    const positions = NETWORK_POSITIONS.slice(0, words.length);
+
+    return (
+      <svg
+        viewBox={`0 0 ${NETWORK_VIEW_WIDTH} ${NETWORK_VIEW_HEIGHT}`}
+        className={className}
+        aria-hidden="true"
+        focusable="false"
+      >
+        {NETWORK_CONNECTIONS.filter(([a, b]) => a < positions.length && b < positions.length).map(([a, b], i) => (
+          <line
+            key={`network-line-${i}`}
+            x1={positions[a].dot.x}
+            y1={positions[a].dot.y}
+            x2={positions[b].dot.x}
+            y2={positions[b].dot.y}
+            pathLength={1}
+            className="pl-draw"
+            stroke={stroke}
+            strokeOpacity={0.3}
+            strokeWidth={1}
+            style={{ animationDelay: `${150 + i * 90}ms` }}
+          />
+        ))}
+        {words.map((word, i) => {
+          const p = positions[i];
+          if (!p) return null;
+          return (
+            <g key={word} className="pl-settle" style={{ animationDelay: `${250 + i * 90}ms` }}>
+              <circle cx={p.dot.x} cy={p.dot.y} r={p.emphasis ? 4 : 3} fill={stroke} opacity={p.emphasis ? 0.9 : 0.6} />
+              <text
+                x={p.x}
+                y={p.y}
+                textAnchor={p.anchor ?? "start"}
+                fontSize={p.emphasis ? 27 : 19}
+                fontWeight={p.emphasis ? 700 : 600}
+                fill="var(--color-slate)"
+              >
+                {word}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    );
+  }
 
   if (layout === "layers") {
     const height = words.length * LAYER_Y_STEP + 20;

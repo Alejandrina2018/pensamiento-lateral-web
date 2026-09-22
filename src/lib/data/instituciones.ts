@@ -15,16 +15,23 @@ export const INSTITUCIONES_HERO = {
 };
 
 // "Comprender para intervenir mejor" + the 6 desafíos — one continuous
-// section in final-copy.md, kept that way here. Only the 4 words that
-// appear literally in this paragraph — no added conclusion (approved).
+// section in final-copy.md, kept that way here.
+//
+// The 6 words below are a visual/conceptual diagram label set, not body
+// copy — the paragraph text itself is untouched. 5 of the 6 appear
+// literally on this page (percepciones/comportamientos/datos/contexto in
+// this paragraph, expectativas in "Opinión pública y electoral" below);
+// "Necesidades" doesn't appear verbatim anywhere in /instituciones' copy —
+// flagged to and explicitly approved by the client to include anyway as a
+// diagram label (design-review pass, 2026-09-22).
 export const INSTITUCIONES_CONNECTION: ConnectionIntroData = {
   title: "Comprender para intervenir mejor",
   paragraphs: [
     "Las problemáticas públicas y sociales rara vez tienen una sola explicación. Requieren integrar percepciones, comportamientos, datos y contexto para interpretar qué está pasando y dónde conviene actuar.",
     "Diseñamos abordajes que permiten escuchar, medir, analizar y priorizar, generando evidencia que ayude a orientar decisiones y acciones en territorio.",
   ],
-  words: ["percepciones", "comportamientos", "datos", "contexto"],
-  layout: "layers",
+  words: ["Percepciones", "Necesidades", "Expectativas", "Comportamientos", "Datos", "Contexto"],
+  layout: "network",
   accent: "green",
 };
 

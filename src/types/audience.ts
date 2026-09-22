@@ -4,9 +4,11 @@
 export interface ConnectionIntroData {
   title: string;
   paragraphs: string[];
-  /** Only words that literally appear in this page's approved copy. */
+  /** Words that literally appear in this page's approved copy, unless a
+   * specific exception was flagged to and approved by the client (see the
+   * call site's own comment). */
   words: string[];
-  layout: "converge" | "layers";
+  layout: "converge" | "layers" | "network";
   accent: "terracotta" | "green";
 }
 

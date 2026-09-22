@@ -126,9 +126,53 @@ const BLOCK_GRID_LINES: Line[] = [
   }),
 ];
 
-type Variant = "scatter-to-grid" | "cluster" | "grid-only" | "territory";
+// --- map (Instituciones hero) ---------------------------------------------
+// A quiet, rotated street grid (structure, not a literal map) with two soft
+// concentration halos — each a loose cluster of points over a radial-fade
+// circle, reading as "where attention/problems concentrate" without any
+// fabricated metric. Deliberately lighter than "territory": fewer grid
+// lines, only 2 zones, no block-grid overlay. Only used by /instituciones'
+// own hero — "territory" (used by /casos/impacto-cercano too) stays as-is.
+const MAP_GRID_VERTICALS = [-20, 150, 320, 490];
+const MAP_GRID_HORIZONTALS = [40, 190, 340];
+const MAP_GRID_Y_RANGE: [number, number] = [-80, 480];
+const MAP_GRID_X_RANGE: [number, number] = [-80, 640];
 
-function Dot({ point, fill, delay }: { point: Point; fill: string; delay: number }) {
+const MAP_ZONES = [
+  { center: { x: 150, y: 150 }, haloRadius: 78, count: 6, seed: 3, color: "var(--color-green)", gradientId: "dp-map-green" },
+  { center: { x: 390, y: 235 }, haloRadius: 88, count: 7, seed: 5, color: "var(--color-terracotta)", gradientId: "dp-map-terracotta" },
+];
+
+const MAP_ZONE_DOTS: Array<Point & { color: string }> = MAP_ZONES.flatMap((zone) =>
+  Array.from({ length: zone.count }, (_, i) => {
+    const angle = ((zone.seed * 97 + i * 61) % 360) * (Math.PI / 180);
+    const radius = 10 + ((zone.seed * 13 + i * 9) % 34);
+    return {
+      x: zone.center.x + Math.cos(angle) * radius,
+      y: zone.center.y + Math.sin(angle) * radius * 0.85,
+      r: i === 0 ? 3.5 : 2 + (i % 2),
+      color: zone.color,
+    };
+  })
+);
+
+// Hand-placed, sparse — the wider, undifferentiated read before the two
+// zones above emerge as concentrations.
+const MAP_SCATTER: Point[] = [
+  { x: 40, y: 60, r: 2 },
+  { x: 90, y: 280, r: 1.5 },
+  { x: 230, y: 40, r: 2 },
+  { x: 260, y: 320, r: 1.5 },
+  { x: 320, y: 70, r: 2 },
+  { x: 480, y: 90, r: 1.5 },
+  { x: 500, y: 310, r: 2 },
+  { x: 60, y: 190, r: 1.5 },
+  { x: 210, y: 230, r: 1.5 },
+];
+
+type Variant = "scatter-to-grid" | "cluster" | "grid-only" | "territory" | "map";
+
+function Dot({ point, fill, delay, opacity = 1 }: { point: Point; fill: string; delay: number; opacity?: number }) {
   return (
     <circle
       cx={point.x}
@@ -136,6 +180,7 @@ function Dot({ point, fill, delay }: { point: Point; fill: string; delay: number
       r={point.r}
       className="pl-settle"
       fill={fill}
+      opacity={opacity}
       style={{ animationDelay: `${delay}ms` }}
     />
   );
@@ -165,8 +210,10 @@ function ConnectorLine({ line, delay }: { line: Line; delay: number }) {
  * - "scatter-to-grid" (default, Home): dispersion settling into order.
  * - "cluster" (Investigación): organic groupings, listening/interpretation.
  * - "grid-only" (Datos): already-structured, a few points read as active.
- * - "territory" (Instituciones): zones of different point density, no
- *   connecting lines — never a map or GIS layer. */
+ * - "territory" (Instituciones' case study): zones of different point
+ *   density, no connecting lines — never a map or GIS layer.
+ * - "map" (Instituciones' own hero): a quiet rotated street grid plus two
+ *   soft concentration halos — reading territory, spotting where to look. */
 export default function DataPattern({
   className = "",
   variant = "scatter-to-grid",
@@ -178,6 +225,50 @@ export default function DataPattern({
    * (Impacto Cercano's extra depth vs. Instituciones' plainer version). */
   gridOverlay?: boolean;
 }) {
+  if (variant === "map") {
+    return (
+      <svg viewBox={VIEW_BOX} className={className} aria-hidden="true" focusable="false">
+        <defs>
+          {MAP_ZONES.map((zone) => (
+            <radialGradient key={zone.gradientId} id={zone.gradientId} cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor={zone.color} stopOpacity={0.22} />
+              <stop offset="100%" stopColor={zone.color} stopOpacity={0} />
+            </radialGradient>
+          ))}
+        </defs>
+
+        <g transform="rotate(-7 280 200)" stroke="var(--color-slate)" strokeOpacity={0.1} strokeWidth={1}>
+          {MAP_GRID_VERTICALS.map((x) => (
+            <line key={`map-v-${x}`} x1={x} y1={MAP_GRID_Y_RANGE[0]} x2={x} y2={MAP_GRID_Y_RANGE[1]} />
+          ))}
+          {MAP_GRID_HORIZONTALS.map((y) => (
+            <line key={`map-h-${y}`} x1={MAP_GRID_X_RANGE[0]} y1={y} x2={MAP_GRID_X_RANGE[1]} y2={y} />
+          ))}
+        </g>
+
+        {MAP_SCATTER.map((p, i) => (
+          <Dot key={`map-scatter-${i}`} point={p} fill="var(--color-slate)" opacity={0.25} delay={i * 25} />
+        ))}
+
+        {MAP_ZONES.map((zone, i) => (
+          <circle
+            key={zone.gradientId}
+            cx={zone.center.x}
+            cy={zone.center.y}
+            r={zone.haloRadius}
+            fill={`url(#${zone.gradientId})`}
+            className="pl-settle"
+            style={{ animationDelay: `${250 + i * 150}ms` }}
+          />
+        ))}
+
+        {MAP_ZONE_DOTS.map((p, i) => (
+          <Dot key={`map-zone-dot-${i}`} point={p} fill={p.color} delay={320 + i * 25} />
+        ))}
+      </svg>
+    );
+  }
+
   if (variant === "territory") {
     return (
       <svg viewBox={VIEW_BOX} className={className} aria-hidden="true" focusable="false">
