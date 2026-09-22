@@ -27,10 +27,12 @@ type CTASectionProps = {
   wide?: boolean;
   /** Default (false) keeps every existing usage's top padding unchanged
    * (overrides `spacious` too, though the two aren't used together in
-   * practice). /datos's design-review pass found the gap above this CTA
-   * too wide, contributed to by both RelatedArticles' own bottom padding
-   * (its `compactBottom`) and this section's top padding — `compactTop`
-   * reduces only this side; bottom is untouched everywhere. */
+   * practice). Only /datos uses this — first pass reduced pt-24/pt-32
+   * to pt-12/pt-16 (paired with RelatedArticles' `compactBottom`, ~120px
+   * total gap); a second design-review pass found that still too much
+   * and tightened it further to pt-8/pt-10 (~80px paired total, see
+   * commit message). Bottom is untouched everywhere; still only
+   * relevant on /datos. */
   compactTop?: boolean;
 };
 
@@ -50,7 +52,7 @@ export default function CTASection({
   compactTop = false,
 }: CTASectionProps) {
   const Heading = headingLevel;
-  const topPadding = compactTop ? "pt-12 md:pt-16" : spacious ? "pt-32 md:pt-48" : "pt-24 md:pt-32";
+  const topPadding = compactTop ? "pt-8 md:pt-10" : spacious ? "pt-32 md:pt-48" : "pt-24 md:pt-32";
   const bottomPadding = spacious ? "pb-32 md:pb-48" : "pb-24 md:pb-32";
 
   const content = (

@@ -66,8 +66,14 @@ export default async function DatosPage() {
         </Container>
       </section>
 
+      {/* Bottom padding trimmed (pb-28→pb-14 desktop) to close the gap to
+          Artículos relacionados below, matched by that section's own
+          `compact` top padding — measured together as one 208px→112px
+          desktop gap (see commit message). Top padding (gap to "De los
+          datos a herramientas de gestión" above) is untouched — not
+          part of this request. */}
       <section className="bg-cream">
-        <Container className="py-20 md:py-28">
+        <Container className="pt-20 pb-10 md:pt-28 md:pb-14">
           <Eyebrow as="h2">Caso destacado</Eyebrow>
           <div className="mt-8">
             <CasePreview caseItem={DATOS_CASE} />
@@ -75,7 +81,7 @@ export default async function DatosPage() {
         </Container>
       </section>
 
-      <RelatedArticles insights={relatedInsights} wideSingle compactBottom />
+      <RelatedArticles insights={relatedInsights} wideSingle compact compactBottom />
 
       <CTASection
         title={DATOS_FINAL_CTA.title}

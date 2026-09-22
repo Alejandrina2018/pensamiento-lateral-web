@@ -12,10 +12,12 @@ type RelatedArticlesProps = {
    * `compact` reduces only the top; bottom is untouched everywhere. */
   compact?: boolean;
   /** Default (false) keeps every existing page's bottom padding
-   * unchanged. /datos's design-review pass found the gap before the
-   * final CTA too wide, contributed to by both this section's bottom
-   * padding and CTASection's own top padding (its `compactTop`) —
-   * `compactBottom` reduces only this side. */
+   * unchanged. Only /datos uses this — first pass reduced pb-20/pb-24
+   * to pb-10/pb-14 (paired with CTASection's `compactTop`, ~120px
+   * total gap); a second design-review pass found that still too much
+   * and tightened it further to pb-8/pb-10 (~80px paired total, see
+   * commit message). Still only relevant on /datos: no other page
+   * passes this prop. */
   compactBottom?: boolean;
   /** Default (false) keeps the single-article layout exactly as it is
    * everywhere else (including /instituciones, which also currently has
@@ -53,7 +55,7 @@ export default function RelatedArticles({
   return (
     <section className="bg-cream">
       <Container
-        className={`${compactBottom ? "pb-10 md:pb-14" : "pb-20 md:pb-24"} ${
+        className={`${compactBottom ? "pb-8 md:pb-10" : "pb-20 md:pb-24"} ${
           compact ? "pt-10 md:pt-14" : "pt-20 md:pt-24"
         }`}
       >
