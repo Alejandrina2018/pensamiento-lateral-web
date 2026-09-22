@@ -6,6 +6,11 @@ import { isInsightPublished } from "@/lib/data/insights";
 
 type RelatedArticlesProps = {
   insights: InsightPreviewData[];
+  /** Default (false) keeps every existing page's top padding unchanged.
+   * /investigacion's design-review pass found a large gap above this
+   * section (on top of Caso destacado's own trimmed bottom padding) —
+   * `compact` reduces only the top; bottom is untouched everywhere. */
+  compact?: boolean;
 };
 
 const GRID_COLS = { 2: "md:grid-cols-2", 3: "md:grid-cols-3" } as const;
@@ -18,14 +23,14 @@ const GRID_COLS = { 2: "md:grid-cols-2", 3: "md:grid-cols-3" } as const;
  * This is also how it should behave once Sanity is wired in: the section's
  * presence follows from what the query actually returns.
  */
-export default function RelatedArticles({ insights }: RelatedArticlesProps) {
+export default function RelatedArticles({ insights, compact = false }: RelatedArticlesProps) {
   if (insights.length === 0) return null;
 
   const isSingle = insights.length === 1;
 
   return (
     <section className="bg-cream">
-      <Container className="py-20 md:py-24">
+      <Container className={`pb-20 md:pb-24 ${compact ? "pt-10 md:pt-14" : "pt-20 md:pt-24"}`}>
         <Eyebrow as="h2">Artículos relacionados</Eyebrow>
 
         <div

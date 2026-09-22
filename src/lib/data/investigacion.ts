@@ -111,6 +111,12 @@ export const INVESTIGACION_CASE: HomeCaseHighlight = {
   ],
   ctaLabel: "Ver caso completo",
   href: "/casos/suono",
+  // Same real photo (and alt text) already used for Suono on Home —
+  // reused here rather than duplicated, per CLAUDE.md #8 (no invented
+  // assets) and the "same image everywhere this block mentions Suono"
+  // instruction. Already a native 4:3 (768×576), the exact box
+  // CasePreview renders it in, so object-cover needs no crop at all.
+  image: { src: "/images/casos/suono.jpeg", alt: "Equipo de trabajo reunido, analizando información en una sala de reuniones" },
 };
 
 // Only articles that already exist in the /insights data (CLAUDE.md #34 —
