@@ -60,8 +60,13 @@ export default async function AutomatizacionesIaPage() {
 
       <ProcessTimeline title={AUTOMATIZACIONES_PROCESS_TITLE} stages={AUTOMATIZACIONES_PROCESS} />
 
+      {/* Bottom padding trimmed (pb-28→pb-14 desktop) to close the gap to
+          the CTA below, paired with CTASection's own `compactTop` — same
+          reasoning and same values already used for /datos's Caso
+          destacado → CTA transition. Top padding (gap to "Cómo
+          trabajamos" above) is untouched — not part of this request. */}
       <section className="bg-cream">
-        <Container className="py-20 md:py-28">
+        <Container className="pt-20 pb-10 md:pt-28 md:pb-14">
           <Eyebrow as="h2">Caso destacado</Eyebrow>
           <div className="mt-8">
             <CasePreview caseItem={AUTOMATIZACIONES_CASE} />
@@ -78,6 +83,7 @@ export default async function AutomatizacionesIaPage() {
           <Button href={AUTOMATIZACIONES_FINAL_CTA.ctaHref}>{AUTOMATIZACIONES_FINAL_CTA.ctaLabel}</Button>
         }
         wide
+        compactTop
       />
     </>
   );
