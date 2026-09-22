@@ -10,8 +10,12 @@ export interface Author {
   bio: string;
   /** Resolved, ready-to-render image — never a raw Sanity asset
    * reference. Optional: TeamMember falls back to the usual placeholder
-   * when absent. */
-  image?: { src: string; alt: string };
+   * when absent. `objectPosition` is a CSS object-position value (e.g.
+   * "center 18%") for photos that need a specific crop anchor to keep
+   * the head in frame — a Sanity image with a hotspot doesn't need one
+   * (Sanity's own crop already respects it); a local fallback file
+   * often does, and not necessarily the same value for every person. */
+  image?: { src: string; alt: string; objectPosition?: string };
   linkedin?: string;
 }
 

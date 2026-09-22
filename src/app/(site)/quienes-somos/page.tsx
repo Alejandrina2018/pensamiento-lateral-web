@@ -31,26 +31,39 @@ export const metadata: Metadata = {
 // yet — keyed by the author's Sanity `slug` (stable identifier, not the
 // display name). Remove an entry once its Sanity author.image is set;
 // toAuthorImage already prefers Sanity first, so nothing else changes.
-const LOCAL_TEAM_PHOTO_FALLBACK: Record<string, string> = {
-  "alejandrina-chichizola": "/images/team/alejandrina-chichizola.jpg",
-  "angeles-calandri": "/images/team/angeles-calandri.jpg",
+//
+// objectPosition is measured per photo, not guessed: TeamMember's box is
+// aspect-[4/3], both source photos are taller/more-square than that, so
+// object-cover's default center crop removes ~150-155px (Alejandrina) /
+// ~117px (Ángeles) off the top in original-image pixels — enough to cut
+// into the hair. Each value below anchors the crop close to the top
+// instead (a small vertical percentage, not "top" outright) so only a
+// little is trimmed above the hairline — leaving a small air margin —
+// and the rest of the crop comes off the bottom (shoulders/torso, never
+// the face). The two values differ because the photos differ; neither
+// is a guess — see the design-review report for the source measurements.
+const LOCAL_TEAM_PHOTO_FALLBACK: Record<string, { src: string; objectPosition: string }> = {
+  "alejandrina-chichizola": { src: "/images/team/alejandrina-chichizola.jpg", objectPosition: "center 18%" },
+  "angeles-calandri": { src: "/images/team/angeles-calandri.jpg", objectPosition: "center 13%" },
 };
 
 /** Resolves a team photo with three tiers, in order: Sanity `author.image`
- * (asset + optional hotspot, hotspot-aware crop to the 4:3 box TeamMember
- * uses) → a local fallback file for the two authors who don't have one in
- * Sanity yet → undefined, which makes TeamMember fall back to its usual
- * placeholder. Never hardcodes a photo inside TeamMember itself. */
-function toAuthorImage(author: SanityAuthor): { src: string; alt: string } | undefined {
+ * (asset + optional hotspot — Sanity's own crop already respects the
+ * hotspot, so no extra object-position is needed here) → a local
+ * fallback file for the two authors who don't have one in Sanity yet,
+ * each with its own measured object-position so the 4:3 crop never cuts
+ * into the head → undefined, which makes TeamMember fall back to its
+ * usual placeholder. Never hardcodes a photo inside TeamMember itself. */
+function toAuthorImage(author: SanityAuthor): { src: string; alt: string; objectPosition?: string } | undefined {
   if (author.image?.asset) {
     return {
       src: urlFor(author.image).width(1200).height(900).fit("crop").url(),
       alt: author.image.alt || `Foto de ${author.name}`,
     };
   }
-  const localSrc = LOCAL_TEAM_PHOTO_FALLBACK[author.slug];
-  if (localSrc) {
-    return { src: localSrc, alt: `Foto de ${author.name}` };
+  const fallback = LOCAL_TEAM_PHOTO_FALLBACK[author.slug];
+  if (fallback) {
+    return { src: fallback.src, alt: `Foto de ${author.name}`, objectPosition: fallback.objectPosition };
   }
   return undefined;
 }
@@ -106,13 +119,16 @@ export default async function QuienesSomosPage() {
           </h2>
           {/* Vertical editorial read, not a two-column split (design-review
               correction — the side-by-side version read as two
-              disconnected halves). The paragraphs get more width than the
-              page's usual --measure column (~8/12 of the grid instead) so
-              the block stops looking narrow next to Team below it, while
-              staying short of the full container so lines stay readable.
-              The closing statement sits below as the block's own
-              conclusion — same left edge as everything above it, full
-              editorial size, no border or side column. */}
+              disconnected halves). Paragraphs and the closing statement
+              share the same md:col-span-8 column (~8/12 of the grid),
+              so both align to the same left edge and read as one block
+              at a width comparable to Nuestro equipo below — wider than
+              the page's usual --measure column, short of the full
+              container. The statement was previously text-display-xl
+              (hero scale, ~2x the H1) — a second design-review pass
+              brought it down to text-display-md, the same scale as this
+              page's own h2/h3 section headings, so it reads as a strong
+              editorial conclusion without competing with the H1. */}
           <div className="mt-10 grid gap-6 md:grid-cols-12">
             <div className="flex flex-col gap-6 text-lg leading-relaxed text-slate/80 md:col-span-8">
               {QUIENES_SOMOS_EVOLUTION.paragraphs.map((paragraph, i) => (
@@ -120,11 +136,13 @@ export default async function QuienesSomosPage() {
               ))}
             </div>
           </div>
-          <div className="mt-16 max-w-4xl md:mt-20">
-            <p className="text-lg font-medium text-slate/70">{QUIENES_SOMOS_EVOLUTION.leadIn}</p>
-            <p className="mt-4 text-display-xl font-semibold text-balance text-slate">
-              {QUIENES_SOMOS_EVOLUTION.closingStatement}
-            </p>
+          <div className="mt-16 grid md:grid-cols-12 md:mt-20">
+            <div className="md:col-span-8">
+              <p className="text-lg font-medium text-slate/70">{QUIENES_SOMOS_EVOLUTION.leadIn}</p>
+              <p className="mt-4 text-display-md font-semibold text-balance text-slate">
+                {QUIENES_SOMOS_EVOLUTION.closingStatement}
+              </p>
+            </div>
           </div>
         </Container>
       </section>

@@ -24,6 +24,7 @@ export default function TeamMember({ author }: TeamMemberProps) {
             fill
             sizes="(min-width: 768px) 40vw, 90vw"
             className="object-cover"
+            style={author.image.objectPosition ? { objectPosition: author.image.objectPosition } : undefined}
           />
         </div>
       ) : (
