@@ -11,6 +11,12 @@ type RelatedArticlesProps = {
    * section (on top of Caso destacado's own trimmed bottom padding) —
    * `compact` reduces only the top; bottom is untouched everywhere. */
   compact?: boolean;
+  /** Default (false) keeps every existing page's bottom padding
+   * unchanged. /datos's design-review pass found the gap before the
+   * final CTA too wide, contributed to by both this section's bottom
+   * padding and CTASection's own top padding (its `compactTop`) —
+   * `compactBottom` reduces only this side. */
+  compactBottom?: boolean;
   /** Default (false) keeps the single-article layout exactly as it is
    * everywhere else (including /instituciones, which also currently has
    * exactly one published related Insight). /datos's design-review pass
@@ -34,14 +40,23 @@ const GRID_COLS = { 2: "md:grid-cols-2", 3: "md:grid-cols-3" } as const;
  * This is also how it should behave once Sanity is wired in: the section's
  * presence follows from what the query actually returns.
  */
-export default function RelatedArticles({ insights, compact = false, wideSingle = false }: RelatedArticlesProps) {
+export default function RelatedArticles({
+  insights,
+  compact = false,
+  compactBottom = false,
+  wideSingle = false,
+}: RelatedArticlesProps) {
   if (insights.length === 0) return null;
 
   const isSingle = insights.length === 1;
 
   return (
     <section className="bg-cream">
-      <Container className={`pb-20 md:pb-24 ${compact ? "pt-10 md:pt-14" : "pt-20 md:pt-24"}`}>
+      <Container
+        className={`${compactBottom ? "pb-10 md:pb-14" : "pb-20 md:pb-24"} ${
+          compact ? "pt-10 md:pt-14" : "pt-20 md:pt-24"
+        }`}
+      >
         <Eyebrow as="h2">Artículos relacionados</Eyebrow>
 
         <div

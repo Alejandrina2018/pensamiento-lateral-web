@@ -75,13 +75,14 @@ export default async function DatosPage() {
         </Container>
       </section>
 
-      <RelatedArticles insights={relatedInsights} wideSingle />
+      <RelatedArticles insights={relatedInsights} wideSingle compactBottom />
 
       <CTASection
         title={DATOS_FINAL_CTA.title}
         body={DATOS_FINAL_CTA.body}
         primaryAction={<Button href={DATOS_FINAL_CTA.ctaHref}>{DATOS_FINAL_CTA.ctaLabel}</Button>}
         wide
+        compactTop
       />
     </>
   );

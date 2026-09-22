@@ -25,6 +25,13 @@ type CTASectionProps = {
    * with the content itself kept to an 8/12 column so it doesn't stretch
    * edge to edge. */
   wide?: boolean;
+  /** Default (false) keeps every existing usage's top padding unchanged
+   * (overrides `spacious` too, though the two aren't used together in
+   * practice). /datos's design-review pass found the gap above this CTA
+   * too wide, contributed to by both RelatedArticles' own bottom padding
+   * (its `compactBottom`) and this section's top padding — `compactTop`
+   * reduces only this side; bottom is untouched everywhere. */
+  compactTop?: boolean;
 };
 
 /** Generic closing CTA block (CLAUDE.md #37) — used by Home's Contacto and
@@ -40,8 +47,11 @@ export default function CTASection({
   spacious = false,
   headingLevel = "h2",
   wide = false,
+  compactTop = false,
 }: CTASectionProps) {
   const Heading = headingLevel;
+  const topPadding = compactTop ? "pt-12 md:pt-16" : spacious ? "pt-32 md:pt-48" : "pt-24 md:pt-32";
+  const bottomPadding = spacious ? "pb-32 md:pb-48" : "pb-24 md:pb-32";
 
   const content = (
     <>
@@ -63,7 +73,7 @@ export default function CTASection({
     <section id={id} className={inverted ? "bg-slate text-cream" : "bg-cream text-slate"}>
       <Container
         narrow={!wide}
-        className={`${wide ? "" : "flex flex-col items-start gap-6"} ${spacious ? "py-32 md:py-48" : "py-24 md:py-32"}`}
+        className={`${wide ? "" : "flex flex-col items-start gap-6"} ${topPadding} ${bottomPadding}`}
       >
         {wide ? (
           <div className="grid gap-6 md:grid-cols-12">
