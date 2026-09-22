@@ -83,8 +83,13 @@ export default async function EmpresasPage() {
         </Container>
       </section>
 
+      {/* Bottom padding trimmed (pb-28→pb-14 desktop) to close the gap to
+          Artículos relacionados below, paired with its `compact` prop —
+          same reasoning and same values already used for /datos and
+          /automatizaciones-ia. Top padding (gap to "Casos" above) is
+          untouched — not part of this request. */}
       <section className="bg-sand/40">
-        <Container className="py-20 md:py-28">
+        <Container className="pt-20 pb-10 md:pt-28 md:pb-14">
           <h2 className="text-display-md font-semibold text-slate">{EMPRESAS_SECTORS.title}</h2>
           <p className="mt-4 max-w-(--measure) text-lg text-slate/80">{EMPRESAS_SECTORS.body}</p>
           <div className="mt-6">
@@ -93,12 +98,14 @@ export default async function EmpresasPage() {
         </Container>
       </section>
 
-      <RelatedArticles insights={relatedInsights} />
+      <RelatedArticles insights={relatedInsights} compact compactBottom />
 
       <CTASection
         title={EMPRESAS_FINAL_CTA.title}
         body={EMPRESAS_FINAL_CTA.body}
         primaryAction={<Button href={EMPRESAS_FINAL_CTA.ctaHref}>{EMPRESAS_FINAL_CTA.ctaLabel}</Button>}
+        wide
+        compactTop
       />
     </>
   );
