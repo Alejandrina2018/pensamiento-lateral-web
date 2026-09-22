@@ -77,6 +77,7 @@ export default async function AutomatizacionesIaPage() {
         primaryAction={
           <Button href={AUTOMATIZACIONES_FINAL_CTA.ctaHref}>{AUTOMATIZACIONES_FINAL_CTA.ctaLabel}</Button>
         }
+        wide
       />
     </>
   );

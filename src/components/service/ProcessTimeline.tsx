@@ -24,7 +24,7 @@ export default function ProcessTimeline({ title, stages }: ProcessTimelineProps)
             <li key={stage.number} className="relative flex-1">
               <span
                 aria-hidden="true"
-                className="absolute -left-[calc(2rem+2px)] top-1 h-1.5 w-1.5 rounded-full bg-terracotta lg:-top-[calc(2.5rem+2px)] lg:left-0"
+                className="absolute -left-[calc(2rem+5px)] top-1 h-2.5 w-2.5 rounded-full bg-terracotta lg:-top-[calc(2.5rem+5px)] lg:left-0"
               />
               <p aria-hidden="true" className="text-number-lg font-semibold text-cream/40">
                 {stage.number}

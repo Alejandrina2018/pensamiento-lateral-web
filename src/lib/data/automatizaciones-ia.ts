@@ -80,6 +80,12 @@ export const AUTOMATIZACIONES_CASE: HomeCaseHighlight = {
   ],
   ctaLabel: "Ver caso completo",
   href: "/casos/suono",
+  // Same real photo (and alt text) already used for Suono everywhere else
+  // it appears — Home, /investigacion — reused here rather than
+  // duplicated (CLAUDE.md #8: no invented assets, and site-wide criterion
+  // that every Suono appearance uses this same meeting photo). Already a
+  // native 4:3 (768×576), the exact box CasePreview renders it in.
+  image: { src: "/images/casos/suono.jpeg", alt: "Equipo de trabajo reunido, analizando información en una sala de reuniones" },
 };
 
 // None of final-copy.md's 3 related titles for this page exist in the
