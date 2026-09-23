@@ -34,6 +34,14 @@ type CTASectionProps = {
    * commit message). Bottom is untouched everywhere; still only
    * relevant on /datos. */
   compactTop?: boolean;
+  /** Optional decorative visual, shown beside the content on desktop/
+   * tablet and below it on mobile (never hidden — CLAUDE.md #24, #28).
+   * Default (undefined) keeps every existing usage exactly as-is: only
+   * /contacto passes one. When present, the Container widens past its
+   * usual narrow measure so there's room for both columns; `wide`'s own
+   * grid layout is unrelated and takes precedence if both were ever
+   * passed together (not done in practice). */
+  visual?: ReactNode;
 };
 
 /** Generic closing CTA block (CLAUDE.md #37) — used by Home's Contacto and
@@ -50,8 +58,10 @@ export default function CTASection({
   headingLevel = "h2",
   wide = false,
   compactTop = false,
+  visual,
 }: CTASectionProps) {
   const Heading = headingLevel;
+  const hasVisual = Boolean(visual);
   const topPadding = compactTop ? "pt-8 md:pt-10" : spacious ? "pt-32 md:pt-48" : "pt-24 md:pt-32";
   const bottomPadding = spacious ? "pb-32 md:pb-48" : "pb-24 md:pb-32";
 
@@ -72,14 +82,19 @@ export default function CTASection({
   );
 
   return (
-    <section id={id} className={inverted ? "bg-slate text-cream" : "bg-cream text-slate"}>
+    <section id={id} className={`overflow-hidden ${inverted ? "bg-slate text-cream" : "bg-cream text-slate"}`}>
       <Container
-        narrow={!wide}
-        className={`${wide ? "" : "flex flex-col items-start gap-6"} ${topPadding} ${bottomPadding}`}
+        narrow={!wide && !hasVisual}
+        className={`${wide || hasVisual ? "" : "flex flex-col items-start gap-6"} ${topPadding} ${bottomPadding}`}
       >
         {wide ? (
           <div className="grid gap-6 md:grid-cols-12">
             <div className="flex flex-col items-start gap-6 md:col-span-8">{content}</div>
+          </div>
+        ) : hasVisual ? (
+          <div className="flex flex-col items-center gap-12 md:flex-row md:items-center md:justify-between md:gap-16">
+            <div className="flex w-full max-w-lg flex-col items-start gap-6">{content}</div>
+            <div className="w-full max-w-[280px] shrink-0 md:max-w-none md:flex-1 md:pl-8">{visual}</div>
           </div>
         ) : (
           content
