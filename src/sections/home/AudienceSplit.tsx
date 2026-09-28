@@ -9,10 +9,18 @@ const ACCENT_BORDER = { terracotta: "border-terracotta", green: "border-green" }
 // Shared neutral (cream) base for both panels — differentiated by a top
 // rule + accent color per territory, not by saturated background blocks
 // (approved direction: sober over bold).
+//
+// Bottom padding is intentionally lighter than the site's usual py-24/
+// py-32 (design-review pass): this section shares its cream background
+// with FeaturedCases right below it (no color change marks the
+// boundary), and FeaturedCases' own top padding is reduced to match —
+// see that section's comment. Top padding stays full: MethodTimeline
+// right above is a full-bleed dark section, a real color break that
+// benefits from the usual air.
 export default function AudienceSplit() {
   return (
     <section className="bg-cream">
-      <Container className="py-24 md:py-32">
+      <Container className="pt-24 pb-12 md:pt-32 md:pb-16">
         <h2 className="text-display-lg font-semibold text-slate">Distintos desafíos. Un mismo enfoque.</h2>
         <p className="mt-4 max-w-(--measure) text-lg text-slate/80">
           Trabajamos con organizaciones que necesitan interpretar mejor su contexto, poner en valor sus datos y

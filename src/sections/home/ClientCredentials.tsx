@@ -17,6 +17,11 @@ import { CLIENT_LOGOS } from "@/lib/data/clients";
 // stretching thin edge-to-edge; wrapping is the intended layout (no
 // carousel/slider), so gaps step up with viewport instead of holding one
 // fixed value that would either crowd mobile or leave desktop sparse.
+//
+// Third design-review pass: PNUD's `tallAspect` flag (see ClientLogo) gives
+// just that one <li> a taller cell so its portrait logo reads at a size
+// comparable to its neighbors — every other logo keeps the same h-8/
+// md:h-9/lg:h-11 cell it always had.
 export default function ClientCredentials() {
   return (
     <section className="bg-sand/60">
@@ -27,7 +32,14 @@ export default function ClientCredentials() {
 
         <ul className="flex max-w-4xl flex-wrap items-center justify-center gap-x-8 gap-y-7 md:max-w-5xl md:gap-x-12 md:gap-y-9 lg:max-w-6xl lg:gap-x-14 lg:gap-y-10">
           {CLIENT_LOGOS.map((logo) => (
-            <li key={logo.name} className="flex h-8 items-center md:h-9 lg:h-11">
+            <li
+              key={logo.name}
+              className={
+                logo.tallAspect
+                  ? "flex h-16 items-center md:h-20 lg:h-24"
+                  : "flex h-8 items-center md:h-9 lg:h-11"
+              }
+            >
               <Image
                 src={logo.src}
                 alt={logo.name}

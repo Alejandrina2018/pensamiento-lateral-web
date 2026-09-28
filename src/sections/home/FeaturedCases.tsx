@@ -9,9 +9,12 @@ import { HOME_CASE_HIGHLIGHTS } from "@/lib/data/cases";
 // Top padding is intentionally lighter than the site's usual py-24/py-32:
 // this section shares its cream background with AudienceSplit right above
 // it (no color change marks the boundary), so the two sections' full
-// paddings stacked read as one oversized, continuity-breaking gap. Bottom
-// padding stays full — it hands off into AboutSection's blue-tint
-// background, where a real section break benefits from the usual air.
+// paddings stacked read as one oversized, continuity-breaking gap.
+// AudienceSplit's own bottom padding is trimmed to match (second
+// design-review pass) — together they read as one normal-sized gap, not
+// two stacked ones. Bottom padding here stays full — it hands off into
+// AboutSection's blue-tint background, where a real section break
+// benefits from the usual air.
 export default function FeaturedCases() {
   return (
     <section id="casos" className="bg-cream">

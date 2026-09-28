@@ -5,6 +5,17 @@ export interface ClientLogo {
    * aspect ratio instead of stretching it into a fixed box. */
   width: number;
   height: number;
+  /** Every logo's cell shares the same fixed height (see
+   * ClientCredentials) and scales its width from that via its own aspect
+   * ratio — correct for the mostly-landscape logos here, but a tall,
+   * narrow (portrait) logo ends up rendering as a thin sliver next to
+   * everything else, even though its *height* matches. Set true only for
+   * a logo whose aspect ratio makes that happen (currently just PNUD,
+   * 82x169) — ClientCredentials gives it a taller cell so it reads at a
+   * comparable size to its neighbors, still fully proportional. Never
+   * used to make a logo bigger for emphasis — only to correct this
+   * specific distortion. */
+  tallAspect?: boolean;
 }
 
 // Real logo files supplied by the client (design-review round, Fase 1 —
@@ -29,7 +40,13 @@ export const CLIENT_LOGOS: ClientLogo[] = [
   { name: "HSBC", src: "/images/logos/hsbc.png", width: 415, height: 270 },
   { name: "UTN — Universidad Tecnológica Nacional", src: "/images/logos/utn.png", width: 548, height: 190 },
   { name: "Ministerio de Salud — Presidencia de la Nación", src: "/images/logos/ministerio-salud.png", width: 411, height: 121 },
-  { name: "PNUD — Programa de las Naciones Unidas para el Desarrollo", src: "/images/logos/undp.png", width: 82, height: 169 },
+  {
+    name: "PNUD — Programa de las Naciones Unidas para el Desarrollo",
+    src: "/images/logos/undp.png",
+    width: 82,
+    height: 169,
+    tallAspect: true,
+  },
   { name: "CARBAP", src: "/images/logos/carbap.png", width: 225, height: 224 },
   { name: "Libertad y Progreso", src: "/images/logos/libertad-y-progreso.png", width: 300, height: 108 },
   { name: "American Express", src: "/images/logos/american-express.png", width: 346, height: 104 },
