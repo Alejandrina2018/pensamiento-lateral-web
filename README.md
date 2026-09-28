@@ -81,17 +81,21 @@ Las 15 páginas públicas están construidas, aprobadas y **congeladas**
 producción (ver "Sanity CMS"); el resto del contenido sigue siendo
 estático en código, a propósito — ver el detalle en esa misma sección.
 
-Pendiente conocido, fuera del alcance de esta rutina de correcciones: no
-existe todavía una página `/insights/[slug]` en `src/app/(site)/insights`.
-El listado de Insights y "Artículos relacionados" ya arman el link
-`/insights/<slug>` y lo muestran solo cuando el Insight tiene body (Sanity)
-o `isInsightPublished` (fallback estático) es verdadero, pero mientras esa
-ruta no exista ningún artículo individual es visitable — no hay 404
-visible porque el link condicional nunca llega a renderizarse hoy. Antes
-de dar por cerrada la sección de Insights hay que construir esa ruta (y su
-`ArticleLayout`) o, si no es prioridad para este lanzamiento, quitar el
-link condicional para no dejar una promesa de contenido sin página
-detrás.
+**Decisión de producto (pre-lanzamiento): Insights es teaser-only.** No
+existe página `/insights/[slug]` en `src/app/(site)/insights`, y no se va
+a construir para este lanzamiento — queda para una fase futura. El
+listado de Insights, Home's `FeaturedInsights` y las cinco secciones
+"Artículos relacionados" muestran siempre título, bajada y autor/categoría,
+nunca un link a `/insights/<slug>`: ese link solo se arma cuando
+`isInsightPublished(insight)` (definida en `src/lib/data/insights.ts`,
+`Boolean(insight.body)`) es verdadero, y `toInsightPreviewData`
+(`src/sanity/lib/insightPreview.ts`) fija `body: undefined` en el mapeo
+desde Sanity para todo Insight, sin excepción, sea cual sea el valor de
+`hasArticle` en el documento — así que ese link nunca se renderiza hoy en
+ningún lugar del sitio, verificado en `InsightPreview.tsx` y
+`RelatedArticles.tsx`, los dos únicos componentes que lo generarían. Si en
+el futuro se decide publicar artículos completos, esa ruta y el flujo que
+la habilita quedan explícitamente fuera del alcance actual.
 
 ## Sanity CMS
 
@@ -135,8 +139,8 @@ puntuales, ninguna es el contenido migrado en sí:
   el listado de casos en sí (`CASOS_LISTING`, en ese mismo archivo) ya no
   se usa fuera de la migración.
 - `RelatedArticles`/`InsightPreview` importan `isInsightPublished` de
-  `src/lib/data/insights.ts` como parte de su gate de publicación (ver el
-  pendiente sobre `/insights/[slug]` más arriba).
+  `src/lib/data/insights.ts` como parte del gate que mantiene Insights
+  teaser-only (ver "Estado actual" más arriba).
 
 **Migración** (una vez configuradas las variables de Sanity):
 
