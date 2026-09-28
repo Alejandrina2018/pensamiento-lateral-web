@@ -40,7 +40,7 @@ export default function Footer() {
       </Container>
 
       <Container className="border-t border-sand py-6">
-        <p className="text-xs text-slate/60">
+        <p className="text-xs text-slate/70">
           © {year} {SITE_NAME}
         </p>
       </Container>

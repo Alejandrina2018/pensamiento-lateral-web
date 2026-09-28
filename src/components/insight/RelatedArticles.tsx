@@ -93,7 +93,7 @@ export default function RelatedArticles({
               {isSingle && (
                 <p className="mt-3 max-w-(--measure) leading-relaxed text-slate/80">{insight.excerpt}</p>
               )}
-              <p className="mt-3 text-sm uppercase tracking-wide text-slate/50">
+              <p className="mt-3 text-sm uppercase tracking-wide text-slate/70">
                 {insight.author.name} · {insight.displayCategory}
               </p>
             </article>

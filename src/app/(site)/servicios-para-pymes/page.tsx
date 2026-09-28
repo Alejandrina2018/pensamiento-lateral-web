@@ -67,7 +67,7 @@ export default function ServiciosParaPymesPage() {
                   <span className="text-3xl font-semibold text-slate/15 md:text-5xl" aria-hidden="true">
                     {solution.number}
                   </span>
-                  <h2 className="text-sm font-medium uppercase tracking-widest text-slate/60">{solution.name}</h2>
+                  <h2 className="text-sm font-medium uppercase tracking-widest text-slate/70">{solution.name}</h2>
                 </div>
                 <div className="flex flex-col gap-4 md:col-span-9">
                   <h3 className="text-display-md font-semibold text-slate">{solution.tagline}</h3>

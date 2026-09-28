@@ -31,7 +31,7 @@ export default function ServiceIntro() {
               <div className="flex flex-col gap-4 md:col-span-9">
                 <h3 className="text-display-md font-semibold text-slate">{service.tagline}</h3>
                 <p className="max-w-(--measure) leading-relaxed text-slate/80">{service.body}</p>
-                <p className="text-sm leading-relaxed text-slate/60">{service.tags.join(" · ")}</p>
+                <p className="text-sm leading-relaxed text-slate/70">{service.tags.join(" · ")}</p>
                 <Link
                   href={service.href}
                   className="mt-2 inline-flex w-fit items-center gap-2 text-sm font-medium text-terracotta hover:text-slate"
@@ -53,7 +53,7 @@ export default function ServiceIntro() {
             <div className="flex flex-col gap-4 md:col-span-9">
               <h3 className="text-3xl font-semibold text-slate md:text-4xl">{automatizaciones.tagline}</h3>
               <p className="max-w-(--measure) leading-relaxed text-slate/80">{automatizaciones.body}</p>
-              <p className="text-sm leading-relaxed text-slate/60">{automatizaciones.tags.join(" · ")}</p>
+              <p className="text-sm leading-relaxed text-slate/70">{automatizaciones.tags.join(" · ")}</p>
               <Link
                 href={automatizaciones.href}
                 className="mt-2 inline-flex w-fit items-center gap-2 text-sm font-medium text-terracotta hover:text-slate"

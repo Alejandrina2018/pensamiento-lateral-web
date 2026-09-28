@@ -56,7 +56,7 @@ export default function InsightPreview({ insight, index, featured = false }: Ins
           >
             {insight.excerpt}
           </p>
-          <p className="mt-4 text-sm uppercase tracking-wide text-slate/50">
+          <p className="mt-4 text-sm uppercase tracking-wide text-slate/70">
             {insight.author.name} · {insight.displayCategory}
           </p>
           {published && (

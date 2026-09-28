@@ -20,7 +20,7 @@ export default function CompactCaseList({ items }: CompactCaseListProps) {
             href={item.href}
             className="group flex flex-col gap-1 py-8 md:flex-row md:items-baseline md:gap-8"
           >
-            <span className="text-sm font-medium uppercase tracking-widest text-slate/60 md:w-44 md:shrink-0">
+            <span className="text-sm font-medium uppercase tracking-widest text-slate/70 md:w-44 md:shrink-0">
               {item.name}
             </span>
             <span className="text-xl font-semibold text-slate group-hover:text-terracotta md:text-2xl">

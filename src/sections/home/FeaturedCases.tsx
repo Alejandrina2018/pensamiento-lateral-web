@@ -3,6 +3,9 @@ import CasePreview from "@/components/case/CasePreview";
 import { HOME_CASE_HIGHLIGHTS } from "@/lib/data/cases";
 
 // Verbatim from content/final-copy.md — Home / Cuando el conocimiento se convierte en acción.
+// HOME_CASE_HIGHLIGHTS (src/lib/data/cases.ts) is a deliberate fixed
+// editorial curation, kept out of Sanity on purpose — see that file's
+// header comment for why.
 // Top padding is intentionally lighter than the site's usual py-24/py-32:
 // this section shares its cream background with AudienceSplit right above
 // it (no color change marks the boundary), so the two sections' full

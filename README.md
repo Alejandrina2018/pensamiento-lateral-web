@@ -6,8 +6,9 @@ Ver `CLAUDE.md` para el brief estratégico y técnico completo.
 
 - Next.js (App Router) + TypeScript
 - Tailwind CSS v4 (tokens en `src/styles/tokens.css`)
-- CMS: Sanity — schemas y Studio listos (`/studio`), **todavía no
-  conectado al frontend público**; ver "Sanity CMS" más abajo
+- CMS: Sanity — Studio embebido (`/studio`) y **conectado al frontend
+  público** para Insights, Casos, Autores y Prensa; ver "Sanity CMS" más
+  abajo
 
 ## Desarrollo local
 
@@ -63,7 +64,8 @@ src/
   lib/          constantes (nav), helpers (env vars de contacto), datos
                 estáticos de página (src/lib/data) — ver nota de Sanity
   sanity/       schemas, clientes, queries y script de migración (ver
-                "Sanity CMS") — nada de esto se lee todavía en producción
+                "Sanity CMS") — las páginas públicas leen de acá para
+                Insights, Casos, Autores y Prensa
   styles/       design tokens (colores, tipografía, radios, motion)
   types/        tipos de contenido
 content/
@@ -75,10 +77,21 @@ sanity.cli.ts      config del CLI de Sanity
 ## Estado actual
 
 Las 15 páginas públicas están construidas, aprobadas y **congeladas**
-(ver `CLAUDE.md`). Contenido de Insights/Casos/Autores/Prensa sigue
-siendo estático en `src/lib/data/*.ts` — la integración de Sanity está en
-curso (schemas y Studio listos, sin conectar al frontend todavía; ver
-"Sanity CMS").
+(ver `CLAUDE.md`). Insights, Casos, Autores y Prensa leen de Sanity en
+producción (ver "Sanity CMS"); el resto del contenido sigue siendo
+estático en código, a propósito — ver el detalle en esa misma sección.
+
+Pendiente conocido, fuera del alcance de esta rutina de correcciones: no
+existe todavía una página `/insights/[slug]` en `src/app/(site)/insights`.
+El listado de Insights y "Artículos relacionados" ya arman el link
+`/insights/<slug>` y lo muestran solo cuando el Insight tiene body (Sanity)
+o `isInsightPublished` (fallback estático) es verdadero, pero mientras esa
+ruta no exista ningún artículo individual es visitable — no hay 404
+visible porque el link condicional nunca llega a renderizarse hoy. Antes
+de dar por cerrada la sección de Insights hay que construir esa ruta (y su
+`ArticleLayout`) o, si no es prioridad para este lanzamiento, quitar el
+link condicional para no dejar una promesa de contenido sin página
+detrás.
 
 ## Sanity CMS
 
@@ -88,11 +101,42 @@ Pymes, Contacto) sigue estático en código, a propósito.
 
 **Studio:** `/studio` (embebido, requiere las variables `NEXT_PUBLIC_SANITY_*`).
 
-**El frontend público NO lee de Sanity todavía.** `src/sanity/` contiene
-schemas, clientes (`published`/`drafts`), queries y el script de
-migración, pero ninguna página de `src/app/(site)` fue modificada para
-usarlos — siguen leyendo `src/lib/data/*.ts`, sin excepción, hasta el
-corte de datos aprobado.
+**El frontend público sí lee de Sanity.** Las páginas de `/casos`,
+`/casos/[slug]`, `/insights`, el equipo en `/quienes-somos` y "PL en la
+prensa" en `/quienes-somos#prensa` consultan `src/sanity/lib/queries.ts`
+a través de `sanityFetch` (`src/sanity/lib/fetch.ts`), con cache tags por
+tipo de contenido (`src/sanity/lib/tags.ts`) invalidados por el webhook de
+revalidación. Home's `FeaturedInsights` y las cinco secciones
+"Artículos relacionados" (`/investigacion`, `/datos`,
+`/automatizaciones-ia`, `/empresas`, `/instituciones`) también resuelven
+sus Insights desde Sanity.
+
+**Lo único que sigue fijo en código, a propósito:** Home's `FeaturedCases`
+(ver `src/lib/data/cases.ts`) — una curaduría editorial de 3 casos con su
+propio copy y agrupamiento ("Sector público" combina GCBA + Impacto
+Cercano bajo un solo bloque, con su CTA a `/instituciones` en vez de a un
+caso individual), aprobada así por el cliente y no derivable
+automáticamente de la lista plana de `caseStudy` en Sanity. No es un
+resabio de la migración: es la curaduría vigente de esa sección, y no se
+tocó en esta rutina de correcciones. El resto del contenido no listado
+arriba (Home institucional, los tres servicios, Empresas, Instituciones,
+Pymes, Contacto) tampoco pasó nunca por Sanity — es copy aprobado y
+congelado, sin necesidad de CMS.
+
+Los datos estáticos legacy en `src/lib/data/casos/*.ts`, `insights.ts` y
+`authors.ts` se conservan sobre todo como fuente del script de migración
+(`src/sanity/migrate/migrate.ts`) y para rollback — con tres excepciones
+puntuales, ninguna es el contenido migrado en sí:
+
+- `FeaturedCases` en Home usa `src/lib/data/cases.ts` (no
+  `casos/*.ts`) para su curaduría fija, como se explica arriba.
+- `/casos/page.tsx` importa `CASOS_INTRO` de `src/lib/data/casos/index.ts`
+  — es el copy fijo de intro de esa página (título + bajada), no un caso;
+  el listado de casos en sí (`CASOS_LISTING`, en ese mismo archivo) ya no
+  se usa fuera de la migración.
+- `RelatedArticles`/`InsightPreview` importan `isInsightPublished` de
+  `src/lib/data/insights.ts` como parte de su gate de publicación (ver el
+  pendiente sobre `/insights/[slug]` más arriba).
 
 **Migración** (una vez configuradas las variables de Sanity):
 

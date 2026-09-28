@@ -3,6 +3,16 @@ import type { HomeCaseHighlight } from "@/types/home";
 // Verbatim from content/final-copy.md — "Cuando el conocimiento se convierte en acción" (Home).
 // "Sector público" groups the GCBA and Impacto Cercano cases; its CTA goes to
 // /instituciones, not a filtered /casos view (confirmed by the client).
+//
+// Deliberate fixed editorial curation, not a pending Sanity migration: this
+// is the one Home section that intentionally stays hand-authored even
+// though /casos itself reads the same underlying cases from Sanity
+// (CASE_STUDIES_QUERY). "Sector público" has no Sanity counterpart — it's
+// a Home-only grouping of two separate caseStudy documents under one
+// block, with its own body copy and a CTA that doesn't point at either
+// case individually — so it can't be derived automatically from Sanity's
+// flat case list without inventing a data model just for this one section.
+// Revisit only if the client asks to change which cases are featured here.
 export const HOME_CASE_HIGHLIGHTS: HomeCaseHighlight[] = [
   {
     name: "Zurich",

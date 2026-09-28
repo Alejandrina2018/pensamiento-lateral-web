@@ -32,7 +32,7 @@ export default function TeamMember({ author }: TeamMemberProps) {
       )}
       <div>
         <h3 className="text-2xl font-semibold text-slate">{author.name}</h3>
-        <p className="mt-1 text-sm font-medium uppercase tracking-widest text-slate/60">{author.role}</p>
+        <p className="mt-1 text-sm font-medium uppercase tracking-widest text-slate/70">{author.role}</p>
         <p className="mt-4 max-w-(--measure) leading-relaxed text-slate/80">{author.bio}</p>
         {author.linkedin ? (
           <a

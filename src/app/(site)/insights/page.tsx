@@ -61,7 +61,7 @@ export default async function InsightsPage({ searchParams }: PageProps) {
                   href={href}
                   aria-current={isActive ? "true" : undefined}
                   className={`text-sm font-medium uppercase tracking-widest ${
-                    isActive ? "text-terracotta" : "text-slate/60 hover:text-slate"
+                    isActive ? "text-terracotta" : "text-slate/70 hover:text-slate"
                   }`}
                 >
                   {filter.label}

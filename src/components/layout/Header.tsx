@@ -18,7 +18,7 @@ export default function Header() {
       <Container className="relative flex items-center justify-between py-5">
         <BrandMark markClassName="h-6 md:h-7" textClassName="text-lg" />
 
-        <nav aria-label="Menú principal" className="hidden items-center gap-8 md:flex">
+        <nav aria-label="Menú principal" className="hidden items-center gap-8 lg:flex">
           {MAIN_NAV.map((item) =>
             item.children ? (
               <details key={item.label} className="group relative">

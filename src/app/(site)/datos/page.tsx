@@ -59,7 +59,7 @@ export default async function DatosPage() {
         <Container className="py-20 md:py-28">
           <h2 className="text-display-md font-semibold text-slate">{DATOS_OUTPUTS.title}</h2>
           <p className="mt-4 max-w-(--measure) text-lg text-slate/80">{DATOS_OUTPUTS.body}</p>
-          <p className="mt-8 text-sm font-medium uppercase tracking-widest text-slate/60">{DATOS_OUTPUTS.label}</p>
+          <p className="mt-8 text-sm font-medium uppercase tracking-widest text-slate/70">{DATOS_OUTPUTS.label}</p>
           <div className="mt-4 max-w-5xl">
             <StructuredIndex terms={DATOS_OUTPUTS.terms} />
           </div>

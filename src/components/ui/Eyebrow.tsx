@@ -15,7 +15,7 @@ type EyebrowProps = {
  * utilities would otherwise race in the generated stylesheet. */
 export default function Eyebrow({ as: Tag = "p", children, className }: EyebrowProps) {
   return (
-    <Tag className={`text-sm font-medium uppercase tracking-widest ${className || "text-slate/60"}`}>
+    <Tag className={`text-sm font-medium uppercase tracking-widest ${className || "text-slate/70"}`}>
       {children}
     </Tag>
   );

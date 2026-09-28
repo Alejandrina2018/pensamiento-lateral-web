@@ -30,7 +30,7 @@ export default function AudienceSplit() {
               </p>
               <h3 className="text-display-md font-semibold text-slate">{audience.tagline}</h3>
               <p className="max-w-(--measure) text-slate/80">{audience.body}</p>
-              <p className="text-sm text-slate/60">{audience.tags.join(" · ")}</p>
+              <p className="text-sm text-slate/70">{audience.tags.join(" · ")}</p>
               <Link
                 href={audience.href}
                 className={`mt-2 inline-flex w-fit items-center gap-2 text-sm font-medium hover:text-slate ${ACCENT_TEXT[audience.accent]}`}
