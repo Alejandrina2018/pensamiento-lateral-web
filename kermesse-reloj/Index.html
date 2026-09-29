@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <style>
+    :root {
+      --verde: #123D2F;
+      --verde-hover: #0C2C21;
+      --verde-suave: #EEF4F1;
+      --verde-linea: #D5E2DB;
+      --apagado-fondo: #F1F3F2;
+      --apagado-texto: #9AA7A1;
+      --texto: #1D2B25;
+      --texto-sec: #5B6B64;
+      --blanco: #FFFFFF;
+      --radio: 14px;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      margin: 0;
+      background: var(--blanco);
+      color: var(--texto);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 17px;
+      line-height: 1.45;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    .contenedor {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 0 20px calc(40px + env(safe-area-inset-bottom));
+    }
+
+    /* ───────── Cabecera ───────── */
+    .cabecera {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 0 18px;
+      border-bottom: 1px solid var(--verde-linea);
+    }
+    .logo-img { height: 44px; width: auto; display: block; }
+    .monograma {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--verde);
+      color: var(--blanco);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px; letter-spacing: .06em;
+      flex-shrink: 0;
+    }
+    .cabecera-texto { color: var(--verde); font-size: 14px; font-weight: 600; letter-spacing: .02em; line-height: 1.2; }
+    .cabecera-texto small { display: block; font-weight: 400; color: var(--texto-sec); font-size: 13px; }
+
+    /* ───────── Títulos ───────── */
+    .intro { text-align: center; padding: 30px 0 8px; }
+    .evento { margin: 0; font-size: 14px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--texto-sec); }
+    .puesto { margin: 6px 0 10px; font-size: 32px; line-height: 1.15; font-weight: 700; color: var(--verde); }
+    .grados {
+      display: inline-block;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: var(--verde-suave);
+      color: var(--verde);
+      font-size: 14px; font-weight: 600; letter-spacing: .04em;
+    }
+    .consigna { margin: 28px 0 16px; font-size: 19px; font-weight: 600; color: var(--verde); text-align: center; }
+
+    /* ───────── Grilla de horarios ───────── */
+    .grilla { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 340px) { .grilla { grid-template-columns: 1fr; } }
+
+    .turno {
+      appearance: none; -webkit-appearance: none;
+      font: inherit;
+      width: 100%;
+      min-height: 88px;
+      padding: 14px 10px;
+      border: 2px solid var(--verde);
+      border-radius: var(--radio);
+      background: var(--blanco);
+      color: var(--verde);
+      cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+      text-align: center;
+      touch-action: manipulation;
+      transition: background-color .15s, color .15s, transform .1s;
+    }
+    .turno .hora { font-size: 18px; font-weight: 700; letter-spacing: .01em; white-space: nowrap; }
+    .turno .lugares { font-size: 13px; font-weight: 500; }
+    .turno:active:not(:disabled) { transform: scale(.98); }
+    .turno.elegido { background: var(--verde); color: var(--blanco); }
+    @media (hover: hover) { .turno:hover:not(:disabled):not(.elegido) { background: var(--verde-suave); } }
+    .turno:focus-visible { outline: 3px solid var(--verde-linea); outline-offset: 2px; }
+    .turno:disabled {
+      cursor: not-allowed;
+      border-color: var(--apagado-fondo);
+      background: var(--apagado-fondo);
+      color: var(--apagado-texto);
+    }
+    .turno:disabled .lugares { font-weight: 700; letter-spacing: .08em; }
+
+    .turno.cargando {
+      border-color: var(--verde-linea);
+      background: linear-gradient(90deg, var(--verde-suave) 0%, #F7FAF8 50%, var(--verde-suave) 100%);
+      background-size: 200% 100%;
+      animation: brillo 1.2s linear infinite;
+    }
+    @keyframes brillo { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+    /* ───────── Avisos ───────── */
+    .aviso {
+      margin: 0 0 16px;
+      padding: 14px 16px;
+      border-radius: var(--radio);
+      background: var(--verde-suave);
+      border-left: 4px solid var(--verde);
+      color: var(--verde);
+      font-size: 16px; font-weight: 600;
+    }
+    .aviso[hidden] { display: none; }
+    .nota { margin: 18px 0 0; text-align: center; color: var(--texto-sec); font-size: 14px; }
+
+    /* ───────── Formulario ───────── */
+    .volver {
+      appearance: none; -webkit-appearance: none;
+      background: none; border: 0; padding: 18px 0 4px;
+      font: inherit; font-size: 16px; font-weight: 600; color: var(--verde);
+      cursor: pointer; touch-action: manipulation;
+    }
+    .resumen {
+      margin: 16px 0 24px;
+      padding: 20px;
+      border-radius: var(--radio);
+      background: var(--verde);
+      color: var(--blanco);
+      text-align: center;
+    }
+    .resumen .etiqueta { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; opacity: .8; }
+    .resumen .valor { font-size: 28px; font-weight: 700; margin-top: 4px; }
+    .resumen .puesto-chico { font-size: 15px; opacity: .9; margin-top: 2px; }
+
+    .campo { margin-bottom: 20px; }
+    .campo label, .campo .rotulo { display: block; margin-bottom: 8px; font-size: 16px; font-weight: 600; color: var(--verde); }
+    .campo input[type="text"], .campo input[type="tel"] {
+      width: 100%;
+      height: 54px;
+      padding: 0 16px;
+      border: 1.5px solid var(--verde-linea);
+      border-radius: 12px;
+      background: var(--blanco);
+      color: var(--texto);
+      font: inherit;
+      font-size: 17px; /* ≥16px evita el zoom automático de Safari en iPhone */
+      -webkit-appearance: none; appearance: none;
+    }
+    .campo input:focus { outline: none; border-color: var(--verde); box-shadow: 0 0 0 3px var(--verde-suave); }
+    .campo input.invalido { border-color: var(--verde); background: var(--verde-suave); }
+
+    .grados-opciones { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grados-opciones input { position: absolute; opacity: 0; pointer-events: none; }
+    .grados-opciones label {
+      margin: 0;
+      height: 54px;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--verde);
+      border-radius: 12px;
+      color: var(--verde);
+      font-size: 18px; font-weight: 700;
+      cursor: pointer; touch-action: manipulation;
+      transition: background-color .15s, color .15s;
+    }
+    .grados-opciones input:checked + label { background: var(--verde); color: var(--blanco); }
+    .grados-opciones input:focus-visible + label { outline: 3px solid var(--verde-linea); outline-offset: 2px; }
+
+    .error-campo { margin: 6px 0 0; font-size: 14px; color: var(--verde); font-weight: 600; }
+    .error-campo:empty { display: none; }
+
+    .boton {
+      appearance: none; -webkit-appearance: none;
+      width: 100%;
+      min-height: 58px;
+      margin-top: 8px;
+      border: 0;
+      border-radius: var(--radio);
+      background: var(--verde);
+      color: var(--blanco);
+      font: inherit; font-size: 18px; font-weight: 700; letter-spacing: .06em;
+      cursor: pointer; touch-action: manipulation;
+    }
+    .boton:active:not(:disabled) { background: var(--verde-hover); }
+    .boton:disabled { opacity: .6; cursor: wait; }
+
+    /* ───────── Confirmación ───────── */
+    .ok { text-align: center; padding-top: 36px; }
+    .check {
+      width: 72px; height: 72px; margin: 0 auto 20px;
+      border-radius: 50%;
+      background: var(--verde);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ok h2 { margin: 0 0 6px; font-size: 28px; color: var(--verde); }
+    .ok .sub { margin: 0 0 24px; color: var(--texto-sec); font-size: 17px; }
+    .ficha {
+      text-align: left;
+      border: 2px solid var(--verde);
+      border-radius: var(--radio);
+      padding: 6px 20px;
+    }
+    .ficha div { padding: 14px 0; border-bottom: 1px solid var(--verde-linea); }
+    .ficha div:last-child { border-bottom: 0; }
+    .ficha span { display: block; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--texto-sec); }
+    .ficha strong { display: block; font-size: 20px; color: var(--verde); margin-top: 2px; word-break: break-word; }
+    .despedida { margin: 28px 0 6px; font-size: 18px; font-weight: 600; color: var(--verde); }
+
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+
+    <!-- CABECERA: preparada para el logo. Si LOGO_URL (en Code.gs) tiene un link, se muestra la imagen. -->
+    <header class="cabecera">
+      <? if (logoUrl) { ?>
+        <img class="logo-img" src="<?= logoUrl ?>" alt="Belgrano Day School">
+      <? } else { ?>
+        <div class="monograma" aria-hidden="true">BDS</div>
+      <? } ?>
+      <div class="cabecera-texto">Kermesse Solidaria<small>Belgrano Day School</small></div>
+    </header>
+
+    <!-- ═════════ PANTALLA 1: HORARIOS ═════════ -->
+    <main id="pantalla-turnos">
+      <section class="intro">
+        <p class="evento">Kermesse Solidaria BDS</p>
+        <h1 class="puesto">Reloj mecánico</h1>
+        <span class="grados">P4B + P4C</span>
+      </section>
+
+      <p class="consigna">Elegí el horario en el que podés colaborar</p>
+
+      <p id="aviso-turnos" class="aviso" role="alert" hidden></p>
+
+      <div id="grilla" class="grilla" aria-live="polite"></div>
+
+      <p class="nota" id="nota-turnos">Cada horario tiene lugar para 2 familias.</p>
+    </main>
+
+    <!-- ═════════ PANTALLA 2: FORMULARIO ═════════ -->
+    <main id="pantalla-form" hidden>
+      <button type="button" class="volver" id="btn-volver">← Cambiar horario</button>
+
+      <div class="resumen">
+        <div class="etiqueta">Tu horario</div>
+        <div class="valor" id="resumen-horario"></div>
+        <div class="puesto-chico">Reloj mecánico</div>
+      </div>
+
+      <p id="aviso-form" class="aviso" role="alert" hidden></p>
+
+      <form id="form" novalidate autocomplete="on">
+        <div class="campo">
+          <label for="familia">Familia / Apellido</label>
+          <input type="text" id="familia" name="familia" maxlength="60"
+                 autocomplete="family-name" autocapitalize="words" enterkeyhint="next"
+                 placeholder="Ej.: Pérez">
+          <p class="error-campo" id="err-familia"></p>
+        </div>
+
+        <div class="campo">
+          <span class="rotulo" id="rotulo-grado">Grado</span>
+          <div class="grados-opciones" role="radiogroup" aria-labelledby="rotulo-grado">
+            <input type="radio" name="grado" id="grado-b" value="P4B">
+            <label for="grado-b">P4B</label>
+            <input type="radio" name="grado" id="grado-c" value="P4C">
+            <label for="grado-c">P4C</label>
+          </div>
+          <p class="error-campo" id="err-grado"></p>
+        </div>
+
+        <div class="campo">
+          <label for="celular">Celular</label>
+          <input type="tel" id="celular" name="celular" maxlength="25"
+                 inputmode="tel" autocomplete="tel" enterkeyhint="done"
+                 placeholder="Ej.: 11 5555 5555">
+          <p class="error-campo" id="err-celular"></p>
+        </div>
+
+        <button type="submit" class="boton" id="btn-reservar">RESERVAR TURNO</button>
+      </form>
+    </main>
+
+    <!-- ═════════ PANTALLA 3: CONFIRMACIÓN ═════════ -->
+    <main id="pantalla-ok" class="ok" hidden>
+      <div class="check" aria-hidden="true">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <h2>¡Gracias por sumarte!</h2>
+      <p class="sub">Tu turno quedó reservado.</p>
+
+      <div class="ficha">
+        <div><span>Puesto</span><strong>Reloj mecánico</strong></div>
+        <div><span>Horario</span><strong id="ok-horario"></strong></div>
+        <div><span>Familia</span><strong id="ok-familia"></strong></div>
+      </div>
+
+      <p class="despedida">Nos vemos en la Kermesse Solidaria BDS</p>
+      <p class="nota">Te sugerimos sacarle una captura a esta pantalla.</p>
+    </main>
+
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var REFRESCO_MS = 30000;          // actualiza la disponibilidad cada 30 s
+      var turnos = [];                  // [{ horario, disponibles }]
+      var abiertas = true;
+      var elegido = null;               // horario seleccionado
+      var enviando = false;
+      var temporizador = null;
+
+      var $ = function (id) { return document.getElementById(id); };
+      var pantallas = { turnos: $('pantalla-turnos'), form: $('pantalla-form'), ok: $('pantalla-ok') };
+
+      // ───────── Navegación ─────────
+      function mostrar(nombre) {
+        Object.keys(pantallas).forEach(function (k) { pantallas[k].hidden = (k !== nombre); });
+        window.scrollTo(0, 0);
+      }
+
+      function aviso(id, texto) {
+        var el = $(id);
+        el.textContent = texto || '';
+        el.hidden = !texto;
+      }
+
+      // ───────── Disponibilidad ─────────
+      function pintarCargando() {
+        var g = $('grilla');
+        g.innerHTML = '';
+        for (var i = 0; i < 10; i++) {
+          var b = document.createElement('button');
+          b.className = 'turno cargando';
+          b.disabled = true;
+          b.setAttribute('aria-hidden', 'true');
+          g.appendChild(b);
+        }
+      }
+
+      function textoLugares(n) {
+        if (n <= 0) return 'COMPLETO';
+        return n === 1 ? '1 lugar disponible' : n + ' lugares disponibles';
+      }
+
+      function pintarTurnos() {
+        var g = $('grilla');
+        g.innerHTML = '';
+        turnos.forEach(function (t) {
+          var completo = t.disponibles <= 0 || !abiertas;
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'turno' + (t.horario === elegido && !completo ? ' elegido' : '');
+          b.disabled = completo;
+
+          var h = document.createElement('span');
+          h.className = 'hora';
+          h.textContent = t.horario;
+          var l = document.createElement('span');
+          l.className = 'lugares';
+          l.textContent = textoLugares(t.disponibles);
+
+          b.appendChild(h);
+          b.appendChild(l);
+          b.setAttribute('aria-label', t.horario + ', ' + textoLugares(t.disponibles));
+          if (!completo) b.addEventListener('click', function () { elegir(t.horario); });
+          g.appendChild(b);
+        });
+
+        var hayLugar = turnos.some(function (t) { return t.disponibles > 0; });
+        if (!abiertas) {
+          $('nota-turnos').textContent = 'Las reservas están cerradas. ¡Gracias!';
+        } else if (!hayLugar) {
+          $('nota-turnos').textContent = 'Todos los horarios están completos. ¡Gracias a todas las familias!';
+        } else {
+          $('nota-turnos').textContent = 'Cada horario tiene lugar para 2 familias.';
+        }
+      }
+
+      function cargar(silencioso) {
+        if (!silencioso && !turnos.length) pintarCargando();
+        google.script.run
+          .withSuccessHandler(function (res) {
+            turnos = res.turnos;
+            abiertas = res.abiertas;
+            pintarTurnos();
+            if (!silencioso) aviso('aviso-turnos', '');
+            revisarElegido();
+          })
+          .withFailureHandler(function () {
+            if (!turnos.length) {
+              $('grilla').innerHTML = '';
+              aviso('aviso-turnos', 'No pudimos cargar los horarios. Revisá tu conexión y volvé a abrir el link.');
+            }
+          })
+          .obtenerDisponibilidad();
+      }
+
+      // Si mientras completa el formulario el turno elegido se llena, se avisa enseguida.
+      function revisarElegido() {
+        if (!elegido || pantallas.form.hidden || enviando) return;
+        var t = turnos.filter(function (x) { return x.horario === elegido; })[0];
+        if (!t || t.disponibles <= 0 || !abiertas) {
+          volverPorCompleto('Ese horario acaba de completarse. Elegí otro horario disponible.');
+        }
+      }
+
+      function programarRefresco() {
+        clearInterval(temporizador);
+        temporizador = setInterval(function () {
+          if (!document.hidden && pantallas.ok.hidden) cargar(true);
+        }, REFRESCO_MS);
+      }
+
+      // Al volver a la pestaña (p. ej. desde WhatsApp) se actualiza al instante.
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden && pantallas.ok.hidden) cargar(true);
+      });
+
+      // ───────── Selección ─────────
+      function elegir(horario) {
+        elegido = horario;
+        pintarTurnos();
+        $('resumen-horario').textContent = horario;
+        aviso('aviso-form', '');
+        limpiarErrores();
+        // Pequeña pausa para que se vea la tarjeta marcada en verde.
+        setTimeout(function () { mostrar('form'); }, 180);
+      }
+
+      function volverPorCompleto(msg) {
+        elegido = null;
+        pintarTurnos();
+        mostrar('turnos');
+        aviso('aviso-turnos', msg);
+      }
+
+      $('btn-volver').addEventListener('click', function () {
+        elegido = null;
+        pintarTurnos();
+        aviso('aviso-turnos', '');
+        mostrar('turnos');
+        cargar(true);
+      });
+
+      // ───────── Formulario ─────────
+      function limpiarErrores() {
+        ['familia', 'grado', 'celular'].forEach(function (c) { $('err-' + c).textContent = ''; });
+        $('familia').classList.remove('invalido');
+        $('celular').classList.remove('invalido');
+      }
+
+      function gradoElegido() {
+        var r = document.querySelector('input[name="grado"]:checked');
+        return r ? r.value : '';
+      }
+
+      function validar() {
+        limpiarErrores();
+        var ok = true;
+        var familia = $('familia').value.trim();
+        var digitos = $('celular').value.replace(/\D/g, '');
+
+        if (familia.length < 2) {
+          $('err-familia').textContent = 'Escribí el apellido de la familia.';
+          $('familia').classList.add('invalido');
+          ok = false;
+        }
+        if (!gradoElegido()) {
+          $('err-grado').textContent = 'Elegí el grado.';
+          ok = false;
+        }
+        if (digitos.length < 8 || digitos.length > 15) {
+          $('err-celular').textContent = 'Revisá el número de celular.';
+          $('celular').classList.add('invalido');
+          ok = false;
+        }
+        return ok;
+      }
+
+      $('form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (enviando) return;               // evita doble toque
+        if (!elegido) { mostrar('turnos'); return; }
+        if (!validar()) return;
+        if (document.activeElement) document.activeElement.blur(); // cierra el teclado
+
+        enviando = true;
+        var btn = $('btn-reservar');
+        btn.disabled = true;
+        btn.textContent = 'Reservando…';
+        aviso('aviso-form', '');
+
+        var datos = {
+          horario: elegido,
+          familia: $('familia').value,
+          grado: gradoElegido(),
+          celular: $('celular').value
+        };
+
+        google.script.run
+          .withSuccessHandler(function (res) {
+            terminarEnvio();
+            if (res && res.ok) {
+              $('ok-horario').textContent = res.horario;
+              $('ok-familia').textContent = res.familia;
+              clearInterval(temporizador);
+              mostrar('ok');
+            } else if (res && (res.codigo === 'COMPLETO' || res.codigo === 'CERRADO')) {
+              volverPorCompleto(res.mensaje);
+              cargar(true);
+            } else {
+              aviso('aviso-form', (res && res.mensaje) || 'No pudimos guardar la reserva. Probá de nuevo.');
+            }
+          })
+          .withFailureHandler(function () {
+            terminarEnvio();
+            aviso('aviso-form', 'Se cortó la conexión. Revisá tu internet y tocá de nuevo “Reservar turno”.');
+          })
+          .reservarTurno(datos);
+      });
+
+      function terminarEnvio() {
+        enviando = false;
+        var btn = $('btn-reservar');
+        btn.disabled = false;
+        btn.textContent = 'RESERVAR TURNO';
+      }
+
+      // ───────── Inicio ─────────
+      cargar(false);
+      programarRefresco();
+    })();
+  </script>
+</body>
+</html>
