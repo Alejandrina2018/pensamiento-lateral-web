@@ -20,13 +20,29 @@ import Button from "@/components/ui/Button";
 // shrinking. Tablet (md:, 768–1023px) keeps the original 5/7 split — its
 // own multi-line wrap already reads fine at that size, and widening it too
 // would shrink the visual much more than it needs to be there.
+//
+// Follow-up design-review pass (round 2): the visual still read too small
+// at lg: — a +50% jump over its previous size isn't reachable while also
+// holding the H1 at text-display-xl and 2 lines, so this round trades that
+// off deliberately: at lg: only, the H1 drops from text-display-xl to
+// text-display-lg — the same scale every *other* page's H1 already uses
+// (Casos, Insights, Quiénes somos, etc.), so Home's hero stays consistent
+// with the site's own type scale rather than shrinking to something new.
+// Its column becomes a fixed lg:w-[520px] (not a grid fraction) so its
+// width — and the H1's wrap — stays predictable and stops competing with
+// the image's for the grid's columns. The image keeps the round-1 approach
+// (`lg:absolute`, pinned to the section's right/vertical edges, sized off
+// the *viewport* so it can bleed past the container's normal margin to the
+// true right edge of the screen) but at a markedly larger lg:w-[55vw].
+// md: (tablet) and the default (mobile) behavior are untouched — same
+// text-display-xl H1, same static grid image, exactly as before.
 export default function Hero() {
   return (
-    <section className="bg-cream">
+    <section className="relative bg-cream">
       <Container className="py-24 md:py-36">
         <div className="grid items-center gap-12 md:grid-cols-12 md:gap-10">
-          <div className="md:col-span-5 lg:col-span-8">
-            <h1 className="text-display-xl font-semibold text-balance text-slate">
+          <div className="md:col-span-5 lg:col-auto lg:w-[520px] lg:shrink-0">
+            <h1 className="text-display-xl font-semibold text-balance text-slate lg:text-display-lg">
               Mejores datos, mejores decisiones.
             </h1>
             <p className="mt-6 max-w-(--measure-narrow) text-lg text-slate/80">
@@ -41,14 +57,14 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="md:col-span-7 lg:col-span-4">
+          <div className="md:col-span-7 lg:col-auto lg:absolute lg:top-1/2 lg:right-0 lg:w-[55vw] lg:-translate-y-1/2">
             <Image
               src="/images/hero/comprender-para-la-accion.jpg"
               alt="Datos dispersos que se ordenan en un patrón y convergen en un hallazgo — comprender para la acción"
               width={1672}
               height={941}
               priority
-              sizes="(min-width: 768px) 58vw, 100vw"
+              sizes="(min-width: 1024px) 55vw, (min-width: 768px) 58vw, 100vw"
               className="h-auto w-full"
             />
           </div>
