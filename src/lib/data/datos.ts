@@ -11,6 +11,9 @@ export const DATOS_HERO = {
   ctaHref: "/contacto",
 };
 
+// Design-review pass: no longer rendered on /datos (the page no longer
+// imports this constant) — kept here, unmodified, so the section can be
+// restored without re-typing the copy if that's reverted.
 export const DATOS_CONTEXT = {
   title: "Dar valor a los datos",
   paragraphs: [

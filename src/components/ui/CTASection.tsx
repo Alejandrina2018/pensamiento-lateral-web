@@ -42,6 +42,14 @@ type CTASectionProps = {
    * grid layout is unrelated and takes precedence if both were ever
    * passed together (not done in practice). */
   visual?: ReactNode;
+  /** Default ("cream") keeps every existing usage's background unchanged.
+   * "sand" is only for a page whose own section rhythm needs this CTA to
+   * read as a distinct block instead of fusing with whatever bg-cream
+   * section sits right above it — /investigacion, /datos and
+   * /automatizaciones-ia's design-review pass (closing the section removed
+   * from each page) is the only place this is used today. Ignored when
+   * `inverted` is true — inverted always means bg-slate, same as before. */
+  background?: "cream" | "sand";
 };
 
 /** Generic closing CTA block (CLAUDE.md #37) — used by Home's Contacto and
@@ -59,11 +67,13 @@ export default function CTASection({
   wide = false,
   compactTop = false,
   visual,
+  background = "cream",
 }: CTASectionProps) {
   const Heading = headingLevel;
   const hasVisual = Boolean(visual);
   const topPadding = compactTop ? "pt-8 md:pt-10" : spacious ? "pt-32 md:pt-48" : "pt-24 md:pt-32";
   const bottomPadding = spacious ? "pb-32 md:pb-48" : "pb-24 md:pb-32";
+  const bgClass = inverted ? "bg-slate text-cream" : background === "sand" ? "bg-sand/40 text-slate" : "bg-cream text-slate";
 
   const content = (
     <>
@@ -82,7 +92,7 @@ export default function CTASection({
   );
 
   return (
-    <section id={id} className={`overflow-hidden ${inverted ? "bg-slate text-cream" : "bg-cream text-slate"}`}>
+    <section id={id} className={`overflow-hidden ${bgClass}`}>
       <Container
         narrow={!wide && !hasVisual}
         className={`${wide || hasVisual ? "" : "flex flex-col items-start gap-6"} ${topPadding} ${bottomPadding}`}

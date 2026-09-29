@@ -30,6 +30,12 @@ type RelatedArticlesProps = {
    * max-w-(--measure) so its lines don't stretch. Only relevant when
    * there's exactly one insight — ignored for 2-3. */
   wideSingle?: boolean;
+  /** Default ("cream") keeps every existing page's background unchanged.
+   * "sand" is only for a page whose own section rhythm needs this block to
+   * read as distinct from whatever bg-cream section sits right above or
+   * below it — /investigacion's design-review pass (closing the section
+   * removed from the page) is the only place this is used today. */
+  background?: "cream" | "sand";
 };
 
 const GRID_COLS = { 2: "md:grid-cols-2", 3: "md:grid-cols-3" } as const;
@@ -47,13 +53,14 @@ export default function RelatedArticles({
   compact = false,
   compactBottom = false,
   wideSingle = false,
+  background = "cream",
 }: RelatedArticlesProps) {
   if (insights.length === 0) return null;
 
   const isSingle = insights.length === 1;
 
   return (
-    <section className="bg-cream">
+    <section className={background === "sand" ? "bg-sand/40" : "bg-cream"}>
       <Container
         className={`${compactBottom ? "pb-8 md:pb-10" : "pb-20 md:pb-24"} ${
           compact ? "pt-10 md:pt-14" : "pt-20 md:pt-24"

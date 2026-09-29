@@ -11,6 +11,9 @@ export const INVESTIGACION_HERO = {
   ctaHref: "/contacto",
 };
 
+// Design-review pass: no longer rendered on /investigacion (the page
+// no longer imports this constant) — kept here, unmodified, so the
+// section can be restored without re-typing the copy if that's reverted.
 export const INVESTIGACION_CONTEXT = {
   title: "Investigar es hacer mejores preguntas",
   paragraphs: [

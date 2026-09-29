@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import ServiceHero from "@/components/service/ServiceHero";
-import ContextIntro from "@/components/service/ContextIntro";
 import CapabilityList from "@/components/service/CapabilityList";
 import StructuredIndex from "@/components/service/StructuredIndex";
 import CasePreview from "@/components/case/CasePreview";
@@ -13,7 +12,6 @@ import DataPattern from "@/components/visualizations/DataPattern";
 import { getRelatedInsights } from "@/sanity/lib/relatedInsights";
 import {
   DATOS_HERO,
-  DATOS_CONTEXT,
   DATOS_CAPABILITIES_INTRO,
   DATOS_CAPABILITIES,
   DATOS_OUTPUTS,
@@ -43,9 +41,20 @@ export default async function DatosPage() {
         visual={<DataPattern variant="grid-only" className="h-full w-full" />}
       />
 
-      <ContextIntro title={DATOS_CONTEXT.title} paragraphs={DATOS_CONTEXT.paragraphs} />
-
-      <section className="bg-cream">
+      {/* "Dar valor a los datos" (ContextIntro, DATOS_CONTEXT — still in
+          src/lib/data/datos.ts, kept for rollback) was removed from render
+          here: design-review pass to get to the team's bios / concrete
+          service content faster. That section was bg-sand/40, sitting
+          between the cream Hero and this cream section — removing it put
+          two cream sections back to back. Recomposed the backgrounds below
+          so cream/sand keeps strictly alternating all the way to the end
+          of the page (a second design-review pass caught the closing CTA
+          defaulting to bg-cream and fusing with Artículos relacionados,
+          also bg-cream, right above it): Hero(cream) → this
+          section(sand) → De los datos a herramientas de gestión(cream) →
+          Caso destacado(sand) → Artículos relacionados(cream, default) →
+          CTA(sand, via CTASection's `background` prop). */}
+      <section className="bg-sand/40">
         <Container className="py-20 md:py-28">
           <Eyebrow as="h2">{DATOS_CAPABILITIES_INTRO.title}</Eyebrow>
           <p className="mt-4 max-w-(--measure) text-lg text-slate/80">{DATOS_CAPABILITIES_INTRO.body}</p>
@@ -55,7 +64,7 @@ export default async function DatosPage() {
         </Container>
       </section>
 
-      <section className="bg-sand/40">
+      <section className="bg-cream">
         <Container className="py-20 md:py-28">
           <h2 className="text-display-md font-semibold text-slate">{DATOS_OUTPUTS.title}</h2>
           <p className="mt-4 max-w-(--measure) text-lg text-slate/80">{DATOS_OUTPUTS.body}</p>
@@ -72,7 +81,7 @@ export default async function DatosPage() {
           desktop gap (see commit message). Top padding (gap to "De los
           datos a herramientas de gestión" above) is untouched — not
           part of this request. */}
-      <section className="bg-cream">
+      <section className="bg-sand/40">
         <Container className="pt-20 pb-10 md:pt-28 md:pb-14">
           <Eyebrow as="h2">Caso destacado</Eyebrow>
           <div className="mt-8">
@@ -89,6 +98,7 @@ export default async function DatosPage() {
         primaryAction={<Button href={DATOS_FINAL_CTA.ctaHref}>{DATOS_FINAL_CTA.ctaLabel}</Button>}
         wide
         compactTop
+        background="sand"
       />
     </>
   );

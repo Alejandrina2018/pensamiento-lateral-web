@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import ServiceHero from "@/components/service/ServiceHero";
-import ContextIntro from "@/components/service/ContextIntro";
 import CapabilityList from "@/components/service/CapabilityList";
 import CasePreview from "@/components/case/CasePreview";
 import RelatedArticles from "@/components/insight/RelatedArticles";
@@ -13,7 +12,6 @@ import DataPattern from "@/components/visualizations/DataPattern";
 import { getRelatedInsights } from "@/sanity/lib/relatedInsights";
 import {
   INVESTIGACION_HERO,
-  INVESTIGACION_CONTEXT,
   INVESTIGACION_CAPABILITIES_INTRO,
   INVESTIGACION_CAPABILITIES,
   INVESTIGACION_METHODOLOGY_INTRO,
@@ -45,9 +43,24 @@ export default async function InvestigacionPage() {
         visual={<DataPattern variant="cluster" className="h-full w-full" />}
       />
 
-      <ContextIntro title={INVESTIGACION_CONTEXT.title} paragraphs={INVESTIGACION_CONTEXT.paragraphs} wide />
-
-      <section className="bg-cream">
+      {/* "Investigar es hacer mejores preguntas" (ContextIntro,
+          INVESTIGACION_CONTEXT — still in src/lib/data/investigacion.ts,
+          kept for rollback) was removed from render here: design-review
+          pass to get to the team's bios / concrete service content
+          faster. That section was bg-sand/40, sitting between the cream
+          Hero and this cream section — removing it put two cream
+          sections back to back. Recomposed the backgrounds for
+          everything below (not just this one seam) so cream/sand keeps
+          strictly alternating all the way to the end of the page —
+          including Artículos relacionados and the closing CTA, which
+          both default to bg-cream and would otherwise fuse with
+          whatever bg-cream section sits next to them (a second
+          design-review pass caught this): Hero(cream) → this
+          section(sand) → Cómo investigamos(cream) → Del hallazgo a la
+          acción(sand) → Caso destacado(cream) →
+          Artículos relacionados(sand, via RelatedArticles' `background`
+          prop) → CTA(cream, default). */}
+      <section className="bg-sand/40">
         <Container className="py-20 md:py-28">
           <h2 className="text-display-md font-semibold text-slate">{INVESTIGACION_CAPABILITIES_INTRO.title}</h2>
           <p className="mt-4 max-w-(--measure) text-lg text-slate/80">{INVESTIGACION_CAPABILITIES_INTRO.body}</p>
@@ -57,7 +70,7 @@ export default async function InvestigacionPage() {
         </Container>
       </section>
 
-      <section className="bg-sand/40">
+      <section className="bg-cream">
         <Container className="py-20 md:py-28">
           <Eyebrow as="h2">{INVESTIGACION_METHODOLOGY_INTRO.title}</Eyebrow>
           <h3 className="mt-4 text-display-md font-semibold text-slate">
@@ -75,11 +88,14 @@ export default async function InvestigacionPage() {
           variant, so this reads as part of the same width system as the
           rest of the page instead of a narrower one-off. Bottom padding
           trimmed (py-24 → pt-24/pb-12) — this section and Caso destacado
-          are both bg-cream with no rule between them, and the two full
-          py-* paddings stacked into a much bigger gap than the page's other
-          section transitions. TagList (a single unconstrained line) is
-          unchanged. */}
-      <section className="bg-cream">
+          used to share a background with no rule between them (the two
+          full py-* paddings stacked into a much bigger gap than the page's
+          other section transitions); a later pass split them onto
+          different backgrounds (sand/cream) to keep the page's closing
+          sections from fusing, but kept this same tightened padding since
+          the gap itself was still the right size. TagList (a single
+          unconstrained line) is unchanged. */}
+      <section className="bg-sand/40">
         <Container className="pt-20 pb-10 md:pt-24 md:pb-14">
           <h2 className="text-display-md font-semibold text-slate">{INVESTIGACION_OUTRO.title}</h2>
           <div className="mt-4 grid gap-4 md:grid-cols-12">
@@ -98,7 +114,11 @@ export default async function InvestigacionPage() {
       {/* Top padding trimmed to match Del hallazgo a la acción's reduced
           bottom above (same reasoning); bottom trimmed too, matched by
           RelatedArticles' own `compact` top padding below, so the gap
-          before Artículos relacionados shrinks the same way. */}
+          before Artículos relacionados shrinks the same way. bg-cream
+          (not sand, see the section-order comment above Investigación
+          para distintos desafíos): differs from Del hallazgo a la
+          acción(sand) above it and from Artículos relacionados(sand)
+          below it, so it still reads as its own block on both sides. */}
       <section className="bg-cream">
         <Container className="pt-10 pb-10 md:pt-14 md:pb-14">
           <Eyebrow as="h2">Caso destacado</Eyebrow>
@@ -108,7 +128,7 @@ export default async function InvestigacionPage() {
         </Container>
       </section>
 
-      <RelatedArticles insights={relatedInsights} compact />
+      <RelatedArticles insights={relatedInsights} compact background="sand" />
 
       <CTASection
         title={INVESTIGACION_FINAL_CTA.title}

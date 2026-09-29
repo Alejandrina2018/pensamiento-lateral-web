@@ -11,6 +11,9 @@ export const AUTOMATIZACIONES_HERO = {
   ctaHref: "/contacto",
 };
 
+// Design-review pass: no longer rendered on /automatizaciones-ia (the
+// page no longer imports this constant) — kept here, unmodified, so the
+// section can be restored without re-typing the copy if that's reverted.
 export const AUTOMATIZACIONES_CONTEXT = {
   title: "La tecnología como herramienta",
   paragraphs: [

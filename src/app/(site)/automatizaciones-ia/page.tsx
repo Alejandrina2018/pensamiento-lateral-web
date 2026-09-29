@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import ServiceHero from "@/components/service/ServiceHero";
-import ContextIntro from "@/components/service/ContextIntro";
 import CapabilityList from "@/components/service/CapabilityList";
 import ProcessTimeline from "@/components/service/ProcessTimeline";
 import CasePreview from "@/components/case/CasePreview";
@@ -13,7 +12,6 @@ import FlowLine from "@/components/visualizations/FlowLine";
 import { getRelatedInsights } from "@/sanity/lib/relatedInsights";
 import {
   AUTOMATIZACIONES_HERO,
-  AUTOMATIZACIONES_CONTEXT,
   AUTOMATIZACIONES_CAPABILITIES,
   AUTOMATIZACIONES_PROCESS_TITLE,
   AUTOMATIZACIONES_PROCESS,
@@ -48,11 +46,33 @@ export default async function AutomatizacionesIaPage() {
         columnWidthClass="max-w-2xl md:max-w-3xl"
       />
 
-      <ContextIntro title={AUTOMATIZACIONES_CONTEXT.title} paragraphs={AUTOMATIZACIONES_CONTEXT.paragraphs} />
+      {/* "La tecnología como herramienta" (ContextIntro,
+          AUTOMATIZACIONES_CONTEXT — still in
+          src/lib/data/automatizaciones-ia.ts, kept for rollback) was
+          removed from render here: design-review pass to get to the
+          team's bios / concrete service content faster. That section was
+          bg-sand/40, sitting between the cream Hero and this cream
+          section — removing it put two cream sections back to back, so
+          this one moves to sand. No dedicated section title in
+          final-copy.md — these five areas follow the context block
+          directly.
 
-      {/* No dedicated section title in final-copy.md — these five areas
-          follow the context block directly. */}
-      <section className="bg-cream">
+          A second design-review pass caught the *next* seam: ProcessTimeline
+          (bg-slate) sat between this section and Caso destacado, so the
+          first pass left Caso destacado at its original bg-cream — safe
+          against ProcessTimeline's slate, but that meant it landed on the
+          same bg-cream as the CTA right after it (Artículos relacionados
+          doesn't render on this page — AUTOMATIZACIONES_RELATED_SLUGS is
+          empty, see lib/data/automatizaciones-ia.ts — so Caso destacado and
+          the CTA are directly adjacent in production). Caso destacado
+          below now moves to sand instead: Hero(cream) → this
+          section(sand) → Cómo trabajamos(slate) → Caso destacado(sand) →
+          CTA(cream, default). If AUTOMATIZACIONES_RELATED_SLUGS ever gets
+          real content, Artículos relacionados will render bg-cream
+          (default) between them — differing from Caso destacado(sand) but
+          matching the CTA(cream) right after it, so that seam would need
+          re-checking then. */}
+      <section className="bg-sand/40">
         <Container className="py-20 md:py-28">
           <CapabilityList items={AUTOMATIZACIONES_CAPABILITIES} columns={2} />
         </Container>
@@ -64,8 +84,11 @@ export default async function AutomatizacionesIaPage() {
           the CTA below, paired with CTASection's own `compactTop` — same
           reasoning and same values already used for /datos's Caso
           destacado → CTA transition. Top padding (gap to "Cómo
-          trabajamos" above) is untouched — not part of this request. */}
-      <section className="bg-cream">
+          trabajamos" above) is untouched — not part of this request.
+          bg-sand (not cream, see the section-order comment above): keeps
+          this from fusing with the CTA right below it, which defaults to
+          bg-cream and isn't changed here (see that comment for why). */}
+      <section className="bg-sand/40">
         <Container className="pt-20 pb-10 md:pt-28 md:pb-14">
           <Eyebrow as="h2">Caso destacado</Eyebrow>
           <div className="mt-8">
