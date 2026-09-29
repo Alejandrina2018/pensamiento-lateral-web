@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Container from "@/components/ui/Container";
 import Eyebrow from "@/components/ui/Eyebrow";
-import RichText from "@/components/ui/RichText";
 import PrincipleList from "@/components/service/PrincipleList";
 import TeamMember from "@/components/team/TeamMember";
 import PressItem from "@/components/press/PressItem";
@@ -113,36 +112,23 @@ export default async function QuienesSomosPage() {
       </section>
 
       <section className="bg-cream">
-        <Container className="py-20 md:py-28">
-          <h2 className="max-w-3xl text-display-md font-semibold text-balance text-slate">
-            {QUIENES_SOMOS_EVOLUTION.title}
-          </h2>
-          {/* Vertical editorial read, not a two-column split (design-review
-              correction — the side-by-side version read as two
-              disconnected halves). Paragraphs and the closing statement
-              share the same md:col-span-8 column (~8/12 of the grid),
-              so both align to the same left edge and read as one block
-              at a width comparable to Nuestro equipo below — wider than
-              the page's usual --measure column, short of the full
-              container. The statement was previously text-display-xl
-              (hero scale, ~2x the H1) — a second design-review pass
-              brought it down to text-display-md, the same scale as this
-              page's own h2/h3 section headings, so it reads as a strong
-              editorial conclusion without competing with the H1. */}
-          <div className="mt-10 grid gap-6 md:grid-cols-12">
-            <div className="flex flex-col gap-6 text-lg leading-relaxed text-slate/80 md:col-span-8">
-              {QUIENES_SOMOS_EVOLUTION.paragraphs.map((paragraph, i) => (
-                <RichText key={i} text={paragraph} />
-              ))}
-            </div>
-          </div>
-          <div className="mt-16 grid md:grid-cols-12 md:mt-20">
-            <div className="md:col-span-8">
-              <p className="text-lg font-medium text-slate/70">{QUIENES_SOMOS_EVOLUTION.leadIn}</p>
-              <p className="mt-4 text-display-md font-semibold text-balance text-slate">
-                {QUIENES_SOMOS_EVOLUTION.closingStatement}
-              </p>
-            </div>
+        <Container className="py-14 md:py-20">
+          {/* Design-review pass: trimmed to just the closing statement —
+              the title, the two evolution paragraphs and the "Hoy, cada
+              estudio..." lead-in (still in QUIENES_SOMOS_EVOLUTION, for
+              the record, just not rendered here) were pushing the team's
+              bios too far down the page. This one line now carries the
+              whole section as a compact manifesto beat, not a second
+              hero: same text-display-md scale as this page's other h2/h3
+              headings (never bumped up), same md:col-span-8 column width
+              already used elsewhere on this page, section padding cut
+              from py-20/py-28 to py-14/py-20 so it reads as a quick beat
+              between "Nuestra forma de trabajar" and "Nuestro equipo",
+              not a lingering stop. */}
+          <div className="grid md:grid-cols-12">
+            <p className="text-display-md font-semibold text-balance text-slate md:col-span-8">
+              {QUIENES_SOMOS_EVOLUTION.closingStatement}
+            </p>
           </div>
         </Container>
       </section>
