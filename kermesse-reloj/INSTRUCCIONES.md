@@ -1,6 +1,6 @@
 # Reservas de turnos · Kermesse Solidaria BDS · Reloj mecánico (P4B + P4C)
 
-Mini web para que cada familia reserve un turno de 15 minutos (18:30 a 21:00, hasta 2 familias por turno).
+Mini web para que cada familia reserve **un** turno de 15 minutos el **6 de Noviembre** (18:30 a 21:00, hasta 2 familias por turno).
 Los datos se guardan en un Google Sheet que **solo vos** ves.
 
 **Archivos:**
@@ -67,9 +67,10 @@ Al terminar, volvé a la planilla: la pestaña **Reservas** tiene que tener la f
 ### 7. Probarlo antes de mandarlo
 1. **Implementar → Probar implementaciones** → copiá la URL que termina en `/dev` y abrila. Es una versión de prueba que solo vos podés abrir.
 2. Hacé una reserva de prueba y fijate que aparezca en la planilla.
-3. Hacé una segunda reserva en el **mismo horario** con otro celular → tiene que pasar a **COMPLETO**.
+3. Hacé una segunda reserva en el **mismo horario** con otro celular → tiene que pasar a **Completo**.
 4. Intentá una tercera en ese horario desde otra pestaña que ya tenías abierta de antes → tiene que decir *"Ese horario acaba de completarse…"*.
-5. **Borrá las filas de prueba** de la planilla (clic derecho sobre el número de fila → Eliminar fila). No borres la fila 1 de títulos.
+5. Intentá reservar **otro horario con el primer celular**, escrito distinto (por ejemplo `+54 9 11…` en vez de `11…`) → tiene que decir *"Esta familia ya tiene un turno reservado."* y mostrar el horario que ya tiene.
+6. **Borrá las filas de prueba** de la planilla (clic derecho sobre el número de fila → Eliminar fila). No borres la fila 1 de títulos.
 
 ### 8. Publicarlo como Web App
 En el editor de Apps Script: **Implementar → Nueva implementación**.
@@ -93,9 +94,11 @@ Tocá **Implementar**.
 Aparece una **URL de la aplicación web** que termina en **`/exec`**. Esa es la que va a WhatsApp.
 Copiala (botón Copiar) y abrila vos primero desde tu celular para chequear.
 
+Al abrirlo vas a ver arriba una franja gris de Google que dice algo como *"Esta aplicación fue creada por un usuario de Google Apps Script"*. Es normal con cuentas de Gmail y no se puede sacar; no afecta el funcionamiento.
+
 Mensaje sugerido:
 
-> ¡Hola familias de P4B y P4C! 🕰️ Para la Kermesse Solidaria BDS estamos a cargo del **Reloj mecánico**. Necesitamos 2 familias por turno de 15 minutos, de 18:30 a 21:00.
+> ¡Hola familias de P4B y P4C! 🕰️ Para la Kermesse Solidaria BDS del 6 de Noviembre estamos a cargo del **Reloj mecánico**. Necesitamos 2 familias por turno de 15 minutos, de 18:30 a 21:00.
 > Reservá tu horario acá (lleva 1 minuto): https://script.google.com/macros/s/……/exec
 > ¡Gracias!
 
@@ -112,8 +115,14 @@ Así el link `/exec` queda **igual** y ya muestra los cambios. (Si hacés "Nueva
 - **Agregar el logo:** subí el logo a Google Drive → clic derecho → Compartir → "Cualquier persona con el vínculo" → copiá el ID del archivo (la parte larga del link entre `/d/` y `/view`) y poné:
   `var LOGO_URL = 'https://lh3.googleusercontent.com/d/ID_DEL_ARCHIVO';`
   (También sirve cualquier link directo a una imagen PNG/SVG, por ejemplo del sitio del colegio.)
+- **Cambiar la fecha:** `var FECHA_EVENTO = '6 de Noviembre';` (se actualiza en las tres pantallas).
 - **Cambiar el cupo:** `var CUPO_POR_TURNO = 2;`
-- **Cancelar una reserva:** borrá la fila en la planilla. El lugar se libera solo.
+
+## Cambios y cancelaciones (los hacés vos, en la planilla)
+Las familias ven al pie: *"Si necesitás modificar tu turno, comunicate con las organizadoras del curso."*
+- **Cancelar:** borrá la fila de esa familia (clic derecho sobre el número de fila → Eliminar fila). El lugar se libera solo y la familia puede volver a reservar desde la web.
+- **Cambiar de horario:** editá la celda de **Horario** de esa fila, copiando el texto exacto de otro turno (por ejemplo `19:30 – 19:45`). Fijate antes que ese horario tenga lugar: la planilla **no** te frena si pasás de 2.
+- **Una familia que cubre dos turnos:** agregá vos una fila nueva al final con Horario, Familia, Grado y Celular. La web solo bloquea las reservas que hacen las familias; lo que cargues a mano se respeta. Esa fila ocupa uno de los 2 lugares del horario.
 
 ## ¿Separar CSS y JavaScript?
 No lo recomiendo para este caso: con un solo `Index.html` hay menos cosas para pegar y menos que se pueda romper. Si alguna vez lo querés hacer:
@@ -134,7 +143,8 @@ No lo recomiendo para este caso: con un solo `Index.html` hay menos cosas para p
 |---|---|
 | **Máximo 2 familias por horario** | El servidor recuenta las reservas de ese horario justo antes de guardar. Si ya hay 2, rechaza. La pantalla no decide nada. Además valida que el horario sea uno de los 10 existentes. |
 | **Varias personas al mismo tiempo** | `LockService`: las reservas se procesan **de a una**. Si dos familias tocan "Reservar" en el mismo segundo por el último lugar, la primera entra y la segunda recibe *"Ese horario acaba de completarse…"* y la lista se actualiza. El bloqueo se libera siempre, aunque haya un error. Si hay muchísima gente a la vez, cada una espera unos segundos; si pasan 20 s sin turno, se le pide reintentar. |
-| **Doble toque / se cortó internet** | El botón se desactiva mientras reserva. Y si el mismo celular reserva dos veces el mismo horario (p. ej. reintentó tras un corte), no se duplica: se confirma la reserva que ya existe. |
+| **Una familia = un turno** | Antes de guardar, con el bloqueo tomado, el servidor busca si ese celular ya tiene una reserva en cualquier horario. Si la tiene, no guarda y muestra *"Esta familia ya tiene un turno reservado."* con el horario que ya tiene. El celular se compara sin importar el formato: `+54 9 11 5555-5555`, `011 15 5555 5555` y `11 5555 5555` cuentan como el mismo. |
+| **Doble toque / se cortó internet** | El botón se desactiva mientras reserva. Si alguien reintenta después de un corte y la primera reserva sí se había guardado, no se duplica: le aparece el aviso de que ya tiene turno, con su horario. |
 | **Privacidad** | La web solo recibe `horario` + `lugares disponibles`. Nombres y celulares nunca viajan al navegador de otra familia. El Sheet no se comparte con nadie. Las funciones internas (terminan en `_`) no se pueden llamar desde afuera. |
 | **Planilla protegida** | Si alguien escribe algo como `=FÓRMULA` en el nombre, se limpia para que no se ejecute en tu planilla. Celular y horario se guardan como texto (no se "rompen" los +54 ni los ceros). |
 | **Safari y Chrome en celulares** | Textos de campos en 17 px (evita el zoom automático del iPhone), teclado numérico para el celular, botones de 54–88 px de alto, `viewport` configurado desde el servidor (Apps Script ignora el del HTML), nada de funciones modernas que fallen en iPhones viejos. Probado en pantallas de 390 px y 320 px. |
@@ -143,5 +153,5 @@ No lo recomiendo para este caso: con un solo `Index.html` hay menos cosas para p
 
 ## Lo que la app **no** hace (para que lo sepas)
 - **No envía confirmación por WhatsApp ni por mail.** Por eso la pantalla final sugiere sacar captura. Si querés recordatorios, se puede exportar la planilla y mandarlos a mano el día anterior.
-- **No evita que una misma familia reserve dos horarios distintos.** Lo dejé así a propósito (hay familias que quieren colaborar más). Si preferís limitarlo, avisame.
-- **Las familias no pueden cancelar solas.** Te escriben y vos borrás la fila.
+- **Las familias no pueden cancelar ni cambiar solas.** Te escriben y lo hacés vos en la planilla (ver "Cambios y cancelaciones").
+- **La familia se identifica por el celular, no por el apellido.** Si una misma familia reserva dos veces con **dos celulares distintos** (mamá y papá), la web no se da cuenta. Conviene mirar la planilla ordenada por Familia un par de días antes.

@@ -32,6 +32,9 @@ var LOGO_URL = '';
 // Poné false para cerrar las reservas (la página sigue mostrando la disponibilidad).
 var RESERVAS_ABIERTAS = true;
 
+// Fecha del evento: se muestra en la pantalla principal, en el formulario y en la confirmación.
+var FECHA_EVENTO = '6 de Noviembre';
+
 var ENCABEZADOS = ['Horario', 'Familia', 'Grado', 'Celular', 'Fecha y hora de reserva'];
 
 // ───────────────────────── PÁGINA WEB ─────────────────────────
@@ -39,6 +42,7 @@ var ENCABEZADOS = ['Horario', 'Familia', 'Grado', 'Celular', 'Fecha y hora de re
 function doGet() {
   var plantilla = HtmlService.createTemplateFromFile('Index');
   plantilla.logoUrl = LOGO_URL;
+  plantilla.fecha = FECHA_EVENTO;
   return plantilla.evaluate()
     .setTitle('Kermesse Solidaria BDS · Reloj mecánico')
     // Sin esta línea, en celulares la página se ve "achicada".
@@ -62,7 +66,8 @@ function obtenerDisponibilidad() {
 }
 
 /**
- * Registra una reserva. La validación del cupo se hace acá (en el servidor),
+ * Registra una reserva. Todas las validaciones que dependen de la planilla
+ * (familia ya anotada y cupo del horario) se hacen acá, en el servidor,
  * dentro de un bloqueo, para que dos personas no puedan tomar el mismo último lugar.
  */
 function reservarTurno(datos) {
@@ -83,18 +88,26 @@ function reservarTurno(datos) {
   try {
     var hoja = obtenerHoja_();
 
-    // 3) Volver a contar las reservas de ESE horario, con el bloqueo tomado.
+    // 3) Con el bloqueo tomado, releer la planilla.
     var filas = leerReservas_(hoja);
-    var ocupados = 0;
-    var digitos = v.celular.replace(/\D/g, '');
+    var clave = claveCelular_(v.celular);
+
+    // 3a) Una familia = un turno: si ese celular ya tiene una reserva (en cualquier horario), no se guarda otra.
     for (var i = 0; i < filas.length; i++) {
-      if (filas[i].horario !== v.horario) continue;
-      // Si el mismo celular ya reservó este horario (p. ej. tocó dos veces o se cortó
-      // la conexión y reintentó), no se duplica: se confirma la reserva existente.
-      if (filas[i].digitos === digitos) {
-        return { ok: true, horario: v.horario, familia: v.familia };
+      if (filas[i].clave === clave) {
+        return {
+          ok: false,
+          codigo: 'YA_RESERVADO',
+          mensaje: 'Esta familia ya tiene un turno reservado.',
+          horario: filas[i].horario
+        };
       }
-      ocupados++;
+    }
+
+    // 3b) Contar las reservas de ESE horario.
+    var ocupados = 0;
+    for (var j = 0; j < filas.length; j++) {
+      if (filas[j].horario === v.horario) ocupados++;
     }
 
     // 4) Si ya está completo, rechazar.
@@ -110,7 +123,7 @@ function reservarTurno(datos) {
     hoja.getRange(fila, 1, 1, 5).setValues([[v.horario, v.familia, v.grado, v.celular, new Date()]]);
     SpreadsheetApp.flush(); // asegura que quede escrita antes de liberar el bloqueo
 
-    return { ok: true, horario: v.horario, familia: v.familia };
+    return { ok: true, horario: v.horario, familia: v.familia, grado: v.grado };
   } catch (e) {
     console.error(e);
     return { ok: false, codigo: 'ERROR', mensaje: 'No pudimos guardar la reserva. Probá de nuevo.' };
@@ -146,7 +159,7 @@ function leerReservas_(hoja) {
   var filas = [];
   for (var i = 0; i < valores.length; i++) {
     var h = normalizarHorario_(valores[i][0]);
-    if (h) filas.push({ horario: h, digitos: String(valores[i][3]).replace(/\D/g, '') });
+    if (h) filas.push({ horario: h, clave: claveCelular_(valores[i][3]) });
   }
   return filas;
 }
@@ -155,6 +168,24 @@ function contarReservas_(hoja) {
   var conteo = {};
   leerReservas_(hoja).forEach(function (f) { conteo[f.horario] = (conteo[f.horario] || 0) + 1; });
   return conteo;
+}
+
+// Identifica a una familia por su celular, sin importar cómo lo escriba:
+// "+54 9 11 5555-5555", "011 15 5555 5555", "15 5555 5555" y "11 5555 5555" dan la misma clave.
+// Se quitan los agregados argentinos (54, 9, 0 y el 15) y se comparan los últimos 8 dígitos.
+function claveCelular_(texto) {
+  var d = String(texto || '').replace(/\D/g, '');
+  if (d.length > 10 && d.indexOf('54') === 0) d = d.slice(2);   // código de país
+  if (d.length === 11 && d.charAt(0) === '9') d = d.slice(1);   // 9 de celular
+  if (d.charAt(0) === '0') d = d.slice(1);                      // 0 de larga distancia
+  if (d.length === 12) {                                        // característica + 15 + número
+    for (var a = 2; a <= 4; a++) {
+      if (d.substr(a, 2) === '15') { d = d.slice(0, a) + d.slice(a + 2); break; }
+    }
+  } else if (d.length === 10 && d.indexOf('15') === 0) {        // 15 + número, sin característica
+    d = d.slice(2);
+  }
+  return d.slice(-8);
 }
 
 // Tolera variaciones si alguien edita la planilla a mano ("18:30-18:45", "18:30 - 18:45", etc.).

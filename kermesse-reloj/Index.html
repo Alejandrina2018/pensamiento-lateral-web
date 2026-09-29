@@ -68,7 +68,9 @@
       color: var(--verde);
       font-size: 14px; font-weight: 600; letter-spacing: .04em;
     }
-    .consigna { margin: 28px 0 16px; font-size: 19px; font-weight: 600; color: var(--verde); text-align: center; }
+    .fecha { margin: 14px 0 0; font-size: 19px; font-weight: 600; color: var(--verde); }
+    .consigna { margin: 28px 0 6px; font-size: 19px; font-weight: 600; color: var(--verde); text-align: center; }
+    .detalle { margin: 0 0 18px; font-size: 15px; color: var(--texto-sec); text-align: center; }
 
     /* ───────── Grilla de horarios ───────── */
     .grilla { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -102,7 +104,7 @@
       background: var(--apagado-fondo);
       color: var(--apagado-texto);
     }
-    .turno:disabled .lugares { font-weight: 700; letter-spacing: .08em; }
+    .turno:disabled .lugares { font-weight: 700; }
 
     .turno.cargando {
       border-color: var(--verde-linea);
@@ -124,6 +126,8 @@
     }
     .aviso[hidden] { display: none; }
     .nota { margin: 18px 0 0; text-align: center; color: var(--texto-sec); font-size: 14px; }
+    .nota:empty { display: none; }
+    .aviso .aviso-detalle { display: block; margin-top: 4px; font-weight: 400; }
 
     /* ───────── Formulario ───────── */
     .volver {
@@ -143,6 +147,7 @@
     .resumen .etiqueta { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; opacity: .8; }
     .resumen .valor { font-size: 28px; font-weight: 700; margin-top: 4px; }
     .resumen .puesto-chico { font-size: 15px; opacity: .9; margin-top: 2px; }
+    .resumen .fecha-chica { font-size: 16px; font-weight: 600; margin-top: 4px; }
 
     .campo { margin-bottom: 20px; }
     .campo label, .campo .rotulo { display: block; margin-bottom: 8px; font-size: 16px; font-weight: 600; color: var(--verde); }
@@ -205,6 +210,15 @@
     }
     .ok h2 { margin: 0 0 6px; font-size: 28px; color: var(--verde); }
     .ok .sub { margin: 0 0 24px; color: var(--texto-sec); font-size: 17px; }
+    .destacado {
+      margin: 20px 0 0;
+      padding: 16px 18px;
+      border-radius: var(--radio);
+      background: var(--verde-suave);
+      color: var(--verde);
+      font-size: 16px; font-weight: 600;
+      text-align: center;
+    }
     .ficha {
       text-align: left;
       border: 2px solid var(--verde);
@@ -215,7 +229,17 @@
     .ficha div:last-child { border-bottom: 0; }
     .ficha span { display: block; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--texto-sec); }
     .ficha strong { display: block; font-size: 20px; color: var(--verde); margin-top: 2px; word-break: break-word; }
-    .despedida { margin: 28px 0 6px; font-size: 18px; font-weight: 600; color: var(--verde); }
+    .despedida { margin: 28px 0 0; font-size: 19px; font-weight: 700; color: var(--verde); }
+
+    /* ───────── Pie ───────── */
+    .pie {
+      margin-top: 36px;
+      padding-top: 16px;
+      border-top: 1px solid var(--verde-linea);
+      text-align: center;
+      font-size: 13px;
+      color: var(--texto-sec);
+    }
 
     [hidden] { display: none !important; }
   </style>
@@ -239,15 +263,17 @@
         <p class="evento">Kermesse Solidaria BDS</p>
         <h1 class="puesto">Reloj mecánico</h1>
         <span class="grados">P4B + P4C</span>
+        <p class="fecha"><?= fecha ?></p>
       </section>
 
       <p class="consigna">Elegí el horario en el que podés colaborar</p>
+      <p class="detalle">Cada turno dura 15 minutos y requiere la colaboración de 2 familias.</p>
 
       <p id="aviso-turnos" class="aviso" role="alert" hidden></p>
 
       <div id="grilla" class="grilla" aria-live="polite"></div>
 
-      <p class="nota" id="nota-turnos">Cada horario tiene lugar para 2 familias.</p>
+      <p class="nota" id="nota-turnos"></p>
     </main>
 
     <!-- ═════════ PANTALLA 2: FORMULARIO ═════════ -->
@@ -256,6 +282,7 @@
 
       <div class="resumen">
         <div class="etiqueta">Tu horario</div>
+        <div class="fecha-chica"><?= fecha ?></div>
         <div class="valor" id="resumen-horario"></div>
         <div class="puesto-chico">Reloj mecánico</div>
       </div>
@@ -300,17 +327,25 @@
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
       </div>
       <h2>¡Gracias por sumarte!</h2>
-      <p class="sub">Tu turno quedó reservado.</p>
+      <p class="sub">Tu turno quedó reservado</p>
 
       <div class="ficha">
         <div><span>Puesto</span><strong>Reloj mecánico</strong></div>
+        <div><span>Fecha</span><strong><?= fecha ?></strong></div>
         <div><span>Horario</span><strong id="ok-horario"></strong></div>
         <div><span>Familia</span><strong id="ok-familia"></strong></div>
+        <div><span>Grado</span><strong id="ok-grado"></strong></div>
       </div>
 
-      <p class="despedida">Nos vemos en la Kermesse Solidaria BDS</p>
-      <p class="nota">Te sugerimos sacarle una captura a esta pantalla.</p>
+      <p class="destacado">Te recomendamos sacar una captura de esta pantalla para recordar tu turno.</p>
+
+      <p class="despedida">¡Nos vemos en la Kermesse Solidaria BDS!</p>
     </main>
+
+    <!-- PIE: visible en todas las pantallas -->
+    <footer class="pie">
+      Si necesitás modificar tu turno, comunicate con las organizadoras del curso.
+    </footer>
 
   </div>
 
@@ -334,9 +369,15 @@
         window.scrollTo(0, 0);
       }
 
-      function aviso(id, texto) {
+      function aviso(id, texto, detalle) {
         var el = $(id);
         el.textContent = texto || '';
+        if (texto && detalle) {
+          var d = document.createElement('span');
+          d.className = 'aviso-detalle';
+          d.textContent = detalle;
+          el.appendChild(d);
+        }
         el.hidden = !texto;
       }
 
@@ -354,8 +395,8 @@
       }
 
       function textoLugares(n) {
-        if (n <= 0) return 'COMPLETO';
-        return n === 1 ? '1 lugar disponible' : n + ' lugares disponibles';
+        if (n <= 0) return 'Completo';
+        return n === 1 ? 'Último lugar' : 'Quedan ' + n + ' lugares';
       }
 
       function pintarTurnos() {
@@ -388,7 +429,7 @@
         } else if (!hayLugar) {
           $('nota-turnos').textContent = 'Todos los horarios están completos. ¡Gracias a todas las familias!';
         } else {
-          $('nota-turnos').textContent = 'Cada horario tiene lugar para 2 familias.';
+          $('nota-turnos').textContent = '';
         }
       }
 
@@ -519,8 +560,12 @@
             if (res && res.ok) {
               $('ok-horario').textContent = res.horario;
               $('ok-familia').textContent = res.familia;
+              $('ok-grado').textContent = res.grado;
               clearInterval(temporizador);
               mostrar('ok');
+            } else if (res && res.codigo === 'YA_RESERVADO') {
+              aviso('aviso-form', res.mensaje, 'Horario reservado: ' + res.horario);
+              window.scrollTo(0, 0);
             } else if (res && (res.codigo === 'COMPLETO' || res.codigo === 'CERRADO')) {
               volverPorCompleto(res.mensaje);
               cargar(true);
