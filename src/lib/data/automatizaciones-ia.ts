@@ -83,12 +83,21 @@ export const AUTOMATIZACIONES_CASE: HomeCaseHighlight = {
   ],
   ctaLabel: "Ver caso completo",
   href: "/casos/suono",
-  // Same real photo (and alt text) already used for Suono everywhere else
-  // it appears — Home, /investigacion — reused here rather than
-  // duplicated (CLAUDE.md #8: no invented assets, and site-wide criterion
-  // that every Suono appearance uses this same meeting photo). Already a
-  // native 4:3 (768×576), the exact box CasePreview renders it in.
-  image: { src: "/images/casos/suono.jpeg", alt: "Equipo de trabajo reunido, analizando información en una sala de reuniones" },
+  // Design-review pass: this one Suono appearance gets its own image
+  // (suono-automatizaciones.jpg) instead of the meeting photo reused on
+  // Home/investigación/casos — client-supplied, on-topic for this
+  // specific case (the posventa chatbot the case describes). Native
+  // 1448×1086 (4:3), matching CasePreview's aspect-[4/3] box exactly, so
+  // object-cover shows the full frame with no crop.
+  //
+  // Flagged to the client before adding: the chat UI's avatar icon is a
+  // stylized robot, which CLAUDE.md #5 lists as a disallowed visual
+  // ("Prohibido... robots"). Client reviewed and asked to use it anyway —
+  // noted here for the record, not a rule I'm overriding unilaterally.
+  image: {
+    src: "/images/casos/suono-automatizaciones.jpg",
+    alt: "Celular con una conversación de un agente de posventa automatizado sobre la cafetera Suono, con una notebook de fondo",
+  },
 };
 
 // None of final-copy.md's 3 related titles for this page exist in the
