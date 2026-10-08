@@ -17,3 +17,7 @@ export function getWhatsAppLink(): string | null {
 export function getContactEmail(): string | null {
   return process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? null;
 }
+
+export function getGaMeasurementId(): string | null {
+  return process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? null;
+}

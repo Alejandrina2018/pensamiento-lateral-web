@@ -11,6 +11,7 @@
     "migrate:sanity": "tsx src/sanity/migrate/migrate.ts"
   },
   "dependencies": {
+    "@next/third-parties": "16.3.5",
     "@portabletext/react": "^8.0.1",
     "@sanity/client": "^8.6.2",
     "@sanity/image-url": "^2.1.1",
