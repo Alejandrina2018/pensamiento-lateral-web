@@ -1,5 +1,5 @@
 /**
- * Kermesse Solidaria BDS — Reloj mecánico (K4)
+ * Kermesse Solidaria BDS — STAND (K4)
  * Backend de reservas de turnos de voluntarios.
  *
  * Base de datos: pestaña "Reservas" del Google Sheet al que está vinculado este script.
@@ -44,7 +44,7 @@ function doGet() {
   plantilla.logoUrl = LOGO_URL;
   plantilla.fecha = FECHA_EVENTO;
   return plantilla.evaluate()
-    .setTitle('Kermesse Solidaria BDS · Reloj mecánico')
+    .setTitle('Kermesse Solidaria BDS · STAND K4')
     // Sin esta línea, en celulares la página se ve "achicada".
     .addMetaTag('viewport', 'width=device-width, initial-scale=1, viewport-fit=cover');
 }

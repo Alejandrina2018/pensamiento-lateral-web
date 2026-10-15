@@ -1,10 +1,10 @@
-# Reservas de turnos · Kermesse Solidaria BDS · Reloj mecánico (K4)
+# Reservas de turnos · Kermesse Solidaria BDS · STAND (K4)
 
 Copia de la app de `kermesse-reloj/` para el curso **K4**. Todo funciona igual
 (máximo 2 familias por turno, una familia = un turno, LockService, privacidad).
 
 Diferencias con la versión P4B + P4C:
-- En la cabecera dice **K4**.
+- Dice **STAND** en lugar de "Reloj mecánico" (título, formulario y confirmación) y **K4** debajo.
 - El formulario no pregunta el grado: se guarda **K4** automáticamente en la planilla y se muestra en la confirmación.
 
 La configuración es la misma: seguí `../kermesse-reloj/INSTRUCCIONES.md`,
