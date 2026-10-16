@@ -2,6 +2,7 @@ import type { SchemaTypeDefinition } from "sanity";
 
 import imageWithAlt from "./objects/imageWithAlt";
 import namedBlock from "./objects/namedBlock";
+import mediaCoverageItem from "./objects/mediaCoverageItem";
 import author from "./documents/author";
 import insight from "./documents/insight";
 import caseStudy from "./documents/caseStudy";
@@ -15,6 +16,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   // Objects first (documents reference them)
   imageWithAlt,
   namedBlock,
+  mediaCoverageItem,
   // Documents
   author,
   insight,

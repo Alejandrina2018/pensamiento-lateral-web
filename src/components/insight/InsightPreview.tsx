@@ -1,17 +1,19 @@
 import Link from "next/link";
 import type { Author } from "@/types/content";
-import { isInsightPublished } from "@/lib/data/insights";
 
 /** Only what this component actually reads — title, excerpt, category,
  * and author name/role. A full `Insight` (with `bio`, `filterCategories`,
  * etc.) satisfies this structurally, so Home's static data still works
  * unchanged; a Sanity listing item doesn't need to fabricate a `bio` it
- * never fetched just to satisfy a wider type. */
+ * never fetched just to satisfy a wider type. `hasArticle` is the same
+ * published && defined(body) && defined(slug.current) check computed by
+ * every Insight query (see INSIGHT_LIST_PROJECTION) — never re-derived
+ * here from partial data. */
 export type InsightPreviewData = {
   title: string;
   slug: string;
   excerpt: string;
-  body?: string;
+  hasArticle: boolean;
   author: Pick<Author, "name" | "role">;
   displayCategory: string;
 };
@@ -29,7 +31,6 @@ type InsightPreviewProps = {
  * renders once the article has an approved body (a real /insights/[slug]
  * page to send someone to) — until then this is a preview, not a link. */
 export default function InsightPreview({ insight, index, featured = false }: InsightPreviewProps) {
-  const published = isInsightPublished(insight);
   const number = String(index + 1).padStart(2, "0");
 
   return (
@@ -59,7 +60,7 @@ export default function InsightPreview({ insight, index, featured = false }: Ins
           <p className="mt-4 text-sm uppercase tracking-wide text-slate/70">
             {insight.author.name} · {insight.displayCategory}
           </p>
-          {published && (
+          {insight.hasArticle && (
             <Link
               href={`/insights/${insight.slug}`}
               className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-terracotta hover:text-slate"

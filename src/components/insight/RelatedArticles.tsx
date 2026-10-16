@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { InsightPreviewData } from "@/components/insight/InsightPreview";
 import Container from "@/components/ui/Container";
 import Eyebrow from "@/components/ui/Eyebrow";
-import { isInsightPublished } from "@/lib/data/insights";
 
 type RelatedArticlesProps = {
   insights: InsightPreviewData[];
@@ -41,12 +40,12 @@ type RelatedArticlesProps = {
 const GRID_COLS = { 2: "md:grid-cols-2", 3: "md:grid-cols-3" } as const;
 
 /**
- * "Artículos relacionados" — only ever renders articles that are actually
- * published (see lib/data/insights.ts's getPublishedInsights). 0 articles
- * renders nothing (no placeholder, no "próximamente", no dead link); 1
- * gets a wider editorial treatment; 2-3 sit in columns divided by a rule.
- * This is also how it should behave once Sanity is wired in: the section's
- * presence follows from what the query actually returns.
+ * "Artículos relacionados" — fed by whatever the caller's Sanity query
+ * actually returned (see src/sanity/lib/relatedInsights.ts: a curated
+ * slug list on service/audience pages, or automatic category matching on
+ * /insights/[slug]). 0 articles renders nothing (no placeholder, no
+ * "próximamente", no dead link); 1 gets a wider editorial treatment; 2-3
+ * sit in columns divided by a rule.
  */
 export default function RelatedArticles({
   insights,
@@ -89,7 +88,7 @@ export default function RelatedArticles({
               }
             >
               <h3 className={`font-semibold text-slate ${isSingle ? "text-2xl md:text-3xl" : "text-xl"}`}>
-                {isInsightPublished(insight) ? (
+                {insight.hasArticle ? (
                   <Link href={`/insights/${insight.slug}`} className="hover:text-terracotta">
                     {insight.title}
                   </Link>

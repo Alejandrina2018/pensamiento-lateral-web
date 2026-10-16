@@ -42,9 +42,30 @@ export type InsightListItem = {
   hasArticle: boolean;
 };
 
-export type InsightArticle = InsightListItem & {
+export type MediaCoverageItem = {
+  _key: string;
+  mediaName: string;
+  articleTitle: string;
+  url: string;
+  publicationDate: string | null;
+};
+
+export type SanityFileAsset = {
+  asset?: { url: string; originalFilename?: string };
+};
+
+export type InsightArticle = Omit<InsightListItem, "slug"> & {
+  // INSIGHT_BY_SLUG_QUERY only ever matches a document whose slug.current
+  // equals the requested $slug — the string, never null, same guarantee
+  // "hasArticle": true already hardcodes for this query's result.
+  slug: string;
   body: PortableTextBlock[];
+  featuredImage?: SanityImage;
   author: Pick<SanityAuthor, "name" | "role" | "bio" | "image" | "linkedin">;
+  reportPdf?: SanityFileAsset;
+  reportTitle?: string;
+  reportDescription?: string;
+  mediaCoverage?: MediaCoverageItem[];
   seoTitle?: string;
   seoDescription?: string;
   ogImage?: SanityImage;

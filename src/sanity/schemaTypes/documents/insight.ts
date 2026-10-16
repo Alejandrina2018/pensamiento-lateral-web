@@ -26,6 +26,7 @@ export default defineType({
   type: "document",
   groups: [
     { name: "content", title: "Contenido", default: true },
+    { name: "extras", title: "Informe y repercusiones" },
     { name: "seo", title: "SEO" },
   ],
   fields: [
@@ -104,6 +105,36 @@ export default defineType({
       group: "content",
       description: "Posición en el listado de /insights. No depende de la fecha de creación ni de publicationDate.",
       validation: (Rule) => Rule.required().integer().positive(),
+    }),
+    defineField({
+      name: "reportPdf",
+      title: "Informe completo (PDF)",
+      type: "file",
+      group: "extras",
+      options: { accept: ".pdf" },
+      description: "Opcional. Si se carga, el artículo muestra un bloque de descarga.",
+    }),
+    defineField({
+      name: "reportTitle",
+      title: "Título del informe",
+      type: "string",
+      group: "extras",
+    }),
+    defineField({
+      name: "reportDescription",
+      title: "Descripción breve del informe",
+      type: "text",
+      rows: 2,
+      group: "extras",
+    }),
+    defineField({
+      name: "mediaCoverage",
+      title: "Repercusiones en medios",
+      type: "array",
+      group: "extras",
+      of: [{ type: "mediaCoverageItem" }],
+      description:
+        "Opcional. Agregá tantas repercusiones como existan — el orden de esta lista es el orden en que se muestran.",
     }),
     ...seoFields,
   ],

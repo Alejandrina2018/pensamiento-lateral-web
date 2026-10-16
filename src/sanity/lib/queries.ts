@@ -85,7 +85,12 @@ export const INSIGHT_BY_SLUG_QUERY = groq`
     filterCategories,
     featured,
     publicationDate,
+    featuredImage,
     "author": author->{ name, role, bio, image, linkedin },
+    reportPdf{ asset->{ url, originalFilename } },
+    reportTitle,
+    reportDescription,
+    mediaCoverage[]{ _key, mediaName, articleTitle, url, publicationDate },
     seoTitle,
     seoDescription,
     ogImage,
@@ -99,6 +104,25 @@ export const INSIGHT_SLUGS_QUERY = groq`
   *[_type == "insight" && defined(body) && count(body) > 0 && defined(slug.current)]{
     "slug": slug.current
   }
+`;
+
+/**
+ * "Insights relacionados" on /insights/[slug] — other published Insights
+ * sharing at least one filterCategory with the current one, excluding
+ * itself. Only Insights with a real article are eligible (same gate as
+ * INSIGHT_BY_SLUG_QUERY), so every related link resolves. There's no
+ * curated slug list for this (unlike the service/audience pages'
+ * *_RELATED_SLUGS) — the editorial `order` is the tie-breaker, same as
+ * every other Insight listing.
+ */
+export const RELATED_INSIGHTS_QUERY = groq`
+  *[
+    _type == "insight" &&
+    slug.current != $slug &&
+    defined(body) && count(body) > 0 && defined(slug.current) &&
+    count((filterCategories[])[@ in $categories]) > 0
+  ] | order(order asc)[0...3]
+  ${INSIGHT_LIST_PROJECTION}
 `;
 
 /**

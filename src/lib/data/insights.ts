@@ -79,12 +79,11 @@ const MODELOS_Y_INVESTIGACION: Insight = {
 };
 
 /** All 7 articles defined in content/final-copy.md's /insights route, in
- * the source document's own order. Every one has approved excerpt/author/
- * category copy — none has an approved full body yet (see `body` on the
- * `Insight` type), so `isInsightPublished` gates linking until that
- * changes. Mirrors what a "published" Sanity query would return — pages
- * should filter/reference this list by slug, never hardcode article text
- * inline. */
+ * the source document's own order. Mirrors what a "published" Sanity
+ * query would return — pages should filter/reference this list by slug,
+ * never hardcode article text inline. Only used by the Sanity migration
+ * script now (src/sanity/migrate/migrate.ts) — every live page reads
+ * Insights from Sanity directly. */
 export const INSIGHTS: Insight[] = [
   CONECTADOS,
   CONSUMIDORES_NO_DISENAR,
@@ -108,18 +107,4 @@ export function getPublishedInsights(slugs: string[]): Insight[] {
   return slugs
     .map((slug) => INSIGHTS.find((insight) => insight.slug === slug))
     .filter((insight): insight is Insight => Boolean(insight));
-}
-
-/**
- * Whether an article has an approved full body — and so a real
- * /insights/[slug] page to link to. Until then, previews must show title/
- * excerpt/author-category only, never a link or "Leer artículo" CTA
- * (audit finding: a dead link is worse than no link). Centralized here so
- * every preview component (and the Sanity-backed listing) uses the same
- * rule. Only needs `body`, so it takes any object that has one — not the
- * full `Insight` shape — letting callers pass narrower view models (e.g.
- * a Sanity listing item) without fabricating unused fields.
- */
-export function isInsightPublished(insight: { body?: string }): boolean {
-  return Boolean(insight.body);
 }
