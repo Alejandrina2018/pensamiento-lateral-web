@@ -29,7 +29,10 @@ type InsightPreviewProps = {
  * motif as Servicios/Método. `featured` gives the first article more
  * space/scale, never a card treatment. The "Leer artículo" CTA only
  * renders once the article has an approved body (a real /insights/[slug]
- * page to send someone to) — until then this is a preview, not a link. */
+ * page to send someone to) — until then this is a preview, not a link.
+ * The title itself is the same conditional link, mirroring
+ * RelatedArticles' own title treatment — a stronger affordance than the
+ * CTA alone, never shown when `hasArticle` is false. */
 export default function InsightPreview({ insight, index, featured = false }: InsightPreviewProps) {
   const number = String(index + 1).padStart(2, "0");
 
@@ -48,7 +51,13 @@ export default function InsightPreview({ insight, index, featured = false }: Ins
               featured ? "text-3xl md:text-5xl" : "text-xl md:text-2xl"
             }`}
           >
-            {insight.title}
+            {insight.hasArticle ? (
+              <Link href={`/insights/${insight.slug}`} className="hover:text-terracotta">
+                {insight.title}
+              </Link>
+            ) : (
+              insight.title
+            )}
           </h3>
           <p
             className={`mt-3 max-w-(--measure) leading-relaxed text-slate/80 ${
